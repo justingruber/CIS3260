@@ -2,6 +2,42 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+
+
+/*
+Unicode Characters for chess:
+
+Black Pieces:
+	- King = \u265A
+	- Queen = \u265B
+	- Rook = \u265C
+	- Bishop = \u265D
+	- Knight = \u265E
+	- Pawn = \u265F
+
+White Pieces:
+	- King = \u2654
+	- Queen = \u2655
+	- Rook = \u2656
+	- Bishop = \u2657
+	- Knight = \u2658
+	- Pawn = \u2659
+
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
 public class VanillaBoardView extends GameView{
 	
 	public static void main(String[] args) {
@@ -25,7 +61,7 @@ public class VanillaBoardView extends GameView{
 
 				
 		char tiles[] = new char[10*10+10];
-		Arrays.fill(tiles, '.');
+		Arrays.fill(tiles, '\u2B1A');
 		for (int x = 0; x < 10; x++){
 			if(x == 0){
 				tiles[x] = '\u250F'; // Top left corner
