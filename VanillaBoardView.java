@@ -53,7 +53,57 @@ public class VanillaBoardView extends GameView{
 	@Override
 	public void demoBoard(){
 
-				
+		
+		//Dynamic method of displaying the board
+
+		int i = 0,j = 0;
+		char[][] tiles2 = new char[10][10];
+
+
+		for (i = 0; i < tiles2.length; i++){
+			for (j = 0; j < tiles2.length; j++){
+					
+
+				if(i == 0 && j == 0){
+					tiles2[i][j] = '\u250F';
+				}
+				else if(i == 0 && j == (tiles2.length - 1)){
+					tiles2[i][j] = '\u2513';
+				}
+				else if(i == (tiles2.length - 1) && j == 0){
+					tiles2[i][j] = '\u2517';
+				}
+				else if((i > 1 || i < (tiles2.length - 2)) && j == 0){
+					tiles2[i][j] = '\u2503';
+				}
+				else if((i > 1 || i < (tiles2.length - 2)) && j == (tiles2.length - 1)){
+					tiles2[i][j] = '\u2503';
+				}
+				else if((j > 0 || j < tiles2.length - 1) && i == 0){
+					tiles2[i][j] = '\u2501';
+				}
+				else if((j > 0 || j < tiles2.length - 1) && i == (tiles2.length - 1)){
+					tiles2[i][j] = '\u2501';
+				}
+				else{
+					tiles2[i][j] = '\u2B1A';
+				}
+				if(i == tiles2.length - 1 && j == tiles2.length - 1){
+					tiles2[i][j] = '\u251B';
+				}
+				System.out.print(tiles2[i][j]); 
+			}
+			System.out.println();
+		}
+		
+
+
+
+
+
+		//Single char array to display board
+		
+		/*
 		char tiles[] = new char[10*10+10];
 		Arrays.fill(tiles, '\u2B1A');
 		for (int x = 0; x < 10; x++){
@@ -76,23 +126,6 @@ public class VanillaBoardView extends GameView{
 
 
 		System.out.println(tiles);
-
-
-		/*int x = 0;
-		int y = 0;
-		for (x = 0; x < 8; x++){
-			System.out.print("___");
-		}
-		System.out.println();
-		for (x = 0; x < 8; x++) {
-			System.out.print("|");				
-
-			for(y = 0; y < 8; y++){
-				System.out.print("__|");
-			}
-			System.out.println();
-		}*/
+		*/
 	}
-
-
 }

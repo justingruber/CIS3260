@@ -9,4 +9,5 @@ public abstract class GameView {
 	abstract void placePieces();
 	abstract void demoBoard();
 
+
 }
