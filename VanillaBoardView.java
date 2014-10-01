@@ -24,16 +24,10 @@ White Pieces:
 	- Knight = \u2658
 	- Pawn = \u2659
 
-
+From here:
+http://unicode-table.com/en/#supplemental-mathematical-operators
 
 */
-
-
-
-
-
-
-
 
 
 
