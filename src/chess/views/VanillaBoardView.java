@@ -1,3 +1,5 @@
+package chess.views;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +36,9 @@ http://unicode-table.com/en/#supplemental-mathematical-operators
 
 public class VanillaBoardView extends GameView{
 	
+	private char[][] tiles2 = new char[10][10];
+
+
 	public static void main(String[] args) {
 		VanillaBoardView newBoard = new VanillaBoardView();
 		newBoard.demoBoard();
@@ -47,17 +52,9 @@ public class VanillaBoardView extends GameView{
 	@Override
 	public void printBoard(){
 
-	}
-
-
-	@Override
-	public void demoBoard(){
-
-		
 		//Dynamic method of displaying the board
 
 		int i = 0,j = 0;
-		char[][] tiles2 = new char[10][10];
 
 
 		for (i = 0; i < tiles2.length; i++){
@@ -95,6 +92,13 @@ public class VanillaBoardView extends GameView{
 			}
 			System.out.println();
 		}
+	}
+
+
+	@Override
+	public void demoBoard(){
+
+		
 		
 
 

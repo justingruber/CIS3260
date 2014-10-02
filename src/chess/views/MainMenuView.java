@@ -1,3 +1,5 @@
+package chess.views;
+
 public abstract class MainMenuView {
 
 	abstract void showGuiMenu();
