@@ -15,4 +15,8 @@ public class Game {
     public Game () {
         //jawoidjaiwodj
     }
+    
+    public void getSpectators(){
+        
+    }
 }
