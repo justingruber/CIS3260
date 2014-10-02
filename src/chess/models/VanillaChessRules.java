@@ -6,18 +6,20 @@ import java.util.ArrayList;
 public class VanillaChessRules extends Rules{
     private ArrayList <ChessPiece> pieces = new ArrayList();
     private ArrayList <Board.BoardTypes> boardTypes = new ArrayList();
+    private ArrayList <String> messages = new ArrayList();
     private Board board = null;
     private RuleTypes ruleType = RuleTypes.VANILLA_CHESS_RULES;
     private Board.BoardTypes selectedBoardType;
     private String message = ""; 
-    private int isCheckMate = 0; // 1 == true, 0 == false
-    private int isCheck = 0; // 1 == true, 0 == false
-    private int isStaleMAte = 0; // 1 == true, 0 == false
+    private Boolean isCheckMate = false;
+    private Boolean isCheck = false;
+    private Boolean isStaleMAte = false;
     
     public VanillaChessRules(){
         super(RuleTypes.VANILLA_CHESS_RULES);
         boardTypes.add(Board.BoardTypes.VANILLA_CHESS_BOARD);
         createPiecesList();
+        this.messages.add("0 messages");
     }
     
     private ArrayList <ChessPiece> initializeWhitePieces(){
@@ -109,30 +111,35 @@ public class VanillaChessRules extends Rules{
         return this.board;
     }
     
-    public String getMessage(){
-        return this.message;
+    public ArrayList<String> getMessages(){
+        return this.messages;
     }
     
     private void setMessage(String message){
-        this.message = message; 
+        this.message = message;
+        setMessages(this.message);
+    }
+    
+    private void setMessages(String message){
+        this.messages.add(message);
     }
     
     public Boolean isCheck(){
-        if(this.isCheck == 1){
+        if(this.isCheck == true){
             return true;
         }
         return false;
     }
     
     public Boolean isCheckMate(){
-        if(this.isCheckMate == 1){
+        if(this.isCheckMate == true){
             return true;
         }
         return false;
     }
     
     public Boolean isStaleMate(){
-        if(this.isStaleMAte == 1){
+        if(this.isStaleMAte == true){
             return true;
         }
         return false;
@@ -181,7 +188,7 @@ public class VanillaChessRules extends Rules{
     public Boolean tryMove(int curX, int curY, int newX, int newY){
         Boolean boolReturns = null;
         
-        setMessage("");
+        this.messages = new ArrayList();
         
         boolReturns = validateCoordinates(curX,curY,newX,newY);
         
@@ -196,6 +203,7 @@ public class VanillaChessRules extends Rules{
         //Set the new coordinates for the piece 
         if(boolReturns == true){
             take(curX,curY,newX,newY);
+            setMessage("Succes: Move was successful");
             return true;
         }else{
             setMessage("ERROR: The piece cannot move to the coordinates: (" + newX + "," + newY +")" );

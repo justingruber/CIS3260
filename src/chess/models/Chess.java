@@ -96,7 +96,7 @@ public class Chess {
                 drawBoard(board);
             }
             
-            System.out.println(rules.getMessage());
+            System.out.println(rules.getMessages());
             System.out.println("\nExit?(Y/N)");
         
             exit = in.nextLine();
