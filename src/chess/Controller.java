@@ -8,6 +8,7 @@ package chess;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Scanner;
 
 /**
  *
@@ -17,7 +18,17 @@ public class Controller implements Observer {
     
     
     public void goMainMenu () {
+        System.out.println ("CHESS GAME");
+        System.out.println ("Play Vanilla");
+        System.out.println ("Quit");
+        Scanner scan = new Scanner (System.in);
+        String option = scan.nextLine ();
         
+        if (option.equals ("Play Vanilla")) {
+            goGame ();
+        } else if (option.equals ("Quit")) {
+            //do quitting things here?
+        }
     }
     
     public void goGame () {
