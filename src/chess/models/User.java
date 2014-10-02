@@ -1,9 +1,14 @@
 package chess.models;
 
 public class User {
+    public enum Role {
+        Lobby,
+        Player,
+        Spectator
+    }
     String userName ="";
     ChessPiece.Colours playerColour = null;
-    ChessEnums.Role userRole = null;
+    Role userRole = null;
     
     public ChessPiece.Colours getColour(){
         return playerColour;
@@ -11,10 +16,10 @@ public class User {
     public void setColour(ChessPiece.Colours colour){
         playerColour = colour;
     }
-    public ChessEnums.Role getRole(){
+    public Role getRole(){
         return userRole;
     }
-    public void setRole(ChessEnums.Role role){
+    public void setRole(Role role){
         userRole = role;
     }
 }

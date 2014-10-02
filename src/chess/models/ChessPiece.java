@@ -7,29 +7,38 @@ public class ChessPiece {
         WHITE
     }
     
-    private VanillaChessRules.ChessPieces pieceName; 
+    public enum ChessPieces {
+        KING,
+        QUEEN,
+        ROOK,
+        BISHOP,
+        KNIGHT,
+        PAWN
+    }
+    
+    private ChessPieces pieceName; 
     private Colours pieceColour;
     private int X = 0;
     private int Y = 0;
     private int state = 0;
     
-    public ChessPiece (VanillaChessRules.ChessPieces pieceName, Colours pieceColour){
+    public ChessPiece (ChessPieces pieceName, Colours pieceColour){
         this.setChessPieceName(pieceName);
         this.setChessPieceColour(pieceColour);
     }
     
-    public ChessPiece (VanillaChessRules.ChessPieces pieceName, Colours pieceColour, int x, int y) {
+    public ChessPiece (ChessPieces pieceName, Colours pieceColour, int x, int y) {
         this.setChessPieceName(pieceName);
         this.setChessPieceColour(pieceColour);
         this.setX(x);
         this.setY(y);     
     }
     
-    public VanillaChessRules.ChessPieces getChessPieceName(){
+    public ChessPieces getChessPieceName(){
         return this.pieceName;
     }
     
-    public void setChessPieceName(VanillaChessRules.ChessPieces pieceName){
+    public void setChessPieceName(ChessPieces pieceName){
         this.pieceName = pieceName;
     }
     

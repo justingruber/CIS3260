@@ -3,9 +3,9 @@ package chess.models;
 import java.util.ArrayList;
 
 public abstract class Board {
-    
+    public enum BoardTypes {VANILLA_CHESS_BOARD}
   
-    abstract public ChessEnums.BoardTypes getBoardType();
+    abstract public BoardTypes getBoardType();
     abstract public ArrayList <ChessPiece> getPieces();
     abstract public void setPieces(ArrayList <ChessPiece> chessPieceList);
     abstract public ChessPiece getPieceAtPosition(int x, int y);

@@ -5,14 +5,14 @@ import java.util.ArrayList;
 public class VanillaChessBoard extends Board {
     ArrayList <ChessPiece> chessPieces;
     //private ChessPiece [] chessPieces; 
-    private ChessEnums.BoardTypes boardType;
+    private BoardTypes boardType;
     private int minX = 0;
     private int maxX = 0;
     private int minY = 0;    
     private int maxY = 0;
     public VanillaChessBoard(){
         super();
-        boardType = ChessEnums.BoardTypes.VANILLA_CHESS_BOARD;
+        boardType = BoardTypes.VANILLA_CHESS_BOARD;
         //init vanilla chess board dimension to x(1:8) y(1:8) 
         minX = 1;
         maxX = 8;
@@ -45,7 +45,7 @@ public class VanillaChessBoard extends Board {
         maxY = y;
     }
     @Override
-    public ChessEnums.BoardTypes getBoardType(){ 
+    public BoardTypes getBoardType(){ 
         return this.boardType;
     }
     @Override

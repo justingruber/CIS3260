@@ -24,7 +24,7 @@ public class Chess {
                         System.out.print("*    ");
                     }else{
                         
-                        VanillaChessRules.ChessPieces name = piece.getChessPieceName();
+                        ChessPiece.ChessPieces name = piece.getChessPieceName();
                         ChessPiece.Colours colour = piece.getChessPieceColour();
                     
                         if(colour == ChessPiece.Colours.WHITE){
@@ -35,17 +35,17 @@ public class Chess {
                             System.out.print("*b");
                         }
                     
-                        if(name == VanillaChessRules.ChessPieces.KING){
+                        if(name == ChessPiece.ChessPieces.KING){
                             System.out.print("K");
-                        }else if(name == VanillaChessRules.ChessPieces.QUEEN){
+                        }else if(name == ChessPiece.ChessPieces.QUEEN){
                             System.out.print("Q");   
-                        }else if(name == VanillaChessRules.ChessPieces.ROOK){
+                        }else if(name == ChessPiece.ChessPieces.ROOK){
                             System.out.print("R");   
-                        }else if(name == VanillaChessRules.ChessPieces.BISHOP){
+                        }else if(name == ChessPiece.ChessPieces.BISHOP){
                             System.out.print("B");   
-                        }else if(name == VanillaChessRules.ChessPieces.KNIGHT){
+                        }else if(name == ChessPiece.ChessPieces.KNIGHT){
                             System.out.print("N");   
-                        }else if(name == VanillaChessRules.ChessPieces.PAWN){
+                        }else if(name == ChessPiece.ChessPieces.PAWN){
                             System.out.print("P");   
                         }
                     
@@ -73,7 +73,7 @@ public class Chess {
         Scanner in = new Scanner(System.in);
         VanillaChessRules rules = new VanillaChessRules();
         
-        rules.createBoard(ChessEnums.BoardTypes.VANILLA_CHESS_BOARD);
+        rules.createBoard(Board.BoardTypes.VANILLA_CHESS_BOARD);
         Board board = rules.getBoardInstance();
         
         Boolean boolReturn;

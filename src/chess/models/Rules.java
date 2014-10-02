@@ -2,19 +2,20 @@ package chess.models;
 import java.util.ArrayList;
 
 public abstract class Rules {
-    private ChessEnums.RuleTypes ruleType;
+    public enum RuleTypes {VANILLA_CHESS_RULES}
+    private RuleTypes ruleType;
     
-    public Rules(ChessEnums.RuleTypes ruleType){
+    public Rules(RuleTypes ruleType){
         this.ruleType = ruleType;
     }
     
-    abstract public ArrayList<ChessEnums.BoardTypes> getBoardTypes();
+    abstract public ArrayList<Board.BoardTypes> getBoardTypes();
     
     abstract public String getDescription();
     
-    abstract public Boolean createBoard(ChessEnums.BoardTypes boardType);
+    abstract public Boolean createBoard(Board.BoardTypes boardType);
     
-    public ChessEnums.RuleTypes getRulesType(){
+    public RuleTypes getRulesType(){
         return ruleType;
     }
 }
