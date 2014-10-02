@@ -1,5 +1,4 @@
-
-package chess;
+package chess.models;
 
 public class ChessEnums {
     public enum BoardTypes {VANILLA_CHESS_BOARD}

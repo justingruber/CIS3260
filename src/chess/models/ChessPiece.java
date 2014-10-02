@@ -1,4 +1,4 @@
-package chess;
+package chess.models;
 import java.lang.Exception;
 
 public class ChessPiece {

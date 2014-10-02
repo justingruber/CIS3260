@@ -1,4 +1,4 @@
-package chess;
+package chess.models;
 import java.util.ArrayList;
 
 public abstract class Rules {

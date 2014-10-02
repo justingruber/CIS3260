@@ -1,4 +1,4 @@
-package chess;
+package chess.models;
 
 import java.lang.Enum;
 import java.util.ArrayList;
@@ -189,17 +189,18 @@ public class VanillaChessRules extends Rules{
     //Need to implement a currX and curY check?
     public Boolean tryMove(int curX, int curY, int newX, int newY){
         Boolean boolReturns = null;
-        ChessPiece curLocationPiece = this.board.getPieceAtPosition(curX, curY);
         
         setMessage("");
         
         boolReturns = validateCoordinates(curX,curY,newX,newY);
         
+        if(boolReturns == false){
+            return false;
+        }
+        
         boolReturns = null;
         
-        if(curLocationPiece.getChessPieceName() == ChessPieces.PAWN){
-            boolReturns = tryMovePawn(curX,curY,newX, newY);
-        }
+        boolReturns = tryMoveCheck(curX,curY,newX, newY);
         
         //Set the new coordinates for the piece 
         if(boolReturns == true){
@@ -210,6 +211,7 @@ public class VanillaChessRules extends Rules{
             return false;
         }
     }
+    
     
     private void take(int curX, int curY, int newX, int newY){
         //Check if King. If king then checkmate.
@@ -424,13 +426,279 @@ public class VanillaChessRules extends Rules{
             
         return possibleMoves;
     } 
-    //Change invalud move to something more meaningful. 
-    private Boolean tryMovePawn(int curX,int curY,int newX, int newY){
+    
+    private ArrayList <Integer[]> rookPossibleMoves(int curX,int curY){
         ArrayList <Integer[]> possibleMoves = new ArrayList();
+        ArrayList <Integer[]> temp;
+        ChessPiece piece = null; 
+        int destX = 0;
+        int destY = 0;
+        Boolean boolReturn;
         
+        //Case 1: Move up
+        temp = new ArrayList();
+        destX = curX;
+        destY = this.board.getMaxY();
+        
+        temp = moveUp(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 2: Move down
+        temp = new ArrayList();
+        destX = curX;
+        destY = this.board.getMinY();
+        
+        temp = moveDown(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 3: Move right
+        temp = new ArrayList();
+        destX = board.getMaxX();
+        destY = curY;
+        
+        temp = moveRight(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 4: Move left
+        temp = new ArrayList();
+        destX = board.getMinX();
+        destY = curY;
+        
+        temp = moveLeft(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        return possibleMoves;
+    }
+    
+    private ArrayList <Integer[]> bishopPossibleMoves(int curX,int curY){
+        ArrayList <Integer[]> possibleMoves = new ArrayList();
+        ArrayList <Integer[]> temp;
+        ChessPiece piece = null; 
+        int destX = 0;
+        int destY = 0;
+        Boolean boolReturn;
+        
+        
+        //Case 1: Left up diagonal
+        temp = new ArrayList();
+        destX = this.board.getMinX();
+        destY = this.board.getMaxY();
+        
+        temp = moveLeftUpDiagonally(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 2: Right up diagonal
+        temp = new ArrayList();
+        destX = this.board.getMaxX();
+        destY = this.board.getMaxY();
+        
+        temp = moveRightUpDiagonally(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 3: Left down diagonal
+        temp = new ArrayList();
+        destX = this.board.getMinX();
+        destY = this.board.getMinY();
+        
+        temp = moveLeftDownDiagonally(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Cas3 4: Right down diagonal
+        temp = new ArrayList();
+        destX = this.board.getMaxX();
+        destY = this.board.getMinY();
+        
+        temp = moveRightDownDiagonally(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        
+        return possibleMoves;
+    }
+    
+    private ArrayList <Integer[]> kingPossibleMoves(int curX,int curY){
+        ArrayList <Integer[]> possibleMoves = new ArrayList();
+        ArrayList <Integer[]> temp;
+        ChessPiece piece = null; 
+        int destX = 0;
+        int destY = 0;
+        Boolean boolReturn;
+        
+        //Case 1: Move up 1 square
+        temp = new ArrayList();
+        destX = curX;
+        destY = curY + 1;
+        temp = moveUp(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 2: move down 1 square
+        temp = new ArrayList();
+        destX = curX;
+        destY = curY - 1;
+        temp = moveDown(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 3: Move right 1 square
+        temp = new ArrayList();
+        destX = curX + 1;
+        destY = curY;
+        temp = moveRight(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 4: Move left 1 square
+        temp = new ArrayList();
+        destX = curX - 1;
+        destY = curY;
+        temp = moveLeft(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 5: Move Left up diagonally 
+        temp = new ArrayList();
+        destX = curX - 1;
+        destY = curY + 1;
+        temp = moveLeftUpDiagonally(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 6: Move right up diagonally
+        temp = new ArrayList();
+        destX = curX + 1;
+        destY = curY + 1;
+        temp = moveRightUpDiagonally(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 7: Move left down diagonally 
+        temp = new ArrayList();
+        destX = curX - 1;
+        destY = curY - 1;
+        temp = moveLeftDownDiagonally(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 8: Move right down diagonally
+        temp = new ArrayList();
+        destX = curX + 1;
+        destY = curY - 1;
+        temp = moveRightDownDiagonally(curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        return possibleMoves;
+    }
+    
+    private ArrayList <Integer[]> queenPossibleMoves(int curX,int curY){
+        ArrayList <Integer[]> possibleMoves = new ArrayList();
+        ArrayList <Integer[]> rookMoves = new ArrayList();
+        ArrayList <Integer[]> bishopMoves = new ArrayList();
+        ChessPiece piece = null; 
+        int destX = 0;
+        int destY = 0;
+        Boolean boolReturn;
+        
+        rookMoves = rookPossibleMoves(curX,curY);
+        bishopMoves = bishopPossibleMoves(curX,curY);
+        
+        possibleMoves.addAll(rookMoves);
+        possibleMoves.addAll(bishopMoves);
+        return possibleMoves;
+    }
+    
+    private ArrayList <Integer[]> knightPossibleMoves(int curX,int curY){
+        ArrayList <Integer[]> possibleMoves = new ArrayList();
+        ArrayList <Integer[]> temp;
+        ChessPiece piece = null; 
+        int destX = 0;
+        int destY = 0;
+        Boolean boolReturn;
+        
+        //Case 1: Move up two squares and 1 to the left
+        temp = new ArrayList();
+        destX = curX - 1;
+        destY = curY + 2;
+        
+        temp = move(-1,2,curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 2: Move Up two squares and 1 to the right
+        temp = new ArrayList();
+        destX = curX + 1;
+        destY = curY + 2;
+        
+        temp = move(1,2,curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 3: Move up one square and two to the left
+        temp = new ArrayList();
+        destX = curX - 2;
+        destY = curY + 1;
+        
+        temp = move(-2,1,curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 4: Move up one square and two to the right
+        temp = new ArrayList();
+        destX = curX + 2;
+        destY = curY + 1;
+        
+        temp = move(2,1,curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 5: Move down one square and two to the left
+        temp = new ArrayList();
+        destX = curX - 2;
+        destY = curY - 1;
+        
+        temp = move(-2,-1,curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 6: Move down one square and two to the right
+        temp = new ArrayList();
+        destX = curX + 2;
+        destY = curY - 1;
+        
+        temp = move(2,-1,curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 7: Move down two squares and one to the left
+        temp = new ArrayList();
+        destX = curX - 1;
+        destY = curY - 2;
+        
+        temp = move(-1,-2,curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        //Case 8: Move down two squares and two to the right
+        temp = new ArrayList();
+        destX = curX + 1;
+        destY = curY - 2;
+        
+        temp = move(1,-2,curX,curY,destX,destY);
+        possibleMoves.addAll(temp);
+        
+        return possibleMoves;
+    }
+    
+    //Change invalid move to something more meaningful. 
+    private Boolean tryMoveCheck(int curX,int curY,int newX, int newY){
+        ArrayList <Integer[]> possibleMoves = new ArrayList();
+        ArrayList <Integer[]> tempPossibleMoves;
+        Boolean boolReturn;
         ChessPiece piece = board.getPieceAtPosition(curX, curY);
         
-        possibleMoves = pawnPossibleMoves(piece.getChessPieceColour().toString(),curX,curY);
+        if(piece.getChessPieceName() == ChessPieces.PAWN){
+            possibleMoves = pawnPossibleMoves(piece.getChessPieceColour().toString(),curX,curY);
+        }else if(piece.getChessPieceName() == ChessPieces.ROOK){
+            possibleMoves = rookPossibleMoves(curX,curY);
+        }else if(piece.getChessPieceName() == ChessPieces.BISHOP){
+            possibleMoves = bishopPossibleMoves(curX,curY);
+        }else if(piece.getChessPieceName() == ChessPieces.KING){
+            possibleMoves = kingPossibleMoves(curX,curY);
+        }else if(piece.getChessPieceName() == ChessPieces.QUEEN){
+            possibleMoves = queenPossibleMoves(curX,curY);
+        }else if(piece.getChessPieceName() == ChessPieces.KNIGHT){
+            possibleMoves = knightPossibleMoves(curX,curY);
+        }else{
+            System.out.println("ERROR: The coordinates passed to tryMoveCheck did not contain a vanilla chess piece");
+            System.exit(1);
+        }
+        
+        
         
         if(possibleMoves.size() == 0){
             setMessage("ERROR: Invalid move");
