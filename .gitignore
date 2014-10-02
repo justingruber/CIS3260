@@ -1,0 +1,6 @@
+/dist/
+/build/
+/nbproject/
+/manifest.mf
+/build.xml
+src/chess/Main.java

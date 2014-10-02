@@ -1,4 +1,4 @@
-package chess;
+package chess.views;
 
 public abstract class MainMenuView {
 

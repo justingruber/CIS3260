@@ -1,4 +1,4 @@
-package chess;
+package chess.views;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +10,6 @@ public abstract class GameView {
 	abstract void printBoard(); 
 	abstract void placePieces();
 	abstract void demoBoard();
-	private placePiece(int row, int col);
+	private void placePiece(int row, int col) {}
 
 }
