@@ -6,10 +6,26 @@
 
 package chess;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  *
  * @author Benjin
  */
-public class Controller {
+public class Controller implements Observer {
     
+    
+    public void goMainMenu () {
+        
+    }
+    
+    public void goGame () {
+        
+    }
+    
+    @Override
+    public void update (Observable object, Object args) {
+        
+    }
 }
