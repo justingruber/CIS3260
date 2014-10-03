@@ -6,13 +6,24 @@
 
 package chess.models;
 
+import java.util.ArrayList;
 /**
  *
  * @author Benjin
  */
 public class Game {
+    private User playerWhite;
+    private User playerBlack;
     
     public Game () {
-        //jawoidjaiwodj
+        
+    }
+    
+    public void AddUser (User user) {
+        if (playerWhite == null) {
+            playerWhite = user;
+        } else if (playerBlack == null) {
+            playerBlack = user;
+        }
     }
 }
