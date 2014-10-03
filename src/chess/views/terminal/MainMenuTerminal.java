@@ -16,12 +16,13 @@ public class MainMenuTerminal extends MainMenuView {
     
     @Override
     public void update () {
-        System.out.println ("CHESS GAME");
+        System.out.println ("SECRET AGENT LASER OBSTACLE CHESS");
         System.out.println (MainMenuTerminal.PLAY);
         System.out.println (MainMenuTerminal.QUIT);
     }
     
     public String getInput () {
+        System.out.print ("What yoo wanna do, foo? ");
         Scanner scan = new Scanner (System.in);
         //String option = scan.nextLine ();
         String option = MainMenuTerminal.PLAY;
