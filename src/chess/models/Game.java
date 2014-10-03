@@ -26,4 +26,8 @@ public class Game {
             playerBlack = user;
         }
     }
+    
+    public void getSpectators(){
+        
+    }
 }
