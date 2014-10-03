@@ -9,6 +9,7 @@ package chess.controllers;
 import java.util.Observer;
 import java.util.Observable;
 import chess.models.Rules;
+import chess.views.terminal.MainMenuTerminal;
 /**
  *
  * @author Benjin
@@ -27,12 +28,17 @@ public class MasterController implements Observer {
         gameControl.start (type);
     }
     
+    public void goQuit () {
+        System.out.println ("BYE");
+    }
+    
     @Override
     public void update (Observable object, Object arg) {
-        if (arg == MainMenuController.PLAY) {
+        if ((int) arg == MainMenuController.PLAY) {
             goGame (Rules.RuleTypes.VANILLA_CHESS_RULES);
-        } else if (arg == MainMenuController.QUIT) {
-            System.out.println ("BYE");
+        } else if ((int) arg == MainMenuController.QUIT) {
+            goQuit ();
         }
     }
 }
+

@@ -6,9 +6,13 @@
 
 package chess.controllers;
 
+import chess.Application;
+import chess.DisplayMode;
 import chess.models.Rules;
 import chess.models.Game;
 import chess.models.UserManager;
+import chess.views.MainMenuView;
+import chess.views.terminal.MainMenuTerminal;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
@@ -18,31 +22,32 @@ import java.util.Scanner;
  * @author Benjin
  */
 public class MainMenuController extends Observable implements Observer {
-
+    private MainMenuView view;
+    
     public void start () {
         UserManager.setCurrentUser ("Naruto");
         
-        System.out.println ("CHESS GAME");
-        System.out.println (MainMenuController.PLAY);
-        System.out.println (MainMenuController.QUIT);
-        Scanner scan = new Scanner (System.in);
-        //String option = scan.nextLine ();
-        String option = MainMenuController.PLAY;
-        
-        if (option.equals (MainMenuController.PLAY)) {
-            this.setChanged ();
-            this.notifyObservers (MainMenuController.PLAY);
-        } else if (option.equals (MainMenuController.QUIT)) {
-            this.setChanged ();
-            this.notifyObservers (MainMenuController.QUIT);
+        if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
+            MainMenuTerminal terminalView = new MainMenuTerminal ();
+            terminalView = new MainMenuTerminal ();
+            terminalView.update ();
+            String input = terminalView.getInput ();
+            
+            if (input == MainMenuTerminal.PLAY) {
+                this.setChanged ();
+                this.notifyObservers (MainMenuController.PLAY);
+            } else if (input == MainMenuTerminal.QUIT) {
+                this.setChanged ();
+                this.notifyObservers (MainMenuController.QUIT);
+            }
         }
     }
     
     @Override
     public void update (Observable object, Object args) {
         
-    }
     
-    public static final String PLAY = "Play";
-    public static final String QUIT = "Quit";
+    }
+    public static final int PLAY = 1;
+    public static final int QUIT = 0;
 }
