@@ -1,15 +1,10 @@
-package chess.views;
+package chess;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-public abstract class GameView {
+import java.util.Observable;
+public abstract class GameView extends Observable{
 
 
 	abstract void printBoard(); 
-	abstract void placePieces();
-	abstract void demoBoard();
-	private void placePiece(int row, int col) {}
+	abstract void placePieces(Board board);
 
 }
