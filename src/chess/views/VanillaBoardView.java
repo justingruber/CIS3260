@@ -1,4 +1,8 @@
-package chess;
+package chess.views;
+
+import chess.models.*;
+import chess.models.ChessPiece;
+//import chess.models.VanillaChessRules;
 
 /*
 Unicode Characters for chess:
@@ -50,7 +54,7 @@ public class VanillaBoardView extends GameView{
             this.placePieces(board);
             this.printBoard();
             if(rules.tryMove(1, 2, 1, 3)){
-                this.printBoard();
+               
             }
             
             
