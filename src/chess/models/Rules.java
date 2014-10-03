@@ -15,6 +15,8 @@ public abstract class Rules {
     
     abstract public Boolean createBoard(Board.BoardTypes boardType);
     
+    abstract public Boolean isGameOver();
+    
     public RuleTypes getRulesType(){
         return ruleType;
     }

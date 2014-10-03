@@ -88,7 +88,7 @@ public class Chess {
             int newX = in.nextInt();
             int newY = in.nextInt();
             exit = in.nextLine();
-            System.out.println("\nMoving piece from: (" + curX + "," + curY + ")" + " to: (" + newX + "," + newY + ")" );
+            //System.out.println("\nMoving piece from: (" + curX + "," + curY + ")" + " to: (" + newX + "," + newY + ")" );
     
             boolReturn = rules.tryMove(curX,curY,newX,newY);
             

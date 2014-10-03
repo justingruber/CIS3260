@@ -124,26 +124,68 @@ public class VanillaChessRules extends Rules{
         this.messages.add(message);
     }
     
-    public Boolean isCheck(){
+    private Boolean isCheck(){
         if(this.isCheck == true){
             return true;
         }
         return false;
     }
     
-    public Boolean isCheckMate(){
+    private Boolean isCheckMate(){
         if(this.isCheckMate == true){
             return true;
         }
         return false;
     }
     
-    public Boolean isStaleMate(){
+    private Boolean isStaleMate(){
         if(this.isStaleMAte == true){
             return true;
         }
         return false;
     }
+    
+    private Boolean checkForStaleMate(ChessPiece.Colours colour){
+        ArrayList <ArrayList> possibleMoves;
+        
+        possibleMoves = getAllPossibleMoves(colour);
+        
+        return true;
+    }
+    
+    private Boolean checkForCheck(ChessPiece.Colours colour){
+        return false;
+    }
+    
+    //Checks enemy pieces after a move to determine if he is in stalemate
+    private ArrayList <ArrayList> getAllPossibleMoves(ChessPiece.Colours colour){
+        ArrayList <ArrayList> possibleMoves = null; 
+        
+        for(ChessPiece piece: board.getPieces()){
+           if(piece.getChessPieceColour() == colour){
+               //System.out.println("Name = " +piece.getChessPieceName() + " Colour = " + piece.getChessPieceColour());
+               
+           }
+       }
+        
+        return possibleMoves;
+    }
+    //If null then no king was found
+    private ChessPiece getKing(ChessPiece.Colours colour){
+        ChessPiece piece1 = null; 
+        
+        for(ChessPiece piece: board.getPieces()){
+           if(piece.getChessPieceName() == ChessPiece.ChessPieces.KING && piece.getChessPieceColour() == colour){
+               return piece;
+           }
+       }
+        return null;
+    }
+    
+    public Boolean isGameOver(){
+        return false;
+    }
+    
     //Move the friendly check to the take function? -- Do we really need it?
     //Move the cur==new coordniates to a new function? -- Do we really need it? 
     private Boolean validateCoordinates(int curX, int curY, int newX, int newY){
@@ -187,6 +229,9 @@ public class VanillaChessRules extends Rules{
     //Need to implement a currX and curY check?
     public Boolean tryMove(int curX, int curY, int newX, int newY){
         Boolean boolReturns = null;
+        ChessPiece.Colours friendlyColour;
+        ChessPiece.Colours enemyColour;
+        ChessPiece piece = null;
         
         this.messages = new ArrayList();
         
@@ -199,11 +244,21 @@ public class VanillaChessRules extends Rules{
         boolReturns = null;
         
         boolReturns = tryMoveCheck(curX,curY,newX, newY);
+        piece = this.board.getPieceAtPosition(curX, curY);
+        
+        friendlyColour = piece.getChessPieceColour();
+        
+        if(friendlyColour == ChessPiece.Colours.WHITE){
+            enemyColour = ChessPiece.Colours.BLACK;
+        }else{
+            enemyColour = ChessPiece.Colours.WHITE;
+        }
         
         //Set the new coordinates for the piece 
         if(boolReturns == true){
             take(curX,curY,newX,newY);
             setMessage("Succes: Move was successful");
+            checkForStaleMate(enemyColour);
             return true;
         }else{
             setMessage("ERROR: The piece cannot move to the coordinates: (" + newX + "," + newY +")" );
@@ -346,7 +401,6 @@ public class VanillaChessRules extends Rules{
         Boolean boolReturn;
         
         temp = new ArrayList();
-        System.out.println(colour);
         //Case1: Move up 2 squares for white pawn if pawn is in its starting position
         if(curY == 2 && colour.equalsIgnoreCase("white")){   
             destX = curX;
@@ -704,13 +758,13 @@ public class VanillaChessRules extends Rules{
             return false;
         }else{//Need to check if newX and newY are within the list
             int foundFlag = 0;
-            System.out.println("Found Moves");
+            //System.out.println("Found Moves");
             
             for(int i = 0; i < possibleMoves.size();i++){
                 if(possibleMoves.get(i)[0] == newX && possibleMoves.get(i)[1] == newY){
                     foundFlag = 1;
                 }
-                System.out.println("(" + possibleMoves.get(i)[0] + "," + possibleMoves.get(i)[1] + ")" );
+                //System.out.println("(" + possibleMoves.get(i)[0] + "," + possibleMoves.get(i)[1] + ")" );
             }
             if(foundFlag == 1){
                 return true;
