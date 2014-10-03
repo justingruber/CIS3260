@@ -1,11 +1,6 @@
 package chess.views;
 
-public abstract class MainMenuView {
+import java.util.Observable;
 
-	abstract void showGuiMenu();
-	abstract void showTerminalMenu();
-
-    public void awd () {
-     
-    }
+public abstract class MainMenuView extends Observable {
 }
