@@ -49,7 +49,7 @@ public class VanillaBoardView extends GameView{
            
             
             
-            rules.createBoard(ChessEnums.BoardTypes.VANILLA_CHESS_BOARD);
+            rules.createBoard(Board.BoardTypes.VANILLA_CHESS_BOARD);
             board = rules.getBoardInstance();
             this.placePieces(board);
             this.printBoard();
@@ -72,34 +72,34 @@ public class VanillaBoardView extends GameView{
                    if(piece == null){
                    } else {
                         if(piece.getState() != 1){
-                            VanillaChessRules.ChessPieces name = piece.getChessPieceName();
+                            ChessPiece.ChessPieces name = piece.getChessPieceName();
                             ChessPiece.Colours colour = piece.getChessPieceColour();
                             if(colour == ChessPiece.Colours.WHITE){
-                                if(name == VanillaChessRules.ChessPieces.KING){
+                                if(name == ChessPiece.ChessPieces.KING){
                                     placePieceAtXY(j,i,'\u2654');
-                                }else if(name == VanillaChessRules.ChessPieces.QUEEN){
+                                }else if(name == ChessPiece.ChessPieces.QUEEN){
                                     placePieceAtXY(j,i,'\u2655');  
-                                }else if(name == VanillaChessRules.ChessPieces.ROOK){
+                                }else if(name == ChessPiece.ChessPieces.ROOK){
                                     placePieceAtXY(j,i,'\u2656');
-                                }else if(name == VanillaChessRules.ChessPieces.BISHOP){
+                                }else if(name == ChessPiece.ChessPieces.BISHOP){
                                     placePieceAtXY(j,i,'\u2657');   
-                                }else if(name == VanillaChessRules.ChessPieces.KNIGHT){
+                                }else if(name == ChessPiece.ChessPieces.KNIGHT){
                                     placePieceAtXY(j,i,'\u2658');   
-                                }else if(name == VanillaChessRules.ChessPieces.PAWN){
+                                }else if(name == ChessPiece.ChessPieces.PAWN){
                                     placePieceAtXY(j,i,'\u2659');  
                                 }
                             } else{
-                                if(name == VanillaChessRules.ChessPieces.KING){
+                                if(name == ChessPiece.ChessPieces.KING){
                                     placePieceAtXY(j,i,'\u265A');
-                                }else if(name == VanillaChessRules.ChessPieces.QUEEN){
+                                }else if(name == ChessPiece.ChessPieces.QUEEN){
                                     placePieceAtXY(j,i,'\u265B');  
-                                }else if(name == VanillaChessRules.ChessPieces.ROOK){
+                                }else if(name == ChessPiece.ChessPieces.ROOK){
                                     placePieceAtXY(j,i,'\u265C');
-                                }else if(name == VanillaChessRules.ChessPieces.BISHOP){
+                                }else if(name == ChessPiece.ChessPieces.BISHOP){
                                     placePieceAtXY(j,i,'\u265D');   
-                                }else if(name == VanillaChessRules.ChessPieces.KNIGHT){
+                                }else if(name == ChessPiece.ChessPieces.KNIGHT){
                                     placePieceAtXY(j,i,'\u265E');   
-                                }else if(name == VanillaChessRules.ChessPieces.PAWN){
+                                }else if(name == ChessPiece.ChessPieces.PAWN){
                                     placePieceAtXY(j,i,'\u265F');  
                                 }
                             }
@@ -142,29 +142,23 @@ public class VanillaBoardView extends GameView{
 
 				if(i == 0 && j == 0){
 					tiles2[i][j] = '\u250F';
-				}
-				else if(i == 0 && j == (tiles2.length - 1)){
+				} else if(i == 0 && j == (tiles2.length - 1)){
 					tiles2[i][j] = '\u2513';
-				}
-				else if(i == (tiles2.length - 1) && j == 0){
+				} else if(i == (tiles2.length - 1) && j == 0){
 					tiles2[i][j] = '\u2517';
-				}
-				else if((i > 1 || i < (tiles2.length - 2)) && j == 0){
+				} else if((i > 1 || i < (tiles2.length - 2)) && j == 0){
 					tiles2[i][j] = '\u2503';
-				}
-				else if((i > 1 || i < (tiles2.length - 2)) && j == (tiles2.length - 1)){
+				} else if((i > 1 || i < (tiles2.length - 2)) && j == (tiles2.length - 1)){
 					tiles2[i][j] = '\u2503';
-				}
-				else if((j > 0 || j < tiles2.length - 1) && i == 0){
+				} else if((j > 0 || j < tiles2.length - 1) && i == 0){
 					tiles2[i][j] = '\u2501';
-				}
-				else if((j > 0 || j < tiles2.length - 1) && i == (tiles2.length - 1)){
+				} else if((j > 0 || j < tiles2.length - 1) && i == (tiles2.length - 1)){
 					tiles2[i][j] = '\u2501';
-				}
-				else{
+                                } else{
 					tiles2[i][j] = '\u2B1A';
 				}
-				if(i == tiles2.length - 1 && j == tiles2.length - 1){
+				
+                                if(i == tiles2.length - 1 && j == tiles2.length - 1){
 					tiles2[i][j] = '\u251B';
 				}
 				//System.out.print(tiles2[i][j]); 
