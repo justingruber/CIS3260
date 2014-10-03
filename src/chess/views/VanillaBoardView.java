@@ -49,7 +49,25 @@ public class VanillaBoardView extends GameView {
         board = rules.getBoardInstance();
         this.placePieces(board);
         this.printBoard();
-        if (rules.tryMove(1, 2, 1, 3)) {
+        if (rules.tryMove(2, 2, 2, 3)) {
+            updatePieceLocation(2,2,2,3);
+            this.printBoard();
+            if(rules.tryMove(3, 1, 1, 3)){
+                updatePieceLocation(3,1,1,3);
+                this.printBoard();
+                if(rules.tryMove(4, 2, 4, 4)){
+                    updatePieceLocation(4,2,4,4);
+                    this.printBoard();
+                    if(rules.tryMove(4,1,4,2)){
+                        updatePieceLocation(4,1,4,3);
+                        this.printBoard();
+                    }
+                }
+            }
+            
+            this.printBoard();
+        } else {
+            System.out.println("false");
         }
 
 
@@ -107,6 +125,12 @@ public class VanillaBoardView extends GameView {
 
     private void placePieceAtXY(int x, int y, char pieceID) {
         tiles2[y][x] = pieceID;
+    }
+    private void updatePieceLocation(int currX, int currY, int newX, int newY){
+        //char tmpChar = tiles2[currY][currX];
+        tiles2[newY][newX] = tiles2[currY][currX];
+        tiles2[currY][currX] = '\u2B1A';
+        //System.out.println(tmpChar);
     }
 
     @Override
