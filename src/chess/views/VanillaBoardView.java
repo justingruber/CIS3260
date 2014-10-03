@@ -127,7 +127,6 @@ public class VanillaBoardView extends GameView {
         tiles2[y][x] = pieceID;
     }
     private void updatePieceLocation(int currX, int currY, int newX, int newY){
-        System.out.println(tiles2[currY][currX]);
         //char tmpChar = tiles2[currY][currX];
         tiles2[newY][newX] = tiles2[currY][currX];
         tiles2[currY][currX] = '\u2B1A';
