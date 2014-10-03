@@ -7,7 +7,6 @@ public class VanillaChessRules extends Rules{
     private ArrayList <ChessPiece> pieces = new ArrayList();
     private ArrayList <Board.BoardTypes> boardTypes = new ArrayList();
     private ArrayList <String> messages = new ArrayList();
-    private Board board = null;
     private RuleTypes ruleType = RuleTypes.VANILLA_CHESS_RULES;
     private Board.BoardTypes selectedBoardType;
     private String message = ""; 
@@ -105,10 +104,6 @@ public class VanillaChessRules extends Rules{
     
     public String getDescription(){
         return "These set of rules are for the standard chess game. The exact description of the rules can be found on wikipedia ";
-    }
-    
-    public Board getBoardInstance(){
-        return this.board;
     }
     
     public ArrayList<String> getMessages(){
