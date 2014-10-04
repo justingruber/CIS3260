@@ -138,6 +138,7 @@ public class VanillaChessRules extends Rules{
             setMessage("Game Over: STALEMATE");
             return true;
         }
+        System.out.println("adsada");
         return false;
     }
     
