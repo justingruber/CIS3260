@@ -64,7 +64,7 @@ public class VanillaChessController extends GameController {
                         } else {
 
                         }
-
+                        
                         for (String message:game.getMessages ()) {
                             System.out.println (message);
                         }

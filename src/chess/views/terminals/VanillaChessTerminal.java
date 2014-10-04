@@ -21,11 +21,6 @@ public class VanillaChessTerminal extends ChessTerminal {
         printBoard ();
     }
     
-    @Override
-    public void showMessage (Message message) {
-        System.out.println (message.getType () + ": " + message.getText ());
-    }
-    
     private void init() {
 
         this.setupBoard();
