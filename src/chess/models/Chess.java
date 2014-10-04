@@ -101,7 +101,7 @@ public class Chess {
         }
         
         
-        while(streamInput.hasNextLine()){
+        /*while(streamInput.hasNextLine()){
             
             System.out.println("/////////////////////////////////////////");
             fileInput = streamInput.nextLine();
@@ -116,16 +116,16 @@ public class Chess {
             ArrayList <Message> messages = rules.getMessages();
             
             for (int i = 0; i < messages.size();i++){
-                System.out.print(messages.get(i).getType() + ":" + messages.get(i).getText()+ "\n\n\n");
+                System.out.print(messages.get(i).getType() + ": " + messages.get(i).getText()+ "\n\n\n");
             }
-        }
+        }*/
         
         streamInput.close();
         
         
         
         while(true){
-            //drawBoard(board);
+            drawBoard(board);
         
             System.out.println("\nEnter curX curY newX newY(Seperate with spaces)");
             int curX = in.nextInt();
@@ -144,7 +144,7 @@ public class Chess {
             ArrayList<Message> messages = rules.getMessages();
             
             for (int i = 0; i < messages.size();i++){
-                System.out.print(messages.get(i).getType() + messages.get(i).getText());
+                System.out.print(messages.get(i).getType() + ": " + messages.get(i).getText());
             }
             
             

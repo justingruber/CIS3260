@@ -69,7 +69,7 @@ public class VanillaChessRules extends Rules{
     @Override
     //When to check if new == current
     //Need to implement a currX and curY check?
-    public Boolean tryMove(ChessPiece.Colours color,int curX, int curY, int newX, int newY){
+    public Boolean tryMove(ChessPiece.Colours colour,int curX, int curY, int newX, int newY){
         Boolean boolReturns = null;
         ChessPiece.Colours friendlyColour;
         ChessPiece.Colours enemyColour;
@@ -85,7 +85,7 @@ public class VanillaChessRules extends Rules{
            return false;
         }
         
-        boolReturns = validateCoordinates(curX,curY,newX,newY);
+        boolReturns = validateInput(colour,curX,curY,newX,newY);
         
         if(boolReturns == false){
             return false;
@@ -95,11 +95,6 @@ public class VanillaChessRules extends Rules{
         
         boolReturns = tryMoveCheck(curX,curY,newX, newY,this.board);
         piece = this.board.getPieceAtPosition(curX, curY);
-        
-        if (piece.getChessPieceColour () != color) {
-            addToMessages (Message.Type.ERROR,"Wrong color");
-            return false;
-        }
         
         friendlyColour = piece.getChessPieceColour();
         
@@ -438,7 +433,7 @@ public class VanillaChessRules extends Rules{
     //Move the friendly check to the take function? -- Do we really need it?
     //Move the cur==new coordniates to a new function? -- Do we really need it? 
     //Make messages meaningful
-    private Boolean validateCoordinates(int curX, int curY, int newX, int newY){
+    private Boolean validateInput(ChessPiece.Colours colour, int curX, int curY, int newX, int newY){
         Boolean boolReturns;
         
         //Make sure that the move
@@ -451,6 +446,11 @@ public class VanillaChessRules extends Rules{
         ChessPiece checkCurLocationPiece = this.board.getPieceAtPosition(curX, curY);
         if(checkCurLocationPiece == null){
             addToMessages(Message.Type.ERROR,"There is no piece at current x and y coordinates");
+            return false;
+        }
+        
+        if (checkCurLocationPiece.getChessPieceColour () != colour) {
+            addToMessages (Message.Type.ERROR,"Wrong colour");
             return false;
         }
         
