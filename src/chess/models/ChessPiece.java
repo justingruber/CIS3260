@@ -34,6 +34,14 @@ public class ChessPiece {
         this.setY(y);     
     }
     
+    public ChessPiece (ChessPiece piece) {
+        this.pieceName = piece.getChessPieceName();
+        this.pieceColour = piece.getChessPieceColour();
+        this.X = piece.getX();
+        this.Y = piece.getY();
+        this.state = piece.getState();
+    }
+    
     public ChessPieces getChessPieceName(){
         return this.pieceName;
     }

@@ -1,5 +1,7 @@
 package chess.models;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -79,8 +81,44 @@ public class Chess {
         Boolean boolReturn;
         String exit = new String("");
         
-        while(true){
+        
+        Scanner streamInput = null;
+        String fileInput;
+        String[] splitFileInput;
+        String delimeters = "[ ]+";
+        Integer curX1 = 0;
+        Integer curY1 = 0;
+        Integer newX1 = 0;
+        Integer newY1 = 0;
+        
+        try{
+            streamInput = new Scanner(new FileInputStream("check.txt"));
+        }catch(FileNotFoundException e){
+            System.out.println("ERORR: FILE NOT FOUND!\n");
+            System.exit(0);
+        }
+        
+        
+         while(streamInput.hasNextLine()){
+            
+            System.out.println("/////////////////////////////////////////");
+            fileInput = streamInput.nextLine();
+            splitFileInput = fileInput.split(delimeters);
+            curX1 = new Integer(splitFileInput[0]);
+            curY1 = new Integer(splitFileInput[1]);
+            newX1 = new Integer(splitFileInput[2]);
+            newY1 = new Integer(splitFileInput[3]);
+            rules.tryMove(curX1, curY1, newX1, newY1);
             drawBoard(board);
+            System.out.println(rules.getMessages() + "\n\n\n");
+        }
+        
+        streamInput.close();
+        
+        
+        
+        while(true){
+            //drawBoard(board);
         
             System.out.println("\nEnter curX curY newX newY(Seperate with spaces)");
             int curX = in.nextInt();
@@ -105,5 +143,6 @@ public class Chess {
                 System.exit(0);
             }
         }
+        
     }
 }
