@@ -124,7 +124,7 @@ public class VanillaChessTerminal extends ChessTerminal {
 
     @Override
     public void printBoard() {
-        String abc = "\n  ABCDEFGH";
+        String abc = "  ABCDEFGH";
         
         for (int i = 0; i < abc.length (); i++) {
             System.out.print (abc.charAt (i));
@@ -145,7 +145,19 @@ public class VanillaChessTerminal extends ChessTerminal {
                 
                 System.out.print(tiles2[i][j]);
             }
+            
+            if (i > 0 && i < 9) {
+                System.out.print(i);
+            }
+            else{
+                System.out.print(" ");
+            }
+            
             System.out.println();
+        }
+        
+        for (int i = 0; i < abc.length (); i++) {
+            System.out.print (abc.charAt (i));
         }
     }
 
