@@ -26,7 +26,7 @@ public class VanillaChessGame extends Game {
     
     public boolean tryMove (int curX, int curY, int newX, int newY) {
         if (this.rules.tryMove (this.currentMover.getColour (), curX, curY, newX, newY)) {
-            
+            //ajwdiajwiodjiwj
             //this.currentMover = (this.currentMover == ChessPiece.Colours.WHITE) ? ChessPiece.Colours.BLACK : ChessPiece.Colours.WHITE;
             return true;
         } else {
@@ -38,9 +38,11 @@ public class VanillaChessGame extends Game {
     public void addUser (User user) {
         if (playerWhite == null) {
             playerWhite = user;
+            playerWhite.setColour (ChessPiece.Colours.WHITE);
             this.currentMover = user;
         } else if (playerBlack == null) {
             playerBlack = user;
+            playerBlack.setColour (ChessPiece.Colours.BLACK);
         } else {
             //spectators
         }

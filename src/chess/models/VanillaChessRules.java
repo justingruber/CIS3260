@@ -406,7 +406,7 @@ public class VanillaChessRules extends Rules{
         ChessPiece.Colours enemyColour;
         ChessPiece piece = null;
         Boolean isCheckMate = null;
-        System.out.println (color);
+        
         this.messages = new ArrayList();
         
         boolReturns = validateCoordinates(curX,curY,newX,newY);
@@ -419,6 +419,11 @@ public class VanillaChessRules extends Rules{
         
         boolReturns = tryMoveCheck(curX,curY,newX, newY,this.board);
         piece = this.board.getPieceAtPosition(curX, curY);
+        
+        if (piece.getChessPieceColour () != color) {
+            setMessage ("Wrong color");
+            return false;
+        }
         
         friendlyColour = piece.getChessPieceColour();
         
