@@ -38,16 +38,16 @@ public class VanillaChessTerminal extends ChessTerminal {
         board = rules.getBoardInstance();
         this.placePieces(board);
         this.printBoard();
-        if (rules.tryMove(2, 2, 2, 3)) {
+        if (rules.tryMove(ChessPiece.Colours.BLACK, 2, 2, 2, 3)) {
             updatePieceLocation(2,2,2,3);
             this.printBoard();
-            if(rules.tryMove(3, 1, 1, 3)){
+            if(rules.tryMove(ChessPiece.Colours.BLACK, 3, 1, 1, 3)){
                 updatePieceLocation(3,1,1,3);
                 this.printBoard();
-                if(rules.tryMove(4, 2, 4, 4)){
+                if(rules.tryMove(ChessPiece.Colours.BLACK, 4, 2, 4, 4)){
                     updatePieceLocation(4,2,4,4);
                     this.printBoard();
-                    if(rules.tryMove(4,1,4,2)){
+                    if(rules.tryMove(ChessPiece.Colours.BLACK, 4,1,4,2)){
                         updatePieceLocation(4,1,4,3);
                         this.printBoard();
                     }
@@ -124,7 +124,7 @@ public class VanillaChessTerminal extends ChessTerminal {
 
     @Override
     public void printBoard() {
-        String abc = "ABCDEFGH";
+        String abc = "  ABCDEFGH";
         
         for (int i = 0; i < abc.length (); i++) {
             System.out.print (abc.charAt (i));
@@ -133,11 +133,31 @@ public class VanillaChessTerminal extends ChessTerminal {
         System.out.println ();
         
         for (int i = 0; i < tiles2.length; i++) {
-
+            
+            if (i > 0 && i < 9) {
+                System.out.print(i);
+            }
+            else{
+                System.out.print(" ");
+            }
+            
             for (int j = 0; j < tiles2.length; j++) {
+                
                 System.out.print(tiles2[i][j]);
             }
+            
+            if (i > 0 && i < 9) {
+                System.out.print(i);
+            }
+            else{
+                System.out.print(" ");
+            }
+            
             System.out.println();
+        }
+        
+        for (int i = 0; i < abc.length (); i++) {
+            System.out.print (abc.charAt (i));
         }
     }
 
@@ -159,13 +179,17 @@ public class VanillaChessTerminal extends ChessTerminal {
                 } else if (i == (tiles2.length - 1) && j == 0) {
                     tiles2[i][j] = VanillaChessTerminal.BOTTOM_LEFT;
                 } else if ((i > 1 || i < (tiles2.length - 2)) && j == 0) {
+                    //Left Col
                     tiles2[i][j] = VanillaChessTerminal.VERTICAL;
                 } else if ((i > 1 || i < (tiles2.length - 2)) && j == (tiles2.length - 1)) {
+                    //Right Col
                     tiles2[i][j] = VanillaChessTerminal.VERTICAL;
                 } else if ((j > 0 || j < tiles2.length - 1) && i == 0) {
+                    //Top row
                     tiles2[i][j] = VanillaChessTerminal.HORIZONTAL;
                 } else if ((j > 0 || j < tiles2.length - 1) && i == (tiles2.length - 1)) {
-                    tiles2[i][j] = VanillaChessTerminal.HORIZONTAL;
+                    //Bottom Row
+                    tiles2[i][j] = VanillaChessTerminal.BOTTOMLINE;
                 } else {
                     tiles2[i][j] = VanillaChessTerminal.BLANK;
                 }
@@ -180,25 +204,26 @@ public class VanillaChessTerminal extends ChessTerminal {
     }
     
     //http://unicode-table.com/en/#supplemental-mathematical-operators
-    private static final char BLACK_KING = '\u265A';
-    private static final char BLACK_QUEEN = '\u265B';
-    private static final char BLACK_ROOK = '\u265C';
-    private static final char BLACK_BISHOP = '\u265D';
-    private static final char BLACK_KNIGHT = '\u265E';
-    private static final char BLACK_PAWN = '\u265F';
+    private static final char BLACK_KING = 'k';
+    private static final char BLACK_QUEEN = 'q';
+    private static final char BLACK_ROOK = 'r';
+    private static final char BLACK_BISHOP = 'b';
+    private static final char BLACK_KNIGHT = 'n';
+    private static final char BLACK_PAWN = 'p';
     
-    private static final char WHITE_KING = '\u2654';
-    private static final char WHITE_QUEEN = '\u2655';
-    private static final char WHITE_ROOK = '\u2656';
-    private static final char WHITE_BISHOP = '\u2657';
-    private static final char WHITE_KNIGHT = '\u2658';
-    private static final char WHITE_PAWN = '\u2659';
+    private static final char WHITE_KING = 'K';
+    private static final char WHITE_QUEEN = 'Q';
+    private static final char WHITE_ROOK = 'R';
+    private static final char WHITE_BISHOP = 'B';
+    private static final char WHITE_KNIGHT = 'N';
+    private static final char WHITE_PAWN = 'P';
     
-    private static final char TOP_LEFT = '\u250F';
-    private static final char TOP_RIGHT = '\u2513';
-    private static final char BOTTOM_LEFT = '\u2517';
-    private static final char BOTTOM_RIGHT = '\u251B';
-    private static final char HORIZONTAL = '\u2501';
-    private static final char VERTICAL = '\u2503';
-    private static final char BLANK = '\u2B1A';
+    private static final char TOP_LEFT = ' ';
+    private static final char TOP_RIGHT = ' ';
+    private static final char BOTTOM_LEFT = ' ';
+    private static final char BOTTOM_RIGHT = ' ';
+    private static final char HORIZONTAL = '-';
+    private static final char VERTICAL = '|';
+    private static final char BLANK = '.';
+    private static final char BOTTOMLINE = '-';
 }

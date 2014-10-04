@@ -17,7 +17,7 @@ public abstract class Rules {
     
     abstract public Boolean createBoard(Board.BoardTypes boardType);
     
-    abstract public Boolean tryMove(int curX, int curY, int newX, int newY);
+    abstract public Boolean tryMove(ChessPiece.Colours color, int curX, int curY, int newX, int newY);
     
     abstract public ArrayList<Message> getMessages();
     

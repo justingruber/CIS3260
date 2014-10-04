@@ -10,15 +10,17 @@ import chess.models.Board;
 import chess.models.ChessPiece;
 import chess.models.Rules;
 import chess.models.User;
+
 import chess.models.VanillaChessRules;
 import chess.models.messages.Message;
+
 import java.util.ArrayList;
 /**
  *
  * @author Benjin
  */
 public abstract class Game {
-    ChessPiece.Colours currentMover;
+    User currentMover;
     Rules rules;
     Board board;
     
@@ -30,5 +32,9 @@ public abstract class Game {
     
     public ArrayList <Message> getMessages () {
         return rules.getMessages ();
+    }
+    
+    public User getCurrentMover () {
+        return currentMover;
     }
 }

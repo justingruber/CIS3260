@@ -110,7 +110,7 @@ public class Chess {
             curY1 = new Integer(splitFileInput[1]);
             newX1 = new Integer(splitFileInput[2]);
             newY1 = new Integer(splitFileInput[3]);
-            rules.tryMove(curX1, curY1, newX1, newY1);
+            rules.tryMove(ChessPiece.Colours.BLACK,curX1, curY1, newX1, newY1);
             drawBoard(board);
             
             ArrayList <Message> messages = rules.getMessages();
@@ -135,7 +135,7 @@ public class Chess {
             exit = in.nextLine();
             //System.out.println("\nMoving piece from: (" + curX + "," + curY + ")" + " to: (" + newX + "," + newY + ")" );
     
-            boolReturn = rules.tryMove(curX,curY,newX,newY);
+            boolReturn = rules.tryMove(ChessPiece.Colours.BLACK, curX,curY,newX,newY);
             
             if(boolReturn == true){
                 drawBoard(board);

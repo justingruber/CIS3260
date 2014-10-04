@@ -69,7 +69,7 @@ public class VanillaChessRules extends Rules{
     @Override
     //When to check if new == current
     //Need to implement a currX and curY check?
-    public Boolean tryMove(int curX, int curY, int newX, int newY){
+    public Boolean tryMove(ChessPiece.Colours color,int curX, int curY, int newX, int newY){
         Boolean boolReturns = null;
         ChessPiece.Colours friendlyColour;
         ChessPiece.Colours enemyColour;
@@ -95,6 +95,11 @@ public class VanillaChessRules extends Rules{
         
         boolReturns = tryMoveCheck(curX,curY,newX, newY,this.board);
         piece = this.board.getPieceAtPosition(curX, curY);
+        
+        if (piece.getChessPieceColour () != color) {
+            addToMessages (Message.Type.ERROR,"Wrong color");
+            return false;
+        }
         
         friendlyColour = piece.getChessPieceColour();
         
