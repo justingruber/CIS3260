@@ -14,7 +14,7 @@ import chess.views.terminals.VanillaChessTerminal;
 import java.util.regex.Matcher;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-
+import chess.models.messages.Message;
 /**
  *
  * @author Benjin
@@ -60,8 +60,8 @@ public class VanillaChessController extends GameController {
 
                         }
 
-                        for (String message:game.getMessages ()) {
-                            System.out.println (message);
+                        for (Message message:game.getMessages ()) {
+                            System.out.println (message.getType() + ": " + message.getText());
                         }
                     } else {
                         //error
