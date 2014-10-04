@@ -159,13 +159,17 @@ public class VanillaChessTerminal extends ChessTerminal {
                 } else if (i == (tiles2.length - 1) && j == 0) {
                     tiles2[i][j] = VanillaChessTerminal.BOTTOM_LEFT;
                 } else if ((i > 1 || i < (tiles2.length - 2)) && j == 0) {
+                    //Left Col
                     tiles2[i][j] = VanillaChessTerminal.VERTICAL;
                 } else if ((i > 1 || i < (tiles2.length - 2)) && j == (tiles2.length - 1)) {
+                    //Right Col
                     tiles2[i][j] = VanillaChessTerminal.VERTICAL;
                 } else if ((j > 0 || j < tiles2.length - 1) && i == 0) {
+                    //Top row
                     tiles2[i][j] = VanillaChessTerminal.HORIZONTAL;
                 } else if ((j > 0 || j < tiles2.length - 1) && i == (tiles2.length - 1)) {
-                    tiles2[i][j] = VanillaChessTerminal.HORIZONTAL;
+                    //Bottom Row
+                    tiles2[i][j] = VanillaChessTerminal.BOTTOMLINE;
                 } else {
                     tiles2[i][j] = VanillaChessTerminal.BLANK;
                 }
@@ -194,11 +198,12 @@ public class VanillaChessTerminal extends ChessTerminal {
     private static final char WHITE_KNIGHT = 'N';
     private static final char WHITE_PAWN = 'P';
     
-    private static final char TOP_LEFT = '\u250F';
-    private static final char TOP_RIGHT = '\u2513';
-    private static final char BOTTOM_LEFT = '\u2517';
-    private static final char BOTTOM_RIGHT = '\u251B';
-    private static final char HORIZONTAL = '\u2501';
-    private static final char VERTICAL = '\u2503';
+    private static final char TOP_LEFT = ' ';
+    private static final char TOP_RIGHT = ' ';
+    private static final char BOTTOM_LEFT = ' ';
+    private static final char BOTTOM_RIGHT = ' ';
+    private static final char HORIZONTAL = '_';
+    private static final char VERTICAL = '|';
     private static final char BLANK = '.';
+    private static final char BOTTOMLINE = '\u203E';
 }
