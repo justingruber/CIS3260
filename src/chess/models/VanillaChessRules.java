@@ -135,10 +135,9 @@ public class VanillaChessRules extends Rules{
     
     private Boolean isStaleMate(){
         if(this.isStaleMAte == true){
-            setMessage("Game Over: STALEMATE");
             return true;
         }
-        System.out.println("adsada");
+        
         return false;
     }
     
@@ -155,6 +154,13 @@ public class VanillaChessRules extends Rules{
         Boolean boolReturn = null;
         tempBoard.setPieces(copyPiecesList(board.getPieces()));
         ArrayList <String> tempMessages = new ArrayList(this.messages);
+        Boolean isCheck = null;
+        
+        isCheck = isCheck(colour,board);
+        
+        if(isCheck == false){
+            return false;
+        }
         
         for(ChessPiece piece: board.getPieces()){
             curX = piece.getX();
@@ -197,30 +203,59 @@ public class VanillaChessRules extends Rules{
     }
     
     private Boolean checkForStaleMate(ChessPiece.Colours colour, Board board){
-        ArrayList <ArrayList> possibleMoves = null;
-        ArrayList <Integer[]> temp;
-        possibleMoves = new ArrayList(getAllPossibleMoves(colour, board));
-        int staleMateFlag = 1; //0 == no stalemate 1 == stalemate
+        ArrayList <ArrayList> possibleMoves = new ArrayList(); 
+        ArrayList <Integer[]> tempArray = new ArrayList();
+        int curX = 0;
+        int curY = 0;
+        Board tempBoard = new VanillaChessBoard();
+        Boolean boolReturn = null;
+        tempBoard.setPieces(copyPiecesList(board.getPieces()));
+        ArrayList <String> tempMessages = new ArrayList(this.messages);
+        Boolean isCheck = null;
         
-        /*for(int i = 0; i < possibleMoves.size();i++){
-            for(int j = 0; j < possibleMoves.get(i).size();j++){
-                temp = new ArrayList(possibleMoves.get(i));
-                System.out.println("(" + temp.get(j)[0] + "," + temp.get(j)[0] + ")");
-            }
-        }*/
+        isCheck = isCheck(colour,board);
         
-        for(int i = 0; i < possibleMoves.size();i++){
-            if(possibleMoves.get(i).isEmpty() != true){
-                staleMateFlag = 0;
-                //System.out.println("No staleMate");
-            }
-        }
-        //System.out.println(staleMateFlag);
-        
-        if(staleMateFlag == 1){
-            this.isStaleMAte = true;
+        if(isCheck == true){
+            return false;
         }
         
+        for(ChessPiece piece: board.getPieces()){
+            curX = piece.getX();
+            curY = piece.getY();
+            if(piece.getChessPieceColour() == colour && piece.getState() == 0){
+                //System.out.println("Position = (" + piece.getX() + "," + piece.getY() + ")");
+                //System.out.println("Name = " + piece.getChessPieceName() + " colour = " + piece.getChessPieceColour() + " state = " + piece.getState());
+                if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
+                    tempArray = new ArrayList(pawnPossibleMoves(piece.getChessPieceColour().toString(),curX,curY,board));                    
+                }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.ROOK){
+                    tempArray = new ArrayList(rookPossibleMoves(curX,curY,board));
+                }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.BISHOP){
+                    tempArray = new ArrayList(bishopPossibleMoves(curX,curY,board));   
+                }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.KING){
+                    tempArray = new ArrayList(kingPossibleMoves(curX,curY,board));
+                }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.QUEEN){
+                    tempArray = new ArrayList(queenPossibleMoves(curX,curY,board));  
+                }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.KNIGHT){
+                    tempArray = new ArrayList(knightPossibleMoves(curX,curY,board));
+                }else{
+                    System.out.println("ERROR: The coordinates passed to tryMoveCheck did not contain a vanilla chess piece");
+                    System.exit(1);
+                }
+           }
+            if(tempArray.size() != 0 && tempArray != null && piece.getState() == 0){
+                for(int i = 0; i < tempArray.size(); i++){
+                    //System.out.println("(" + tempArray.get(i)[0] + "," + tempArray.get(i)[1] + ")");
+                    boolReturn = take(piece.getX(),piece.getY(),tempArray.get(i)[0],tempArray.get(i)[1],tempBoard);
+                    if(boolReturn == true){
+                        this.messages = new ArrayList(tempMessages);
+                        return false;
+                    }
+                }
+            }
+       }
+        this.messages = new ArrayList();
+        setMessages("GAME OVER: Stalemate");
+        this.isStaleMAte = true;
         return true;
     }
     
@@ -243,7 +278,7 @@ public class VanillaChessRules extends Rules{
         for(int i = 0; i < possibleMoves.size();i++){
             for(int j = 0; j < possibleMoves.get(i).size();j++){
                 tempArray = new ArrayList(possibleMoves.get(i));
-                //System.out.println("(" + tempArray.get(j)[0] + "," + tempArray.get(j)[1] + ")");
+                //System.out.println("****(" + tempArray.get(j)[0] + "," + tempArray.get(j)[1] + ")");
                 if(king.getX() == tempArray.get(j)[0] && king.getY() == tempArray.get(j)[1]){
                     this.isCheck = true;
                     //System.out.println("1 (" + tempArray.get(j)[0] + "," + tempArray.get(j)[1] + ")");
@@ -310,7 +345,7 @@ public class VanillaChessRules extends Rules{
     }
     
     public Boolean isGameOver(){
-        if(isCheckMate() == true){
+        if(isCheckMate() == true || isStaleMate() == true){
             return true;
         } 
         return false;
@@ -370,7 +405,7 @@ public class VanillaChessRules extends Rules{
         ChessPiece.Colours friendlyColour;
         ChessPiece.Colours enemyColour;
         ChessPiece piece = null;
-        Boolean isCheckMae = null;
+        Boolean isCheckMate = null;
         
         this.messages = new ArrayList();
         
@@ -398,6 +433,8 @@ public class VanillaChessRules extends Rules{
             //checkForCheck(friendlyColour,this.board);
             take(curX,curY,newX,newY,this.board);
             checkForCheckMate(enemyColour,this.board);
+            checkForStaleMate(enemyColour,this.board);
+            //checkForStaleMate(friendlyColour,this.board);
             //isGameOver();
             return true;
         }else{
@@ -458,16 +495,15 @@ public class VanillaChessRules extends Rules{
             
             pieceFromCopy.setX(newX);
             pieceFromCopy.setY(newY);
-            //Should this be on the copy?
             
-            //Are you still in check after the move?
-            
+            //Are you still in check after the move?  
             isCheck = isCheck(friendlyColour,tempBoard);
             if(isCheck == true){
-                setMessage("Error: The move will leave you in check");
+                setMessage("Error: You are in check");
                 return false;
             }else{
                 board.setPieces(copyOfPieces);
+                
                 //Check if you put enemy into check
                 isCheck = isCheck(enemyColour,board);
                 
@@ -478,7 +514,7 @@ public class VanillaChessRules extends Rules{
                 return true;
             }
         }else{
-            boolReturn = null;
+            /*boolReturn = null;
             boolReturn = board.isPosistionOcuppied(newX, newY);
         
             if(boolReturn == true){
@@ -496,8 +532,41 @@ public class VanillaChessRules extends Rules{
                 setMessage(enemyColour.toString() + " king is in Check");
             }
             setMessage("Succes: Move was successful");
-            //isCheckMate = checkForCheckMate(enemyColour,board);
-            return true;
+            return true;*/
+            
+            copyOfPieces = copyPiecesList (board.getPieces());
+            tempBoard.setPieces(copyOfPieces);
+            boolReturn = null;
+            boolReturn = tempBoard.isPosistionOcuppied(newX, newY);
+            
+            if(boolReturn == true){
+                ChessPiece takePiece = tempBoard.getPieceAtPosition(newX, newY);
+                takePiece.setState(1);
+                takePiece.setX(0);
+                takePiece.setY(0);
+            }
+            
+            pieceFromCopy = tempBoard.getPieceAtPosition(curX, curY);
+            
+            pieceFromCopy.setX(newX);
+            pieceFromCopy.setY(newY);
+            
+            isCheck = isCheck(friendlyColour,tempBoard);
+            if(isCheck == true){
+                setMessage("Error: The move will put you in check");
+                return false;
+            }else{
+                board.setPieces(copyOfPieces);
+                
+                //Check if you put enemy into check
+                isCheck = isCheck(enemyColour,board);
+                
+                if(isCheck == true){
+                    setMessage(enemyColour.toString() + " king is in Check");
+                }
+                setMessage("Succes: Move was successful");
+                return true;
+            }
         }
     }
     

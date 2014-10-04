@@ -91,15 +91,15 @@ public class Chess {
         Integer newX1 = 0;
         Integer newY1 = 0;
         
-        try{
-            streamInput = new Scanner(new FileInputStream("check.txt"));
+        /*try{
+            streamInput = new Scanner(new FileInputStream("stalemateTest.txt"));
         }catch(FileNotFoundException e){
             System.out.println("ERORR: FILE NOT FOUND!\n");
             System.exit(0);
         }
         
         
-         while(streamInput.hasNextLine()){
+        /*while(streamInput.hasNextLine()){
             
             System.out.println("/////////////////////////////////////////");
             fileInput = streamInput.nextLine();
@@ -113,12 +113,12 @@ public class Chess {
             System.out.println(rules.getMessages() + "\n\n\n");
         }
         
-        streamInput.close();
+        streamInput.close();*/
         
         
         
         while(true){
-            //drawBoard(board);
+            drawBoard(board);
         
             System.out.println("\nEnter curX curY newX newY(Seperate with spaces)");
             int curX = in.nextInt();
