@@ -21,7 +21,7 @@ import java.util.Scanner;
  */
 public class MainMenuController extends Observable implements Observer {
     public void start () {
-        UserManager.setCurrentUser ("Naruto");
+        //UserManager.setCurrentUser ("Naruto");
         
         if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
             MainMenuTerminal terminalView = new MainMenuTerminal ();

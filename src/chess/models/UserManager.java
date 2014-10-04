@@ -14,8 +14,7 @@ public class UserManager {
     private static User currentUser;
     
     public static void setCurrentUser (String username) {
-        currentUser = new User ();
-        currentUser.userName = username;
+        currentUser = new User (username);
     }
     
     public static User getCurrentUser () {
