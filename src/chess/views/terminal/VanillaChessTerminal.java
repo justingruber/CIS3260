@@ -1,4 +1,4 @@
-package chess.views;
+package chess.views.terminal;
 
 import chess.models.*;
 import chess.models.ChessPiece;
@@ -27,24 +27,31 @@ From here:
 http://unicode-table.com/en/#supplemental-mathematical-operators
 
  */
-public class VanillaBoardView extends GameView {
+public class VanillaChessTerminal extends ChessTerminal {
 
     private char[][] tiles2 = new char[10][10];
     private Board board = null;
 
     public static void main(String[] args) {
-        VanillaBoardView newBoard = new VanillaBoardView();
+        VanillaChessTerminal newBoard = new VanillaChessTerminal();
         newBoard.init();
 
     }
-
+    
+    @Override
+    public void update () {
+        setupBoard ();
+        placePieces (this.getBoard ());
+        printBoard ();
+    }
+    
     private void init() {
 
         this.setupBoard();
         VanillaChessRules rules = new VanillaChessRules();
 
 
-
+        
         rules.createBoard(Board.BoardTypes.VANILLA_CHESS_BOARD);
         board = rules.getBoardInstance();
         this.placePieces(board);
