@@ -400,13 +400,13 @@ public class VanillaChessRules extends Rules{
     //When to check if new == current
     //Need to check for check and stalemate
     //Need to implement a currX and curY check?
-    public Boolean tryMove(int curX, int curY, int newX, int newY){
+    public Boolean tryMove(ChessPiece.Colours color, int curX, int curY, int newX, int newY){
         Boolean boolReturns = null;
         ChessPiece.Colours friendlyColour;
         ChessPiece.Colours enemyColour;
         ChessPiece piece = null;
         Boolean isCheckMate = null;
-        
+        System.out.println (color);
         this.messages = new ArrayList();
         
         boolReturns = validateCoordinates(curX,curY,newX,newY);

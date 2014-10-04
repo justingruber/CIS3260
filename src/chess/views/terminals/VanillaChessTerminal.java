@@ -38,16 +38,16 @@ public class VanillaChessTerminal extends ChessTerminal {
         board = rules.getBoardInstance();
         this.placePieces(board);
         this.printBoard();
-        if (rules.tryMove(2, 2, 2, 3)) {
+        if (rules.tryMove(ChessPiece.Colours.BLACK, 2, 2, 2, 3)) {
             updatePieceLocation(2,2,2,3);
             this.printBoard();
-            if(rules.tryMove(3, 1, 1, 3)){
+            if(rules.tryMove(ChessPiece.Colours.BLACK, 3, 1, 1, 3)){
                 updatePieceLocation(3,1,1,3);
                 this.printBoard();
-                if(rules.tryMove(4, 2, 4, 4)){
+                if(rules.tryMove(ChessPiece.Colours.BLACK, 4, 2, 4, 4)){
                     updatePieceLocation(4,2,4,4);
                     this.printBoard();
-                    if(rules.tryMove(4,1,4,2)){
+                    if(rules.tryMove(ChessPiece.Colours.BLACK, 4,1,4,2)){
                         updatePieceLocation(4,1,4,3);
                         this.printBoard();
                     }

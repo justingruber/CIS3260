@@ -128,7 +128,7 @@ public class Chess {
             exit = in.nextLine();
             //System.out.println("\nMoving piece from: (" + curX + "," + curY + ")" + " to: (" + newX + "," + newY + ")" );
     
-            boolReturn = rules.tryMove(curX,curY,newX,newY);
+            boolReturn = rules.tryMove(ChessPiece.Colours.BLACK, curX,curY,newX,newY);
             
             if(boolReturn == true){
                 drawBoard(board);

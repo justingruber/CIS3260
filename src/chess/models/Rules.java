@@ -26,6 +26,6 @@ public abstract class Rules {
         return board;
     }
     
-    abstract public Boolean tryMove(int curX, int curY, int newX, int newY);
+    abstract public Boolean tryMove(ChessPiece.Colours color, int curX, int curY, int newX, int newY);
     abstract public ArrayList<String> getMessages();
 }
