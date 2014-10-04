@@ -45,17 +45,22 @@ public class VanillaChessController extends GameController {
                     this.notifyObservers (GameController.QUIT);
                     break;
                 } else {
-                    Pattern pattern = Pattern.compile ("^\\s*\\d+ \\d+ \\d+ \\d+\\s*$");
+                    Pattern pattern = Pattern.compile ("^\\s*[a-h][1-8] [a-h][1-8]\\s*$");
                     Matcher matcher = pattern.matcher (input);
 
                     if (matcher.find ()) {
                         input = matcher.group ();
-                        String [] coords = input.split (" ");
-
-                        boolean success = game.tryMove (Integer.parseInt (coords [0]), Integer.parseInt (coords [1]), Integer.parseInt (coords [2]), Integer.parseInt (coords [3]));
+                        String [] temp = input.split (" ");
+                        String abc = "abcdefh";
+                        int curX = abc.indexOf (temp [0].charAt (0)) + 1;
+                        int curY = Integer.parseInt ("" + temp [0].charAt (1));
+                        int newX = abc.indexOf (temp [1].charAt (0)) + 1;
+                        int newY = Integer.parseInt ("" + temp [1].charAt (1));
+                        
+                        boolean success = game.tryMove (curX, curY, newX, newY);
 
                         if (success) {
-                            terminalView.update ();
+                            
                         } else {
 
                         }
@@ -65,6 +70,7 @@ public class VanillaChessController extends GameController {
                         }
                     } else {
                         //error
+                        System.out.println ("AWDAWD");
                     }
                 }
             }

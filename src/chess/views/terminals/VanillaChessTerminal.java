@@ -12,7 +12,6 @@ public class VanillaChessTerminal extends ChessTerminal {
     public static void main(String[] args) {
         VanillaChessTerminal newBoard = new VanillaChessTerminal();
         newBoard.init();
-
     }
     
     @Override
@@ -70,7 +69,6 @@ public class VanillaChessTerminal extends ChessTerminal {
             for (int j = 1; j <= 8; j++) {
                 ChessPiece piece = board.getPieceAtPosition(j, i);
 
-
                 if (piece == null) {
                 } else {
                     if (piece.getState() != 1) {
@@ -116,10 +114,8 @@ public class VanillaChessTerminal extends ChessTerminal {
         tiles2[y][x] = pieceID;
     }
     private void updatePieceLocation(int currX, int currY, int newX, int newY){
-        //char tmpChar = tiles2[currY][currX];
         tiles2[newY][newX] = tiles2[currY][currX];
         tiles2[currY][currX] = VanillaChessTerminal.BLANK;
-        //System.out.println(tmpChar);
     }
 
     @Override
@@ -159,19 +155,16 @@ public class VanillaChessTerminal extends ChessTerminal {
         for (int i = 0; i < abc.length (); i++) {
             System.out.print (abc.charAt (i));
         }
+        
+        System.out.println ();
     }
 
     private void setupBoard() {
-
         //Dynamic method of displaying the board
-
         int i = 0, j = 0;
-
 
         for (i = 0; i < tiles2.length; i++) {
             for (j = 0; j < tiles2.length; j++) {
-
-
                 if (i == 0 && j == 0) {
                     tiles2[i][j] = VanillaChessTerminal.TOP_LEFT;
                 } else if (i == 0 && j == (tiles2.length - 1)) {
@@ -197,9 +190,7 @@ public class VanillaChessTerminal extends ChessTerminal {
                 if (i == tiles2.length - 1 && j == tiles2.length - 1) {
                     tiles2[i][j] = VanillaChessTerminal.BOTTOM_RIGHT;
                 }
-                //System.out.print(tiles2[i][j]); 
             }
-            //System.out.println();
         }
     }
     
