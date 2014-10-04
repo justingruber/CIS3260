@@ -8,11 +8,9 @@ package chess.controllers;
 
 import chess.Application;
 import chess.DisplayMode;
-import chess.models.Rules;
-import chess.models.Game;
 import chess.models.UserManager;
-import chess.views.MainMenuView;
-import chess.views.terminal.MainMenuTerminal;
+import chess.views.terminals.MainMenuTerminal;
+import chess.models.messages.Message;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
@@ -22,8 +20,6 @@ import java.util.Scanner;
  * @author Benjin
  */
 public class MainMenuController extends Observable implements Observer {
-    private MainMenuView view;
-    
     public void start () {
         UserManager.setCurrentUser ("Naruto");
         
@@ -31,14 +27,24 @@ public class MainMenuController extends Observable implements Observer {
             MainMenuTerminal terminalView = new MainMenuTerminal ();
             terminalView = new MainMenuTerminal ();
             terminalView.update ();
-            String input = terminalView.getInput ();
             
-            if (input == MainMenuTerminal.PLAY) {
-                this.setChanged ();
-                this.notifyObservers (MainMenuController.PLAY);
-            } else if (input == MainMenuTerminal.QUIT) {
-                this.setChanged ();
-                this.notifyObservers (MainMenuController.QUIT);
+            while (true) {
+                Scanner scan = new Scanner (System.in);
+                //String input = scan.nextLine ();
+                String input = MainMenuController.PLAY;
+                input = input.toLowerCase ().trim ();
+                
+                if (input.equals (MainMenuController.PLAY)) {
+                    this.setChanged ();
+                    this.notifyObservers (MainMenuController.PLAY);
+                    break;
+                } else if (input.equals (MainMenuController.QUIT)) {
+                    this.setChanged ();
+                    this.notifyObservers (MainMenuController.QUIT);
+                    break;
+                } else {  //invalid input
+                    terminalView.showMessage (new Message (Message.Type.ERROR, "Invalid input"));
+                }
             }
         }
     }
@@ -46,8 +52,8 @@ public class MainMenuController extends Observable implements Observer {
     @Override
     public void update (Observable object, Object args) {
         
-    
     }
-    public static final int PLAY = 1;
-    public static final int QUIT = 0;
+    
+    public static final String PLAY = "play";
+    public static final String QUIT = "quit";
 }

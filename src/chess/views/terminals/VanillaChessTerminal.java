@@ -1,32 +1,9 @@
-package chess.views.terminal;
+package chess.views.terminals;
 
 import chess.models.*;
+import chess.models.messages.Message;
 import chess.models.ChessPiece;
-//import chess.models.VanillaChessRules;
 
-/*
-Unicode Characters for chess:
-
-Black Pieces:
-- King = \u265A
-- Queen = \u265B
-- Rook = \u265C
-- Bishop = \u265D
-- Knight = \u265E
-- Pawn = \u265F
-
-White Pieces:
-- King = \u2654
-- Queen = \u2655
-- Rook = \u2656
-- Bishop = \u2657
-- Knight = \u2658
-- Pawn = \u2659
-
-From here:
-http://unicode-table.com/en/#supplemental-mathematical-operators
-
- */
 public class VanillaChessTerminal extends ChessTerminal {
 
     private char[][] tiles2 = new char[10][10];
@@ -43,6 +20,11 @@ public class VanillaChessTerminal extends ChessTerminal {
         setupBoard ();
         placePieces (this.getBoard ());
         printBoard ();
+    }
+    
+    @Override
+    public void showMessage (Message message) {
+        System.out.println (message.getType () + ": " + message.getText ());
     }
     
     private void init() {
@@ -96,31 +78,31 @@ public class VanillaChessTerminal extends ChessTerminal {
                         ChessPiece.Colours colour = piece.getChessPieceColour();
                         if (colour == ChessPiece.Colours.WHITE) {
                             if (name == ChessPiece.ChessPieces.KING) {
-                                placePieceAtXY(j, i, '\u2654');
+                                placePieceAtXY(j, i, VanillaChessTerminal.WHITE_KING);
                             } else if (name == ChessPiece.ChessPieces.QUEEN) {
-                                placePieceAtXY(j, i, '\u2655');
+                                placePieceAtXY(j, i, VanillaChessTerminal.WHITE_QUEEN);
                             } else if (name == ChessPiece.ChessPieces.ROOK) {
-                                placePieceAtXY(j, i, '\u2656');
+                                placePieceAtXY(j, i, VanillaChessTerminal.WHITE_ROOK);
                             } else if (name == ChessPiece.ChessPieces.BISHOP) {
-                                placePieceAtXY(j, i, '\u2657');
+                                placePieceAtXY(j, i, VanillaChessTerminal.WHITE_BISHOP);
                             } else if (name == ChessPiece.ChessPieces.KNIGHT) {
-                                placePieceAtXY(j, i, '\u2658');
+                                placePieceAtXY(j, i, VanillaChessTerminal.WHITE_KNIGHT);
                             } else if (name == ChessPiece.ChessPieces.PAWN) {
-                                placePieceAtXY(j, i, '\u2659');
+                                placePieceAtXY(j, i, VanillaChessTerminal.WHITE_PAWN);
                             }
                         } else {
                             if (name == ChessPiece.ChessPieces.KING) {
-                                placePieceAtXY(j, i, '\u265A');
+                                placePieceAtXY(j, i, VanillaChessTerminal.BLACK_KING);
                             } else if (name == ChessPiece.ChessPieces.QUEEN) {
-                                placePieceAtXY(j, i, '\u265B');
+                                placePieceAtXY(j, i, VanillaChessTerminal.BLACK_QUEEN);
                             } else if (name == ChessPiece.ChessPieces.ROOK) {
-                                placePieceAtXY(j, i, '\u265C');
+                                placePieceAtXY(j, i, VanillaChessTerminal.BLACK_ROOK);
                             } else if (name == ChessPiece.ChessPieces.BISHOP) {
-                                placePieceAtXY(j, i, '\u265D');
+                                placePieceAtXY(j, i, VanillaChessTerminal.BLACK_BISHOP);
                             } else if (name == ChessPiece.ChessPieces.KNIGHT) {
-                                placePieceAtXY(j, i, '\u265E');
+                                placePieceAtXY(j, i, VanillaChessTerminal.BLACK_KNIGHT);
                             } else if (name == ChessPiece.ChessPieces.PAWN) {
-                                placePieceAtXY(j, i, '\u265F');
+                                placePieceAtXY(j, i, VanillaChessTerminal.BLACK_PAWN);
                             }
                         }
                     }
@@ -136,12 +118,20 @@ public class VanillaChessTerminal extends ChessTerminal {
     private void updatePieceLocation(int currX, int currY, int newX, int newY){
         //char tmpChar = tiles2[currY][currX];
         tiles2[newY][newX] = tiles2[currY][currX];
-        tiles2[currY][currX] = '\u2B1A';
+        tiles2[currY][currX] = VanillaChessTerminal.BLANK;
         //System.out.println(tmpChar);
     }
 
     @Override
     public void printBoard() {
+        String abc = "ABCDEFGH";
+        
+        for (int i = 0; i < abc.length (); i++) {
+            System.out.print (abc.charAt (i));
+        }
+        
+        System.out.println ();
+        
         for (int i = 0; i < tiles2.length; i++) {
 
             for (int j = 0; j < tiles2.length; j++) {
@@ -163,29 +153,52 @@ public class VanillaChessTerminal extends ChessTerminal {
 
 
                 if (i == 0 && j == 0) {
-                    tiles2[i][j] = '\u250F';
+                    tiles2[i][j] = VanillaChessTerminal.TOP_LEFT;
                 } else if (i == 0 && j == (tiles2.length - 1)) {
-                    tiles2[i][j] = '\u2513';
+                    tiles2[i][j] = VanillaChessTerminal.TOP_RIGHT;
                 } else if (i == (tiles2.length - 1) && j == 0) {
-                    tiles2[i][j] = '\u2517';
+                    tiles2[i][j] = VanillaChessTerminal.BOTTOM_LEFT;
                 } else if ((i > 1 || i < (tiles2.length - 2)) && j == 0) {
-                    tiles2[i][j] = '\u2503';
+                    tiles2[i][j] = VanillaChessTerminal.VERTICAL;
                 } else if ((i > 1 || i < (tiles2.length - 2)) && j == (tiles2.length - 1)) {
-                    tiles2[i][j] = '\u2503';
+                    tiles2[i][j] = VanillaChessTerminal.VERTICAL;
                 } else if ((j > 0 || j < tiles2.length - 1) && i == 0) {
-                    tiles2[i][j] = '\u2501';
+                    tiles2[i][j] = VanillaChessTerminal.HORIZONTAL;
                 } else if ((j > 0 || j < tiles2.length - 1) && i == (tiles2.length - 1)) {
-                    tiles2[i][j] = '\u2501';
+                    tiles2[i][j] = VanillaChessTerminal.HORIZONTAL;
                 } else {
-                    tiles2[i][j] = '\u2B1A';
+                    tiles2[i][j] = VanillaChessTerminal.BLANK;
                 }
 
                 if (i == tiles2.length - 1 && j == tiles2.length - 1) {
-                    tiles2[i][j] = '\u251B';
+                    tiles2[i][j] = VanillaChessTerminal.BOTTOM_RIGHT;
                 }
                 //System.out.print(tiles2[i][j]); 
             }
             //System.out.println();
         }
     }
+    
+    //http://unicode-table.com/en/#supplemental-mathematical-operators
+    private static final char BLACK_KING = '\u265A';
+    private static final char BLACK_QUEEN = '\u265B';
+    private static final char BLACK_ROOK = '\u265C';
+    private static final char BLACK_BISHOP = '\u265D';
+    private static final char BLACK_KNIGHT = '\u265E';
+    private static final char BLACK_PAWN = '\u265F';
+    
+    private static final char WHITE_KING = '\u2654';
+    private static final char WHITE_QUEEN = '\u2655';
+    private static final char WHITE_ROOK = '\u2656';
+    private static final char WHITE_BISHOP = '\u2657';
+    private static final char WHITE_KNIGHT = '\u2658';
+    private static final char WHITE_PAWN = '\u2659';
+    
+    private static final char TOP_LEFT = '\u250F';
+    private static final char TOP_RIGHT = '\u2513';
+    private static final char BOTTOM_LEFT = '\u2517';
+    private static final char BOTTOM_RIGHT = '\u251B';
+    private static final char HORIZONTAL = '\u2501';
+    private static final char VERTICAL = '\u2503';
+    private static final char BLANK = '\u2B1A';
 }

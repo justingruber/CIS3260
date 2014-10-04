@@ -4,9 +4,10 @@
  * and open the template in the editor.
  */
 
-package chess.views.terminal;
+package chess.views.terminals;
 
 import chess.views.GameView;
+import chess.models.messages.Message;
 import java.util.Scanner;
 
 /**
@@ -15,10 +16,14 @@ import java.util.Scanner;
  */
 public abstract class ChessTerminal extends GameView {
     
-    public String readLine () {
-        Scanner scan = new Scanner (System.in);
-        return scan.nextLine ();
+    public void print (String text) {
+        System.out.print (text);
+    }
+    
+    public void printLine (String text) {
+        System.out.println (text);
     }
     
     public abstract void update ();
+    public abstract void showMessage (Message message);
 }

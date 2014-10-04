@@ -4,42 +4,42 @@
  * and open the template in the editor.
  */
 
-package chess.controllers;
+package chess.controllers.games;
 
-import chess.views.terminal.VanillaChessTerminal;
 import chess.Application;
 import chess.DisplayMode;
-import java.util.Observable;
-import java.util.Observer;
+import chess.models.games.VanillaChessGame;
+import chess.models.UserManager;
+import chess.views.terminals.VanillaChessTerminal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import chess.models.Rules;
-import chess.models.Game;
-import chess.models.UserManager;
-import chess.views.terminal.ChessTerminal;
-import chess.views.terminal.VanillaChessTerminal;
+
 /**
  *
  * @author Benjin
  */
-public class GameController extends Observable implements Observer {
-    private Game game;
-    private ChessTerminal terminalView;
+public class VanillaChessController extends GameController {
     
-    public void start (Rules.RuleTypes type) {
-        game = new Game (type);
+    @Override
+    public void start () {
+        VanillaChessGame game = new VanillaChessGame ();
         game.addUser (UserManager.getCurrentUser ());
         
         if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
-            if (type == Rules.RuleTypes.VANILLA_CHESS_RULES) {
-                terminalView = new VanillaChessTerminal ();
-            }
-            
+            terminalView = new VanillaChessTerminal ();
             terminalView.setBoard (game.getBoard ());
             
-            while (true) {
+            //while (true) {
                 terminalView.update ();
-                String input = terminalView.readLine ();
+                String input = "";
+                //String input = 
+                
+                if (input.toLowerCase ().trim ().equals ("quit")) {
+                    this.setChanged ();
+                    this.notifyObservers (GameController.QUIT);
+                    //break;
+                }
+                
                 Pattern pattern = Pattern.compile ("^\\s*\\d+ \\d+ \\d+ \\d+\\s*$");
                 Matcher matcher = pattern.matcher (input);
                 
@@ -61,12 +61,7 @@ public class GameController extends Observable implements Observer {
                 } else {
                     //error
                 }
-            }
+            //}
         }
-    }
-    
-    @Override
-    public void update (Observable object, Object args) {
-        
     }
 }
