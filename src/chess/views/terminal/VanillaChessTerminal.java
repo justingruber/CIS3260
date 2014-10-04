@@ -38,12 +38,10 @@ public class VanillaChessTerminal extends ChessTerminal {
 
     }
     
-    public VanillaChessTerminal () {
-        setupBoard ();
-    }
-    
     @Override
     public void update () {
+        setupBoard ();
+        placePieces (this.getBoard ());
         printBoard ();
     }
     

@@ -106,6 +106,7 @@ public class VanillaChessRules extends Rules{
         return "These set of rules are for the standard chess game. The exact description of the rules can be found on wikipedia ";
     }
     
+    @Override
     public ArrayList<String> getMessages(){
         return this.messages;
     }
@@ -219,6 +220,8 @@ public class VanillaChessRules extends Rules{
         }
         return true;
     }
+    
+    @Override
     //When to check if new == current
     //Need to check for check and stalemate
     //Need to implement a currX and curY check?

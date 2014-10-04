@@ -25,4 +25,7 @@ public abstract class Rules {
     public Board getBoardInstance () {
         return board;
     }
+    
+    abstract public Boolean tryMove(int curX, int curY, int newX, int newY);
+    abstract public ArrayList<String> getMessages();
 }

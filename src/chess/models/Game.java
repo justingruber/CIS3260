@@ -6,15 +6,13 @@
 
 package chess.models;
 
-
-import chess.models.Rules;
-import chess.models.VanillaChessRules;
-import chess.models.Board;
+import java.util.ArrayList;
 /**
  *
  * @author Benjin
  */
 public class Game {
+    private ChessPiece.Colours currentMover = ChessPiece.Colours.WHITE;
     private Rules rules;
     private Board board;
     private User playerWhite;
@@ -29,7 +27,12 @@ public class Game {
     }
     
     public boolean tryMove (int curX, int curY, int newX, int newY) {
-        return true;
+        if (rules.tryMove (curX, curY, newX, newY)) {
+            currentMover = (currentMover == ChessPiece.Colours.WHITE) ? ChessPiece.Colours.BLACK : ChessPiece.Colours.WHITE;
+            return true;
+        } else {
+            return false;
+        }
     }
     
     public void addUser (User user) {
@@ -37,6 +40,8 @@ public class Game {
             playerWhite = user;
         } else if (playerBlack == null) {
             playerBlack = user;
+        } else {
+            //spectators
         }
     }
     
@@ -46,5 +51,9 @@ public class Game {
     
     public Board getBoard () {
         return rules.getBoardInstance ();
+    }
+    
+    public ArrayList <String> getMessages () {
+        return rules.getMessages ();
     }
 }

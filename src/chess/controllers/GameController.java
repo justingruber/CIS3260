@@ -35,23 +35,33 @@ public class GameController extends Observable implements Observer {
                 terminalView = new VanillaChessTerminal ();
             }
             
-            terminalView.placePieces (game.getBoard ());
+            terminalView.setBoard (game.getBoard ());
             
-            //while (true) {
+            while (true) {
                 terminalView.update ();
                 String input = terminalView.readLine ();
-                Pattern pattern = Pattern.compile ("^\\s*\\d \\d \\d \\d\\s*$");
+                Pattern pattern = Pattern.compile ("^\\s*\\d+ \\d+ \\d+ \\d+\\s*$");
                 Matcher matcher = pattern.matcher (input);
                 
                 if (matcher.find ()) {
                     input = matcher.group ();
                     String [] coords = input.split (" ");
                     
-                    game.tryMove (Integer.parseInt (coords [0]), Integer.parseInt (coords [1]), Integer.parseInt (coords [2]), Integer.parseInt (coords [3]));
+                    boolean success = game.tryMove (Integer.parseInt (coords [0]), Integer.parseInt (coords [1]), Integer.parseInt (coords [2]), Integer.parseInt (coords [3]));
+                    
+                    if (success) {
+                        terminalView.update ();
+                    } else {
+                        
+                    }
+                    
+                    for (String message:game.getMessages ()) {
+                        System.out.println (message);
+                    }
                 } else {
                     //error
                 }
-            //}
+            }
         }
     }
     
