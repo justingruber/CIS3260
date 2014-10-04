@@ -2,13 +2,13 @@ package chess.models;
 
 import java.lang.Enum;
 import java.util.ArrayList;
-
+import chess.models.messages.*;
+        
 public class VanillaChessRules extends Rules{
     private ArrayList <ChessPiece> pieces = new ArrayList();
     private ArrayList <Board.BoardTypes> boardTypes = new ArrayList();
-    private ArrayList <String> messages = new ArrayList();
+    private ArrayList <Message> messages = new ArrayList();
     private RuleTypes ruleType = RuleTypes.VANILLA_CHESS_RULES;
-    private Board.BoardTypes selectedBoardType;
     private String message = ""; 
     private Boolean isCheckMate = false;
     private Boolean isCheck = false;
@@ -16,9 +16,117 @@ public class VanillaChessRules extends Rules{
     
     public VanillaChessRules(){
         super(RuleTypes.VANILLA_CHESS_RULES);
-        boardTypes.add(Board.BoardTypes.VANILLA_CHESS_BOARD);
+        this.boardTypes.add(Board.BoardTypes.VANILLA_CHESS_BOARD);
         createPiecesList();
-        this.messages.add("0 messages");
+        //this.addToMessages(Message.Type.INFO, "No messages");
+    }
+    
+    @Override
+    public String getDescription(){
+        return "VanillaChessRules class is a implementation of the standard chess game. It contains public functions that allow for a standard chess game to be played.";
+    }
+    
+    @Override
+    public ArrayList<Message> getMessages(){
+        return this.messages;
+    }
+    
+    @Override
+    public Boolean isGameOver(){
+        if(isCheckMate() == true || isStaleMate() == true){
+            addToMessages(Message.Type.INFO , "GAME OVER");
+            return true;
+        } 
+        return false;
+    }
+    
+    //Create a copy of pieces?
+    @Override
+    public Boolean createBoard(Board.BoardTypes boardType){
+        Boolean correctInput = false;
+        
+        for (int i = 0; i < boardTypes.size(); i++){
+            if(boardTypes.get(i) == boardType){
+                correctInput = true;
+                break;
+            }
+        }
+        if(correctInput == true){
+            this.board = new VanillaChessBoard();
+            this.board.setPieces(this.pieces);
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    @Override
+    public ArrayList<Board.BoardTypes> getBoardTypes(){
+        ArrayList copyBoardTypes = new ArrayList(this.boardTypes);
+        return copyBoardTypes;
+    }
+    
+    @Override
+    //When to check if new == current
+    //Need to implement a currX and curY check?
+    public Boolean tryMove(int curX, int curY, int newX, int newY){
+        Boolean boolReturns = null;
+        ChessPiece.Colours friendlyColour;
+        ChessPiece.Colours enemyColour;
+        ChessPiece piece = null;
+        Boolean isCheckMate = null;
+        Boolean isStaleMate = null;
+        
+        this.messages = new ArrayList();
+        
+        //Make sure it's not checkmate
+        if(isGameOver() == true){
+           addToMessages(Message.Type.INFO,"GAME OVER: Can't move any piece");
+           return false;
+        }
+        
+        boolReturns = validateCoordinates(curX,curY,newX,newY);
+        
+        if(boolReturns == false){
+            return false;
+        }
+        
+        boolReturns = null;
+        
+        boolReturns = tryMoveCheck(curX,curY,newX, newY,this.board);
+        piece = this.board.getPieceAtPosition(curX, curY);
+        
+        friendlyColour = piece.getChessPieceColour();
+        
+        if(friendlyColour == ChessPiece.Colours.WHITE){
+            enemyColour = ChessPiece.Colours.BLACK;
+        }else{
+            enemyColour = ChessPiece.Colours.WHITE;
+        }
+        
+        //Set the new coordinates for the piece 
+        if(boolReturns == true){
+            //checkForCheck(friendlyColour,this.board);
+            take(curX,curY,newX,newY,this.board);
+            isCheckMate = checkForCheckMate(enemyColour,this.board);
+            isStaleMate = checkForStaleMate(enemyColour,this.board);
+            //checkForStaleMate(friendlyColour,this.board);
+            
+            if(isCheckMate == true){
+                this.messages = new ArrayList();
+                addToMessages(Message.Type.INFO,"GAME OVER: Checkmate");
+            }
+            
+            if(isStaleMate == true){
+                this.messages = new ArrayList();
+                addToMessages(Message.Type.INFO,"GAME OVER: Slatemate");
+            }
+            
+            return true;
+        }else{
+            addToMessages(Message.Type.ERROR,"The piece cannot move to the coordinates: (" + newX + "," + newY +")" );
+            return false;
+        }
     }
     
     private ArrayList <ChessPiece> initializeWhitePieces(){
@@ -81,7 +189,6 @@ public class VanillaChessRules extends Rules{
         return blackPieces;
     }
     
-    
     private void createPiecesList(){
         ArrayList <ChessPiece> whitePieces = initializeWhitePieces();
         ArrayList <ChessPiece> blackPieces = initializeBlackPieces();
@@ -90,33 +197,12 @@ public class VanillaChessRules extends Rules{
         pieces.addAll(blackPieces);
     }
     
-    
-    public Boolean createBoard(Board.BoardTypes boardType){
-        this.board = new VanillaChessBoard();
-        this.board.setPieces(this.pieces);
-        return true;
+    private void addToMessages(Message.Type type, String text){
+        Message message = new Message(type, text);
+        setMessages(message);
     }
     
-    public ArrayList<Board.BoardTypes> getBoardTypes(){
-        ArrayList copyBoardTypes = new ArrayList(this.boardTypes);
-        return copyBoardTypes;
-    }
-    
-    public String getDescription(){
-        return "These set of rules are for the standard chess game. The exact description of the rules can be found on wikipedia ";
-    }
-    
-    @Override
-    public ArrayList<String> getMessages(){
-        return this.messages;
-    }
-    
-    private void setMessage(String message){
-        this.message = message;
-        setMessages(this.message);
-    }
-    
-    private void setMessages(String message){
+    private void setMessages(Message message){
         this.messages.add(message);
     }
     
@@ -142,11 +228,11 @@ public class VanillaChessRules extends Rules{
     }
     
     private Boolean isDraw(){
+        //Both are stalemated and no pieces left to do checkmate
         return false;
     }
     
     private Boolean checkForCheckMate(ChessPiece.Colours colour, Board board){
-        ArrayList <ArrayList> possibleMoves = new ArrayList(); 
         ArrayList <Integer[]> tempArray = new ArrayList();
         int curX = 0;
         int curY = 0;
@@ -166,8 +252,6 @@ public class VanillaChessRules extends Rules{
             curX = piece.getX();
             curY = piece.getY();
             if(piece.getChessPieceColour() == colour && piece.getState() == 0){
-                //System.out.println("Position = (" + piece.getX() + "," + piece.getY() + ")");
-                //System.out.println("Name = " + piece.getChessPieceName() + " colour = " + piece.getChessPieceColour() + " state = " + piece.getState());
                 if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
                     tempArray = new ArrayList(pawnPossibleMoves(piece.getChessPieceColour().toString(),curX,curY,board));                    
                 }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.ROOK){
@@ -185,7 +269,7 @@ public class VanillaChessRules extends Rules{
                     System.exit(1);
                 }
            }
-            if(tempArray.size() != 0 && tempArray != null && piece.getState() == 0){
+            if(tempArray.size() != 0 && piece.getState() == 0){
                 for(int i = 0; i < tempArray.size(); i++){
                     //System.out.println("(" + tempArray.get(i)[0] + "," + tempArray.get(i)[1] + ")");
                     boolReturn = take(piece.getX(),piece.getY(),tempArray.get(i)[0],tempArray.get(i)[1],tempBoard);
@@ -196,8 +280,6 @@ public class VanillaChessRules extends Rules{
                 }
             }
        }
-        this.messages = new ArrayList();
-        setMessages("GAME OVER: Checkmate");
         this.isCheckMate = true;
         return true;
     }
@@ -253,9 +335,11 @@ public class VanillaChessRules extends Rules{
                 }
             }
        }
-        this.messages = new ArrayList();
-        setMessages("GAME OVER: Stalemate");
         this.isStaleMAte = true;
+        return true;
+    }
+    
+    private boolean canAPieceMove(){
         return true;
     }
     
@@ -334,6 +418,7 @@ public class VanillaChessRules extends Rules{
        }
         return possibleMoves;
     }
+    
     //If null then no king was found
     private ChessPiece getKing(ChessPiece.Colours colour,Board board){
         for(ChessPiece piece: board.getPieces()){
@@ -344,41 +429,30 @@ public class VanillaChessRules extends Rules{
         return null;
     }
     
-    public Boolean isGameOver(){
-        if(isCheckMate() == true || isStaleMate() == true){
-            return true;
-        } 
-        return false;
-    }
     
     //Move the friendly check to the take function? -- Do we really need it?
     //Move the cur==new coordniates to a new function? -- Do we really need it? 
+    //Make messages meaningful
     private Boolean validateCoordinates(int curX, int curY, int newX, int newY){
         Boolean boolReturns;
         
-        //Make sure it's not checkmate
-        if(isGameOver() == true){
-           setMessage("GAME OVER: Can't move any piece");
-           return false;
-        }
-        
         //Make sure that the move
         if(curX == newX && curY == newY){
-            setMessage("ERROR: New coordinates are the same as current coordinates");
+            addToMessages(Message.Type.ERROR,"New coordinates are the same as current coordinates");
             return false;
         }
       
         //Make sure that there is a piece at current x and y coordinates
         ChessPiece checkCurLocationPiece = this.board.getPieceAtPosition(curX, curY);
         if(checkCurLocationPiece == null){
-            setMessage("ERROR: There is no piece at current x and y coordinates");
+            addToMessages(Message.Type.ERROR,"There is no piece at current x and y coordinates");
             return false;
         }
         
         //Check if new coordinates are within the boards ranges
         boolReturns = this.board.isPositionValid(newX,newY);
         if(boolReturns != true){ 
-            setMessage("ERROR: New coordinates are out of bounds");
+            addToMessages(Message.Type.ERROR,"New coordinates are out of bounds");
             return false;
         }
         
@@ -389,58 +463,11 @@ public class VanillaChessRules extends Rules{
             ChessPiece newLocationPiece = this.board.getPieceAtPosition(newX, newY);
           
             if(curLocationPiece != null && newLocationPiece != null && curLocationPiece.getChessPieceColour() == newLocationPiece.getChessPieceColour()){
-                setMessage("ERROR: Friendly piece exists at those coordinates");
+                addToMessages(Message.Type.ERROR,"Friendly piece exists at those coordinates");
                 return false;
             }   
         }
         return true;
-    }
-    
-    @Override
-    //When to check if new == current
-    //Need to check for check and stalemate
-    //Need to implement a currX and curY check?
-    public Boolean tryMove(int curX, int curY, int newX, int newY){
-        Boolean boolReturns = null;
-        ChessPiece.Colours friendlyColour;
-        ChessPiece.Colours enemyColour;
-        ChessPiece piece = null;
-        Boolean isCheckMate = null;
-        
-        this.messages = new ArrayList();
-        
-        boolReturns = validateCoordinates(curX,curY,newX,newY);
-        
-        if(boolReturns == false){
-            return false;
-        }
-        
-        boolReturns = null;
-        
-        boolReturns = tryMoveCheck(curX,curY,newX, newY,this.board);
-        piece = this.board.getPieceAtPosition(curX, curY);
-        
-        friendlyColour = piece.getChessPieceColour();
-        
-        if(friendlyColour == ChessPiece.Colours.WHITE){
-            enemyColour = ChessPiece.Colours.BLACK;
-        }else{
-            enemyColour = ChessPiece.Colours.WHITE;
-        }
-        
-        //Set the new coordinates for the piece 
-        if(boolReturns == true){
-            //checkForCheck(friendlyColour,this.board);
-            take(curX,curY,newX,newY,this.board);
-            checkForCheckMate(enemyColour,this.board);
-            checkForStaleMate(enemyColour,this.board);
-            //checkForStaleMate(friendlyColour,this.board);
-            //isGameOver();
-            return true;
-        }else{
-            setMessage("ERROR: The piece cannot move to the coordinates: (" + newX + "," + newY +")" );
-            return false;
-        }
     }
     
     private ArrayList <ChessPiece> copyPiecesList(ArrayList<ChessPiece> oldPiecesList){
@@ -499,7 +526,7 @@ public class VanillaChessRules extends Rules{
             //Are you still in check after the move?  
             isCheck = isCheck(friendlyColour,tempBoard);
             if(isCheck == true){
-                setMessage("Error: You are in check");
+                addToMessages(Message.Type.ERROR,"You are in check");
                 return false;
             }else{
                 board.setPieces(copyOfPieces);
@@ -508,9 +535,9 @@ public class VanillaChessRules extends Rules{
                 isCheck = isCheck(enemyColour,board);
                 
                 if(isCheck == true){
-                    setMessage(enemyColour.toString() + " king is in Check");
+                   addToMessages(Message.Type.INFO,enemyColour.toString() + " king is in Check");
                 }
-                setMessage("Succes: Move was successful");
+                addToMessages(Message.Type.SUCCESS,"Move was successful");
                 return true;
             }
         }else{
@@ -553,7 +580,7 @@ public class VanillaChessRules extends Rules{
             
             isCheck = isCheck(friendlyColour,tempBoard);
             if(isCheck == true){
-                setMessage("Error: The move will put you in check");
+                addToMessages(Message.Type.ERROR,"The move will put you in check");
                 return false;
             }else{
                 board.setPieces(copyOfPieces);
@@ -562,9 +589,9 @@ public class VanillaChessRules extends Rules{
                 isCheck = isCheck(enemyColour,board);
                 
                 if(isCheck == true){
-                    setMessage(enemyColour.toString() + " king is in Check");
+                    addToMessages(Message.Type.INFO,enemyColour.toString() + " king is in Check");
                 }
-                setMessage("Succes: Move was successful");
+                addToMessages(Message.Type.SUCCESS,"Move was successful");
                 return true;
             }
         }
@@ -1045,11 +1072,8 @@ public class VanillaChessRules extends Rules{
             System.out.println("ERROR: The coordinates passed to tryMoveCheck did not contain a vanilla chess piece");
             System.exit(1);
         }
-        
-        
-        
         if(possibleMoves.size() == 0){
-            setMessage("ERROR: Invalid move");
+            addToMessages(Message.Type.ERROR,"Invalid move");
             return false;
         }else{//Need to check if newX and newY are within the list
             int foundFlag = 0;
