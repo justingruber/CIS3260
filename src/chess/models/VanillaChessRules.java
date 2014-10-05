@@ -21,16 +21,19 @@ public class VanillaChessRules extends Rules{
     }
     
     @Override
+    //Description of the function in the rules class
     public String getDescription(){
         return "VanillaChessRules class is a implementation of the standard chess game. It contains public functions that allow for a standard chess game to be played.";
     }
     
     @Override
+    //Description of the function in the rules class
     public ArrayList<Message> getMessages(){
         return this.messages;
     }
     
     @Override
+    //Description of the function in the rules class
     public Boolean isGameOver(){
         if(isCheckMate() == true || isStaleMate() == true){
             addToMessages(Message.Type.INFO , "GAME OVER");
@@ -41,9 +44,11 @@ public class VanillaChessRules extends Rules{
     
     //Create a copy of pieces?
     @Override
+    //Description of the function in the rules class
     public Boolean createBoard(Board.BoardTypes boardType){
         Boolean correctInput = false;
         
+        //Check the input
         for (int i = 0; i < boardTypes.size(); i++){
             if(boardTypes.get(i) == boardType){
                 correctInput = true;
@@ -60,19 +65,16 @@ public class VanillaChessRules extends Rules{
     }
     
     @Override
+    //Description of the function in the rules class
     public ArrayList<Board.BoardTypes> getBoardTypes(){
         ArrayList copyBoardTypes = new ArrayList(this.boardTypes);
         return copyBoardTypes;
     }
     
-    /*
-     * Name: 
-     * Description: 
-     * Returns: 
-     */
     @Override
     //When to check if new == current
     //Need to implement a currX and curY check?
+    //Description of the function in the rules class
     public Boolean tryMove(ChessPiece.Colours colour,int curX, int curY, int newX, int newY){
         Boolean boolReturns = null;
         ChessPiece.Colours friendlyColour;
@@ -83,20 +85,19 @@ public class VanillaChessRules extends Rules{
         
         this.messages = new ArrayList();
         
-        //Make sure it's not checkmate
+        //Make sure it's not game over
         if(isGameOver() == true){
            //addToMessages(Message.Type.INFO,"GAME OVER: Can't move any piece");
            return false;
         }
         
+        //Check to see if the input is valid
         boolReturns = validateInput(colour,curX,curY,newX,newY);
-        
         if(boolReturns == false){
             return false;
         }
         
         boolReturns = null;
-        
         boolReturns = tryMoveCheck(curX,curY,newX, newY,this.board);
         piece = this.board.getPieceAtPosition(curX, curY);
         
@@ -108,9 +109,7 @@ public class VanillaChessRules extends Rules{
             enemyColour = ChessPiece.Colours.WHITE;
         }
         
-        //Set the new coordinates for the piece 
-        if(boolReturns == true){
-            //checkForCheck(friendlyColour,this.board);
+        if(boolReturns == true){//If the new coordinates given are within the pieces possible moves
             take(curX,curY,newX,newY,this.board);
             checkMate = checkForCheckMate(enemyColour,this.board);
             staleMate = checkForStaleMate(enemyColour,this.board);
@@ -127,7 +126,7 @@ public class VanillaChessRules extends Rules{
             }
             
             return true;
-        }else{
+        }else{//The new coordinates given are not a valid move for the piece
             addToMessages(Message.Type.ERROR,"The piece cannot move to the coordinates: (" + newX + "," + newY +")" );
             return false;
         }
@@ -690,7 +689,12 @@ public class VanillaChessRules extends Rules{
         return possibleMoves;
     }
     
-    
+    /*
+     * Name: moveUp
+     * Description: Determines the increments needed to move a piece up and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveUp(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleUpMoves = new ArrayList();
         
@@ -699,6 +703,12 @@ public class VanillaChessRules extends Rules{
         return possibleUpMoves;
     }
     
+    /*
+     * Name: moveDown
+     * Description: Determines the increments needed to move a piece down and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveDown(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleDownMoves = new ArrayList();
         
@@ -707,6 +717,12 @@ public class VanillaChessRules extends Rules{
         return possibleDownMoves;
     }
     
+    /*
+     * Name: moveRight
+     * Description: Determines the increments needed to move a piece right and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveRight(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleRightMoves = new ArrayList();
         
@@ -715,6 +731,12 @@ public class VanillaChessRules extends Rules{
         return possibleRightMoves;
     }
     
+    /*
+     * Name: moveLeft
+     * Description: Determines the increments needed to move a piece left and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveLeft(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleLeftMoves = new ArrayList();
         
@@ -723,6 +745,12 @@ public class VanillaChessRules extends Rules{
         return possibleLeftMoves;
     }
     
+    /*
+     * Name: moveLeftUpDiaginally
+     * Description: Determines the increments needed to move a piece moveLeftUpDiaginally and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveLeftUpDiagonally(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleLeftUpDiagonally = new ArrayList();
         
@@ -731,6 +759,12 @@ public class VanillaChessRules extends Rules{
         return possibleLeftUpDiagonally;
     }
     
+    /*
+     * Name: moveLeftDownDiagonally
+     * Description: Determines the increments needed to move a piece moveLeftDownDiaginally and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveLeftDownDiagonally(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleLeftDownDiagonally = new ArrayList();
         
@@ -739,6 +773,12 @@ public class VanillaChessRules extends Rules{
         return possibleLeftDownDiagonally;
     }
     
+    /*
+     * Name: moveRightUpDiagonally
+     * Description: Determines the increments needed to move a piece moveRightUpDiaginally and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveRightUpDiagonally(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleRightUpDiagonally = new ArrayList();
         
@@ -747,6 +787,12 @@ public class VanillaChessRules extends Rules{
         return possibleRightUpDiagonally;
     }
     
+    /*
+     * Name: moveRightDownDiagonally
+     * Description: Determines the increments needed to move a piece moveRightDownDiaginally and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveRightDownDiagonally(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleRightDownDiagonally = new ArrayList();
         
