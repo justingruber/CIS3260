@@ -92,50 +92,67 @@ public class Chess {
         Integer curY1 = 0;
         Integer newX1 = 0;
         Integer newY1 = 0;
+        String string = "";
         
         try{
-            streamInput = new Scanner(new FileInputStream("stalemateTest.txt"));
+            streamInput = new Scanner(new FileInputStream("check.txt"));
         }catch(FileNotFoundException e){
             System.out.println("ERORR: FILE NOT FOUND!\n");
             System.exit(0);
         }
         
         
-        /*while(streamInput.hasNextLine()){
+        while(streamInput.hasNextLine()){
             
             System.out.println("/////////////////////////////////////////");
             fileInput = streamInput.nextLine();
             splitFileInput = fileInput.split(delimeters);
-            curX1 = new Integer(splitFileInput[0]);
-            curY1 = new Integer(splitFileInput[1]);
-            newX1 = new Integer(splitFileInput[2]);
-            newY1 = new Integer(splitFileInput[3]);
-            rules.tryMove(ChessPiece.Colours.BLACK,curX1, curY1, newX1, newY1);
+            string = new String(splitFileInput[0]);
+            curX1 = new Integer(splitFileInput[1]);
+            curY1 = new Integer(splitFileInput[2]);
+            newX1 = new Integer(splitFileInput[3]);
+            newY1 = new Integer(splitFileInput[4]);
+            
+            if(string.equalsIgnoreCase("Black")){
+                rules.tryMove(ChessPiece.Colours.BLACK,curX1, curY1, newX1, newY1);   
+            }else{
+                rules.tryMove(ChessPiece.Colours.WHITE,curX1, curY1, newX1, newY1);   
+            }
             drawBoard(board);
             
             ArrayList <Message> messages = rules.getMessages();
-            
+      
             for (int i = 0; i < messages.size();i++){
-                System.out.print(messages.get(i).getType() + ": " + messages.get(i).getText()+ "\n\n\n");
+                System.out.println(messages.get(i).getType() + ": " + messages.get(i).getText()+ "");
             }
-        }*/
+        }
         
         streamInput.close();
         
-        
+        System.out.println("\n");
         
         while(true){
             drawBoard(board);
-        
+            int curX;
+            int curY;
+            int newX;
+            int newY;
             System.out.println("\nEnter curX curY newX newY(Seperate with spaces)");
-            int curX = in.nextInt();
-            int curY = in.nextInt();
-            int newX = in.nextInt();
-            int newY = in.nextInt();
-            exit = in.nextLine();
+            fileInput = in.nextLine();
+            splitFileInput = fileInput.split(delimeters);
+            string = new String(splitFileInput[0]);
+            curX = new Integer(splitFileInput[1]);
+            curY = new Integer(splitFileInput[2]);
+            newX = new Integer(splitFileInput[3]);
+            newY = new Integer(splitFileInput[4]);
+
             //System.out.println("\nMoving piece from: (" + curX + "," + curY + ")" + " to: (" + newX + "," + newY + ")" );
     
-            boolReturn = rules.tryMove(ChessPiece.Colours.BLACK, curX,curY,newX,newY);
+            if(string.equalsIgnoreCase("Black")){
+                boolReturn = rules.tryMove(ChessPiece.Colours.BLACK,curX, curY, newX, newY);   
+            }else{
+                boolReturn = rules.tryMove(ChessPiece.Colours.WHITE,curX, curY, newX, newY);   
+            }
             
             if(boolReturn == true){
                 drawBoard(board);
@@ -144,7 +161,7 @@ public class Chess {
             ArrayList<Message> messages = rules.getMessages();
             
             for (int i = 0; i < messages.size();i++){
-                System.out.print(messages.get(i).getType() + ": " + messages.get(i).getText());
+                System.out.println(messages.get(i).getType() + ": " + messages.get(i).getText());
             }
             
             
