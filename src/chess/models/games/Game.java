@@ -10,6 +10,10 @@ import chess.models.Board;
 import chess.models.ChessPiece;
 import chess.models.Rules;
 import chess.models.User;
+
+import chess.models.VanillaChessRules;
+import chess.models.messages.Message;
+
 import java.util.ArrayList;
 /**
  *
@@ -26,7 +30,7 @@ public abstract class Game {
         return rules.getBoardInstance ();
     }
     
-    public ArrayList <String> getMessages () {
+    public ArrayList <Message> getMessages () {
         return rules.getMessages ();
     }
     

@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.ArrayList;
+import chess.models.messages.Message;
+
 public class Chess {
     
    public static void drawBoard(Board board){
@@ -91,7 +93,7 @@ public class Chess {
         Integer newX1 = 0;
         Integer newY1 = 0;
         
-        /*try{
+        try{
             streamInput = new Scanner(new FileInputStream("stalemateTest.txt"));
         }catch(FileNotFoundException e){
             System.out.println("ERORR: FILE NOT FOUND!\n");
@@ -108,12 +110,17 @@ public class Chess {
             curY1 = new Integer(splitFileInput[1]);
             newX1 = new Integer(splitFileInput[2]);
             newY1 = new Integer(splitFileInput[3]);
-            rules.tryMove(curX1, curY1, newX1, newY1);
+            rules.tryMove(ChessPiece.Colours.BLACK,curX1, curY1, newX1, newY1);
             drawBoard(board);
-            System.out.println(rules.getMessages() + "\n\n\n");
-        }
+            
+            ArrayList <Message> messages = rules.getMessages();
+            
+            for (int i = 0; i < messages.size();i++){
+                System.out.print(messages.get(i).getType() + ": " + messages.get(i).getText()+ "\n\n\n");
+            }
+        }*/
         
-        streamInput.close();*/
+        streamInput.close();
         
         
         
@@ -134,7 +141,14 @@ public class Chess {
                 drawBoard(board);
             }
             
-            System.out.println(rules.getMessages());
+            ArrayList<Message> messages = rules.getMessages();
+            
+            for (int i = 0; i < messages.size();i++){
+                System.out.print(messages.get(i).getType() + ": " + messages.get(i).getText());
+            }
+            
+            
+            
             System.out.println("\nExit?(Y/N)");
         
             exit = in.nextLine();

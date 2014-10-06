@@ -14,6 +14,10 @@ public class VanillaChessTerminal extends ChessTerminal {
         newBoard.init();
     }
     
+    public VanillaChessTerminal () {
+        this.helpLines.add ("a1 a2   - Moves the piece from a1 to a2. Change to the piece you actually want.");
+    }
+    
     @Override
     public void update () {
         setupBoard ();

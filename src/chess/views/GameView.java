@@ -1,9 +1,10 @@
 package chess.views;
 
-import java.util.Observable;
 import chess.models.Board;
-import java.util.ArrayList;
 import chess.models.messages.Message;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Observable;
 
 public abstract class GameView extends Observable {
     private ArrayList <Message> messages = new ArrayList <Message> ();
@@ -25,6 +26,10 @@ public abstract class GameView extends Observable {
     
     public void addMessage (Message message) {
         messages.add (message);
+    }
+    
+    public void addMessages (Collection <Message> messages) {
+        this.messages.addAll (messages);
     }
     
     public Message getNextMessage () {

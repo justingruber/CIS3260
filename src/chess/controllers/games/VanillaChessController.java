@@ -8,11 +8,12 @@ package chess.controllers.games;
 
 import chess.Application;
 import chess.DisplayMode;
-import chess.models.games.VanillaChessGame;
 import chess.models.User;
+import chess.models.games.VanillaChessGame;
+import chess.models.messages.Message;
 import chess.views.terminals.VanillaChessTerminal;
-import java.util.regex.Matcher;
 import java.util.Scanner;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -30,16 +31,26 @@ public class VanillaChessController extends GameController {
         if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
             terminalView = new VanillaChessTerminal ();
             terminalView.setBoard (game.getBoard ());
+            boolean updateView = true;
+            terminalView.addMessage (new Message (Message.Type.INFO, "Enter help for a list of commands."));
             
             while (true) {
-                terminalView.update ();
+                if (updateView) {
+                    terminalView.update ();
+                }
                 
+                updateView = true;
+                terminalView.showMessages ();
+                terminalView.printLine ("What do you want to do?");
                 Scanner scan = new Scanner (System.in);
                 String input = scan.nextLine ();
                 input = input.toLowerCase ().trim ();
                 
                 if (input.equals ("display")) {
-                    terminalView.update ();
+                    
+                } else if (input.equals ("help")) {
+                    updateView = false;
+                    terminalView.showHelp ();
                 } else if (input.equals ("quit")) {
                     this.setChanged ();
                     this.notifyObservers (GameController.QUIT);
@@ -65,12 +76,11 @@ public class VanillaChessController extends GameController {
 
                         }
                         
-                        for (String message:game.getMessages ()) {
-                            System.out.println (message);
-                        }
+                        terminalView.addMessages (game.getMessages ());
                     } else {
                         //error
-                        System.out.println ("AWDAWD");
+                        updateView = false;
+                        terminalView.addMessage (new Message (Message.Type.ERROR, "Invalid command."));
                     }
                 }
             }

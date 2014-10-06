@@ -18,9 +18,8 @@ public abstract class ChessTerminal extends GameView {
     ArrayList <String> helpLines = new ArrayList <String> ();
     
     public ChessTerminal () {
-        helpLines.add ("help    - Shows a list of possible commands");
-        helpLines.add ("display - Redraws the game in its current state");
-        helpLines.add ("quit    - Exits to the main menu");
+        helpLines.add ("display - Redraws the game in its current state.");
+        helpLines.add ("quit    - Exits to the main menu.");
     }
     
     public void print (String text) {
