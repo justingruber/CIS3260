@@ -1,6 +1,5 @@
 package chess.models;
 
-import java.lang.Enum;
 import java.util.ArrayList;
 import chess.models.messages.*;
         
@@ -22,16 +21,19 @@ public class VanillaChessRules extends Rules{
     }
     
     @Override
+    //Description of the function in the rules class
     public String getDescription(){
         return "VanillaChessRules class is a implementation of the standard chess game. It contains public functions that allow for a standard chess game to be played.";
     }
     
     @Override
+    //Description of the function in the rules class
     public ArrayList<Message> getMessages(){
         return this.messages;
     }
     
     @Override
+    //Description of the function in the rules class
     public Boolean isGameOver(){
         if(isCheckMate() == true || isStaleMate() == true){
             addToMessages(Message.Type.INFO , "GAME OVER");
@@ -42,9 +44,11 @@ public class VanillaChessRules extends Rules{
     
     //Create a copy of pieces?
     @Override
+    //Description of the function in the rules class
     public Boolean createBoard(Board.BoardTypes boardType){
         Boolean correctInput = false;
         
+        //Check the input
         for (int i = 0; i < boardTypes.size(); i++){
             if(boardTypes.get(i) == boardType){
                 correctInput = true;
@@ -61,6 +65,7 @@ public class VanillaChessRules extends Rules{
     }
     
     @Override
+    //Description of the function in the rules class
     public ArrayList<Board.BoardTypes> getBoardTypes(){
         ArrayList copyBoardTypes = new ArrayList(this.boardTypes);
         return copyBoardTypes;
@@ -69,30 +74,30 @@ public class VanillaChessRules extends Rules{
     @Override
     //When to check if new == current
     //Need to implement a currX and curY check?
+    //Description of the function in the rules class
     public Boolean tryMove(ChessPiece.Colours colour,int curX, int curY, int newX, int newY){
         Boolean boolReturns = null;
         ChessPiece.Colours friendlyColour;
         ChessPiece.Colours enemyColour;
         ChessPiece piece = null;
-        Boolean isCheckMate = null;
-        Boolean isStaleMate = null;
+        Boolean checkMate = null;
+        Boolean staleMate = null;
         
         this.messages = new ArrayList();
         
-        //Make sure it's not checkmate
+        //Make sure it's not game over
         if(isGameOver() == true){
-           addToMessages(Message.Type.INFO,"GAME OVER: Can't move any piece");
+           //addToMessages(Message.Type.INFO,"GAME OVER: Can't move any piece");
            return false;
         }
         
+        //Check to see if the input is valid
         boolReturns = validateInput(colour,curX,curY,newX,newY);
-        
         if(boolReturns == false){
             return false;
         }
         
         boolReturns = null;
-        
         boolReturns = tryMoveCheck(curX,curY,newX, newY,this.board);
         piece = this.board.getPieceAtPosition(curX, curY);
         
@@ -104,31 +109,36 @@ public class VanillaChessRules extends Rules{
             enemyColour = ChessPiece.Colours.WHITE;
         }
         
-        //Set the new coordinates for the piece 
-        if(boolReturns == true){
-            //checkForCheck(friendlyColour,this.board);
+        if(boolReturns == true){//If the new coordinates given are within the pieces possible moves
             take(curX,curY,newX,newY,this.board);
-            isCheckMate = checkForCheckMate(enemyColour,this.board);
-            isStaleMate = checkForStaleMate(enemyColour,this.board);
+            checkMate = checkForCheckMate(enemyColour,this.board);
+            staleMate = checkForStaleMate(enemyColour,this.board);
             //checkForStaleMate(friendlyColour,this.board);
             
-            if(isCheckMate == true){
+            if(checkMate == true){
                 this.messages = new ArrayList();
                 addToMessages(Message.Type.INFO,"GAME OVER: Checkmate");
             }
             
-            if(isStaleMate == true){
+            if(staleMate == true){
                 this.messages = new ArrayList();
-                addToMessages(Message.Type.INFO,"GAME OVER: Slatemate");
+                addToMessages(Message.Type.INFO,"GAME OVER: Stalemate");
             }
             
             return true;
-        }else{
+        }else{//The new coordinates given are not a valid move for the piece
             addToMessages(Message.Type.ERROR,"The piece cannot move to the coordinates: (" + newX + "," + newY +")" );
             return false;
         }
     }
     
+    
+    /*
+     * Name: initializeWhitePieces
+     * Description: The function creates all the required white pieces for a standard chess game
+     *              and sets each piece's position to its starting position.
+     * Returns: ArrayList <ChessPiece>
+     */
     private ArrayList <ChessPiece> initializeWhitePieces(){
         ArrayList <ChessPiece> whitePieces = new ArrayList();
         
@@ -149,16 +159,19 @@ public class VanillaChessRules extends Rules{
         ChessPiece whiteBishop1 = new ChessPiece(ChessPiece.ChessPieces.BISHOP,ChessPiece.Colours.WHITE,6,1);
         whitePieces.add(whiteBishop1);
         
-        int i = 0;
-        
-        for(i = 1; i <= 8; i++){
+        for(int i = 1; i <= 8; i++){
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.WHITE,i,2);
             whitePieces.add(pawn);
         }
-        
         return whitePieces;
     }
     
+    /*
+     * Name: initializeBlackPieces
+     * Description: The function creates all the required black pieces for a standard chess game
+     *              and sets each piece's position to its starting position.
+     * Returns: ArrayList <ChessPiece>
+     */
     private ArrayList <ChessPiece> initializeBlackPieces(){
         ArrayList <ChessPiece> blackPieces = new ArrayList();
         
@@ -179,16 +192,19 @@ public class VanillaChessRules extends Rules{
         ChessPiece blackBishop1 = new ChessPiece(ChessPiece.ChessPieces.BISHOP,ChessPiece.Colours.BLACK,6,8);
         blackPieces.add(blackBishop1);
         
-        int i = 0;
-        
-        for(i = 1; i <= 8; i++){
+        for(int i = 1; i <= 8; i++){
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.BLACK,i,7);
             blackPieces.add(pawn);
         }
-        
         return blackPieces;
     }
     
+    /*
+     * Name: createPiecesList
+     * Description: The funciton merges the ArrayLists returned by initializeWhitePieces() 
+     *              and initializeBlackPieces() to create one ArrayList that contains all 
+     *              the pieces for a standard chess game and their initial positions.
+     */
     private void createPiecesList(){
         ArrayList <ChessPiece> whitePieces = initializeWhitePieces();
         ArrayList <ChessPiece> blackPieces = initializeBlackPieces();
@@ -197,21 +213,48 @@ public class VanillaChessRules extends Rules{
         pieces.addAll(blackPieces);
     }
     
+    
+    /*
+     * Name: addToMessages
+     * Description: The function creates a Message object and calls setMessages() to add it 
+     *              to the list of Message objects.
+     */
     private void addToMessages(Message.Type type, String text){
         Message message = new Message(type, text);
         setMessages(message);
     }
     
+    /*
+     * Name: setMessages
+     * Description: The function adds a Message object to an ArrayList that contains a list of Message
+     *              objects. 
+     */
     private void setMessages(Message message){
         this.messages.add(message);
     }
     
+    /*
+     * Name: isCheck
+     * Description: The function takes a given colour and board and calls checkForCheck() to see if
+     *              the given colour is in check
+     * Returns: - true if a given colour is in check
+     *          - false if a given colour is not in check
+     */
     private Boolean isCheck(ChessPiece.Colours colour,Board board){
         Boolean boolReturn = null;
         boolReturn = checkForCheck(colour,board);
         return boolReturn;
     }
     
+    /*
+     * Name: isCheckMate
+     * Description: Checks an instance variable to see if there is a checkmate
+     * Returns: - true if a there is a checkmate
+     *          - false if there is no checkmate
+     * Note: This function doesn't determine if there is a checkmate. It only uses a instance variable that
+     *       is set by checkForCheckMate(). If you want to see if a colour is in checkmate then call
+     *       checkForCheckMate()
+     */
     private Boolean isCheckMate(){
         if(this.isCheckMate == true){
             return true;
@@ -219,6 +262,15 @@ public class VanillaChessRules extends Rules{
         return false;
     }
     
+    /*
+     * Name: isStaleMate
+     * Description: Checks an instance variable to see if there is a stalemate
+     * Returns: - true if a there is a stalemate
+     *          - false if there is no stalemate
+     * Note: This function doesn't determine if there is a stalemate. It only uses a instance variable that
+     *       is set by checkForStaleMate(). If you want to see if a colour is in stalemate then call
+     *       checkForStaleMate()
+     */
     private Boolean isStaleMate(){
         if(this.isStaleMAte == true){
             return true;
@@ -227,86 +279,102 @@ public class VanillaChessRules extends Rules{
         return false;
     }
     
+    /*
+     * Name: isDraw
+     * Description: Checks an instance variable to see if there is a draw
+     * Returns: - true if a there is a draw
+     *          - false if there is no draw
+     * Note: The function isn't done so it only returns false
+     */
     private Boolean isDraw(){
         //Both are stalemated and no pieces left to do checkmate
         return false;
     }
     
+    /*
+     * Name: checkForCheckMate
+     * Description: The function determines if a given colour on a given board is in checkmate
+     * Returns: - true if the given colour is in checkmate
+     *          - false if the given colour is not in checkmate
+     * Note: Checkmate occurs when the colour is in check and cannot make any legal moves
+     */
     private Boolean checkForCheckMate(ChessPiece.Colours colour, Board board){
-        ArrayList <Integer[]> tempArray = new ArrayList();
-        int curX = 0;
-        int curY = 0;
-        Board tempBoard = new VanillaChessBoard();
-        Boolean boolReturn = null;
-        tempBoard.setPieces(copyPiecesList(board.getPieces()));
-        ArrayList <String> tempMessages = new ArrayList(this.messages);
-        Boolean isCheck = null;
+        Boolean boolReturn;
+        Boolean check;
         
-        isCheck = isCheck(colour,board);
+        check = isCheck(colour,board);
         
-        if(isCheck == false){
+        //Checkmate can only occur if the player with the given colour is in check
+        if(check == false){
             return false;
         }
         
-        for(ChessPiece piece: board.getPieces()){
-            curX = piece.getX();
-            curY = piece.getY();
-            if(piece.getChessPieceColour() == colour && piece.getState() == 0){
-                if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
-                    tempArray = new ArrayList(pawnPossibleMoves(piece.getChessPieceColour().toString(),curX,curY,board));                    
-                }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.ROOK){
-                    tempArray = new ArrayList(rookPossibleMoves(curX,curY,board));
-                }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.BISHOP){
-                    tempArray = new ArrayList(bishopPossibleMoves(curX,curY,board));   
-                }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.KING){
-                    tempArray = new ArrayList(kingPossibleMoves(curX,curY,board));
-                }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.QUEEN){
-                    tempArray = new ArrayList(queenPossibleMoves(curX,curY,board));  
-                }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.KNIGHT){
-                    tempArray = new ArrayList(knightPossibleMoves(curX,curY,board));
-                }else{
-                    System.out.println("ERROR: The coordinates passed to tryMoveCheck did not contain a vanilla chess piece");
-                    System.exit(1);
-                }
-           }
-            if(tempArray.size() != 0 && piece.getState() == 0){
-                for(int i = 0; i < tempArray.size(); i++){
-                    //System.out.println("(" + tempArray.get(i)[0] + "," + tempArray.get(i)[1] + ")");
-                    boolReturn = take(piece.getX(),piece.getY(),tempArray.get(i)[0],tempArray.get(i)[1],tempBoard);
-                    if(boolReturn == true){
-                        this.messages = new ArrayList(tempMessages);
-                        return false;
-                    }
-                }
-            }
-       }
-        this.isCheckMate = true;
-        return true;
+        boolReturn = canAPieceMove(colour, board);
+        
+        //If there is no legal move and the given colour is in check then checkmate!
+        if(boolReturn == false){
+            this.isCheckMate = true;
+            return true;
+        }else{
+            return false;
+        }
     }
     
+    /*
+     * Name: checkForStaleMate
+     * Description: The function determins if a given colour on a given board is in a stalemate
+     * Returns: - true if the given colour is in a stalemate
+     *          - false if the given colour is not in a stalemate
+     * Note: Stalemate can only occur if the given colour is not in check and has no legal moves
+     */
     private Boolean checkForStaleMate(ChessPiece.Colours colour, Board board){
-        ArrayList <ArrayList> possibleMoves = new ArrayList(); 
+        Boolean boolReturn;
+        Boolean check;
+        
+        check = isCheck(colour,board);
+        
+        //The colour cannot be in check for a stalemate to occur 
+        if(check == true){
+            return false;
+        }
+        
+       boolReturn = canAPieceMove(colour,board);
+       
+       //If the player is not in check and has no legal moves then stalemate
+       if(boolReturn == false){
+           this.isStaleMAte = true;
+            return true;
+       }else{
+           return false;
+       }
+    }
+    
+    /*
+     * Name: canAPieceMove
+     * Description: The function creates a temporary board and copies the piece positons from the 
+     *              original board. It then plays out all possible moves to see if any piece of given colour 
+     *              can make a legal move. 
+     * Returns: - true if there exists one valid move for a given colour. 
+     *          - false if there are zero valid moves for a given colour
+     */
+    private boolean canAPieceMove(ChessPiece.Colours colour, Board board){
         ArrayList <Integer[]> tempArray = new ArrayList();
         int curX = 0;
         int curY = 0;
         Board tempBoard = new VanillaChessBoard();
-        Boolean boolReturn = null;
+        Boolean boolReturn;
+        ArrayList<Message> tempMessages = new ArrayList(this.messages);
+        
+        this.messages = new ArrayList();
+        
+        //Create a temporary board and set piece positions from the original board
         tempBoard.setPieces(copyPiecesList(board.getPieces()));
-        ArrayList <String> tempMessages = new ArrayList(this.messages);
-        Boolean isCheck = null;
         
-        isCheck = isCheck(colour,board);
-        
-        if(isCheck == true){
-            return false;
-        }
-        
+        //Get all possible moves for each piece
         for(ChessPiece piece: board.getPieces()){
             curX = piece.getX();
             curY = piece.getY();
             if(piece.getChessPieceColour() == colour && piece.getState() == 0){
-                //System.out.println("Position = (" + piece.getX() + "," + piece.getY() + ")");
-                //System.out.println("Name = " + piece.getChessPieceName() + " colour = " + piece.getChessPieceColour() + " state = " + piece.getState());
                 if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
                     tempArray = new ArrayList(pawnPossibleMoves(piece.getChessPieceColour().toString(),curX,curY,board));                    
                 }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.ROOK){
@@ -324,29 +392,32 @@ public class VanillaChessRules extends Rules{
                     System.exit(1);
                 }
            }
+            
             if(tempArray.size() != 0 && tempArray != null && piece.getState() == 0){
-                for(int i = 0; i < tempArray.size(); i++){
-                    //System.out.println("(" + tempArray.get(i)[0] + "," + tempArray.get(i)[1] + ")");
+                for(int i = 0; i < tempArray.size(); i++){//Play out every move for that piece on the temp board
                     boolReturn = take(piece.getX(),piece.getY(),tempArray.get(i)[0],tempArray.get(i)[1],tempBoard);
-                    if(boolReturn == true){
+                    if(boolReturn == true){ //Only need to find one valid move
                         this.messages = new ArrayList(tempMessages);
-                        return false;
+                        return true;
                     }
                 }
             }
        }
-        this.isStaleMAte = true;
-        return true;
+        return false;
     }
     
-    private boolean canAPieceMove(){
-        return true;
-    }
-    
+    /*
+     * Name: checkForCheck
+     * Description: The function gets the coordinates of a king and gets all the possible moves 
+     *              of all pieces of opposite colour from the king. If a piece has coordinates 
+     *              equal to the king's current coordinates then the king is in check.
+     * Returns: - true if the king of a given colour is in check
+     *          - false if the king of a given colour is not in check
+     */
     private Boolean checkForCheck(ChessPiece.Colours friendlyColour,Board board){
-        ArrayList <ArrayList> possibleMoves = new ArrayList(); 
-        ArrayList <Integer[]> tempArray = null;
-        ChessPiece king = null;
+        ArrayList <ArrayList> possibleMoves; 
+        ArrayList <Integer[]> tempArray;
+        ChessPiece king;
         ChessPiece.Colours enemyColour;
         
         if(friendlyColour  == ChessPiece.Colours.WHITE){
@@ -354,18 +425,18 @@ public class VanillaChessRules extends Rules{
         }else{
             enemyColour = ChessPiece.Colours.WHITE;
         }
-        
-        king = getKing(friendlyColour,board);
+
+        king = getKing(friendlyColour,board); 
         
         possibleMoves = getAllPossibleMoves(enemyColour,board);
-        //System.out.println(king.getChessPieceColour() +" King coordinates: (" + king.getX() + "," + king.getY() + ")");
+        
+        //Go through the enememy's possible moves
         for(int i = 0; i < possibleMoves.size();i++){
             for(int j = 0; j < possibleMoves.get(i).size();j++){
                 tempArray = new ArrayList(possibleMoves.get(i));
-                //System.out.println("****(" + tempArray.get(j)[0] + "," + tempArray.get(j)[1] + ")");
+                //If coordinates match the king's coordinates then he is in check
                 if(king.getX() == tempArray.get(j)[0] && king.getY() == tempArray.get(j)[1]){
                     this.isCheck = true;
-                    //System.out.println("1 (" + tempArray.get(j)[0] + "," + tempArray.get(j)[1] + ")");
                     return true;
                 }
             }
@@ -373,7 +444,12 @@ public class VanillaChessRules extends Rules{
         return false;
     }
     
-    //Checks enemy pieces after a move to determine if he is in stalemate
+    /*
+     * Name: getAllPossibleMoves
+     * Description: The function gets all the possiblem moves for a given colour on a given board.
+     * Returns: - ArrayList<ArrayList> 
+     *          - The ArrayList<ArrayList> will be empty if there are no possible moves
+     */
     private ArrayList <ArrayList> getAllPossibleMoves(ChessPiece.Colours colour,Board board){
         ArrayList <ArrayList> possibleMoves = new ArrayList(); 
         ArrayList <Integer[]> tempArray = null;
@@ -385,7 +461,6 @@ public class VanillaChessRules extends Rules{
             curY = piece.getY();
             
             if(piece.getChessPieceColour() == colour){
-                //System.out.println("Name = " +piece.getChessPieceName() + " Colour = " + piece.getChessPieceColour());
                 if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
                     tempArray = new ArrayList(pawnPossibleMoves(piece.getChessPieceColour().toString(),curX,curY,board));
                     possibleMoves.add(tempArray);
@@ -419,7 +494,11 @@ public class VanillaChessRules extends Rules{
         return possibleMoves;
     }
     
-    //If null then no king was found
+    /*
+     * Name: 
+     * Description: The function gets the king piece from a given board
+     * Returns: ChessPiece object
+     */
     private ChessPiece getKing(ChessPiece.Colours colour,Board board){
         for(ChessPiece piece: board.getPieces()){
            if(piece.getChessPieceName() == ChessPiece.ChessPieces.KING && piece.getChessPieceColour() == colour){
@@ -433,10 +512,16 @@ public class VanillaChessRules extends Rules{
     //Move the friendly check to the take function? -- Do we really need it?
     //Move the cur==new coordniates to a new function? -- Do we really need it? 
     //Make messages meaningful
+    /*
+     * Name: validateInput
+     * Description: Validates that the input entered to make a move is correct
+     * Returns: - true if the input is correct
+     *          - false if the input is incorrect
+     */
     private Boolean validateInput(ChessPiece.Colours colour, int curX, int curY, int newX, int newY){
         Boolean boolReturns;
         
-        //Make sure that the move
+        //Check to see if current coordinates and new coordinates are equal
         if(curX == newX && curY == newY){
             addToMessages(Message.Type.ERROR,"New coordinates are the same as current coordinates");
             return false;
@@ -449,19 +534,20 @@ public class VanillaChessRules extends Rules{
             return false;
         }
         
+        //Make sure that the colour entered is correct
         if (checkCurLocationPiece.getChessPieceColour () != colour) {
             addToMessages (Message.Type.ERROR,"Wrong colour");
             return false;
         }
         
-        //Check if new coordinates are within the boards ranges
+        //Check if new coordinates are within the board's ranges
         boolReturns = this.board.isPositionValid(newX,newY);
         if(boolReturns != true){ 
             addToMessages(Message.Type.ERROR,"New coordinates are out of bounds");
             return false;
         }
         
-        //Check if friendly piece is on the new coordinates
+        //Check if there is a friendly piece on the new coordinates
         boolReturns = this.board.isPosistionOcuppied(newX, newY);
         if(boolReturns != false){
             ChessPiece curLocationPiece = this.board.getPieceAtPosition(curX, curY);
@@ -475,6 +561,11 @@ public class VanillaChessRules extends Rules{
         return true;
     }
     
+    /*
+     * Name: copyPiecesList
+     * Description: The function takes an ArrayList and creates a deep copy
+     * Returns: ArrayList<ChessPiece>
+     */
     private ArrayList <ChessPiece> copyPiecesList(ArrayList<ChessPiece> oldPiecesList){
         ArrayList <ChessPiece> copyPiecesList = new ArrayList();
         ChessPiece tempPiece;
@@ -487,10 +578,16 @@ public class VanillaChessRules extends Rules{
         return copyPiecesList;
     }
     
+    /*
+     * Name: take
+     * Description: The function is does two things. First, it determines if a move is legal(will not let  
+     *              a player move a piece if it puts him/her in check). Second, it moves and takes pieces.
+     * Returns: - true if the piece moved to the new coordinates successfully
+     *          - false if the piece tried to make an illegal move
+     */
     private Boolean take(int curX, int curY, int newX, int newY,Board board){
         Boolean boolReturn;
-        Boolean isCheck;
-        Boolean isCheckMate;
+        Boolean check;
         ArrayList <ChessPiece> copyOfPieces;
         ChessPiece pieceFromCopy;
         ChessPiece.Colours friendlyColour;
@@ -507,112 +604,61 @@ public class VanillaChessRules extends Rules{
             enemyColour = ChessPiece.Colours.WHITE;
         }
         
-        //Check if you are in check
-        isCheck = isCheck(friendlyColour,board);
+        check = isCheck(friendlyColour,board);//Check to see if the moving player is in check
         
-        if (isCheck == true) {
-            copyOfPieces = copyPiecesList (board.getPieces());
-            tempBoard.setPieces(copyOfPieces);
-            boolReturn = null;
-            boolReturn = tempBoard.isPosistionOcuppied(newX, newY);
-            
-            if(boolReturn == true){
-                ChessPiece takePiece = tempBoard.getPieceAtPosition(newX, newY);
-                takePiece.setState(1);
-                takePiece.setX(0);
-                takePiece.setY(0);
-            }
-            
-            pieceFromCopy = tempBoard.getPieceAtPosition(curX, curY);
-            
-            pieceFromCopy.setX(newX);
-            pieceFromCopy.setY(newY);
-            
-            //Are you still in check after the move?  
-            isCheck = isCheck(friendlyColour,tempBoard);
-            if(isCheck == true){
-                addToMessages(Message.Type.ERROR,"You are in check");
-                return false;
-            }else{
-                board.setPieces(copyOfPieces);
-                
-                //Check if you put enemy into check
-                isCheck = isCheck(enemyColour,board);
-                
-                if(isCheck == true){
-                   addToMessages(Message.Type.INFO,enemyColour.toString() + " king is in Check");
-                }
-                addToMessages(Message.Type.SUCCESS,"Move was successful");
-                return true;
-            }
+        copyOfPieces = copyPiecesList (board.getPieces());
+        tempBoard.setPieces(copyOfPieces);
+        boolReturn = null;
+
+        //Take the enemy piece if the new coordinates are occupied
+        boolReturn = tempBoard.isPosistionOcuppied(newX, newY);
+        if(boolReturn == true){
+            ChessPiece takePiece = tempBoard.getPieceAtPosition(newX, newY);
+            takePiece.setState(1);
+            takePiece.setX(0);
+            takePiece.setY(0);
+        }
+
+        //Move the piece
+        pieceFromCopy = tempBoard.getPieceAtPosition(curX, curY);
+        pieceFromCopy.setX(newX);
+        pieceFromCopy.setY(newY);
+
+        //Is the moving player in check after the move?
+        check = isCheck(friendlyColour,tempBoard);
+        if(check == true){
+            addToMessages(Message.Type.ERROR,"The move will place you in check");
+            return false;
         }else{
-            /*boolReturn = null;
-            boolReturn = board.isPosistionOcuppied(newX, newY);
-        
-            if(boolReturn == true){
-                ChessPiece takePiece = board.getPieceAtPosition(newX, newY);
-                takePiece.setState(1);
-                takePiece.setX(0);
-                takePiece.setY(0);
+            board.setPieces(copyOfPieces);
+
+            //Check to see if the move put the enemy in check
+            check = isCheck(enemyColour,board);
+            if(check == true){
+               addToMessages(Message.Type.INFO,enemyColour.toString() + " king is in Check");
             }
-            
-            piece.setX(newX);
-            piece.setY(newY);
-            isCheck = isCheck(enemyColour,board);
- 
-            if(isCheck == true){
-                setMessage(enemyColour.toString() + " king is in Check");
-            }
-            setMessage("Succes: Move was successful");
-            return true;*/
-            
-            copyOfPieces = copyPiecesList (board.getPieces());
-            tempBoard.setPieces(copyOfPieces);
-            boolReturn = null;
-            boolReturn = tempBoard.isPosistionOcuppied(newX, newY);
-            
-            if(boolReturn == true){
-                ChessPiece takePiece = tempBoard.getPieceAtPosition(newX, newY);
-                takePiece.setState(1);
-                takePiece.setX(0);
-                takePiece.setY(0);
-            }
-            
-            pieceFromCopy = tempBoard.getPieceAtPosition(curX, curY);
-            
-            pieceFromCopy.setX(newX);
-            pieceFromCopy.setY(newY);
-            
-            isCheck = isCheck(friendlyColour,tempBoard);
-            if(isCheck == true){
-                addToMessages(Message.Type.ERROR,"The move will put you in check");
-                return false;
-            }else{
-                board.setPieces(copyOfPieces);
-                
-                //Check if you put enemy into check
-                isCheck = isCheck(enemyColour,board);
-                
-                if(isCheck == true){
-                    addToMessages(Message.Type.INFO,enemyColour.toString() + " king is in Check");
-                }
-                addToMessages(Message.Type.SUCCESS,"Move was successful");
-                return true;
-            }
+            addToMessages(Message.Type.SUCCESS,"Move was successful");
+            return true;
         }
     }
     
     //Test what happens when curX and Y = destX and Y
     //Error check dest?
     //Check what happens when pawn reaches 1-maxrange and maxrange
+    /*
+     * Name: move
+     * Description: The move function returns an ArrayList containing all the possible coordinates given an
+     *               x and y increment, current location, and a destination. 
+     * Returns: ArrayList<Integer[]>
+     */
     private  ArrayList<Integer[]> move(int xIncrement, int yIncrement, int curX, int curY, int destX, int destY,Board board){
         ArrayList <Integer[]> possibleMoves = new ArrayList();
-        
         ChessPiece pieceAtNewPosition = null; 
         int newX = curX;
         int newY = curY;
         Boolean boolReturn;
         
+        //Start at current coordinates and increment them until destination is reached
         while(newX != destX || newY != destY){
             newX = newX + xIncrement;
             newY = newY + yIncrement;
@@ -643,7 +689,12 @@ public class VanillaChessRules extends Rules{
         return possibleMoves;
     }
     
-    
+    /*
+     * Name: moveUp
+     * Description: Determines the increments needed to move a piece up and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveUp(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleUpMoves = new ArrayList();
         
@@ -652,6 +703,12 @@ public class VanillaChessRules extends Rules{
         return possibleUpMoves;
     }
     
+    /*
+     * Name: moveDown
+     * Description: Determines the increments needed to move a piece down and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveDown(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleDownMoves = new ArrayList();
         
@@ -660,6 +717,12 @@ public class VanillaChessRules extends Rules{
         return possibleDownMoves;
     }
     
+    /*
+     * Name: moveRight
+     * Description: Determines the increments needed to move a piece right and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveRight(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleRightMoves = new ArrayList();
         
@@ -668,6 +731,12 @@ public class VanillaChessRules extends Rules{
         return possibleRightMoves;
     }
     
+    /*
+     * Name: moveLeft
+     * Description: Determines the increments needed to move a piece left and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveLeft(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleLeftMoves = new ArrayList();
         
@@ -676,6 +745,12 @@ public class VanillaChessRules extends Rules{
         return possibleLeftMoves;
     }
     
+    /*
+     * Name: moveLeftUpDiaginally
+     * Description: Determines the increments needed to move a piece moveLeftUpDiaginally and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveLeftUpDiagonally(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleLeftUpDiagonally = new ArrayList();
         
@@ -684,6 +759,12 @@ public class VanillaChessRules extends Rules{
         return possibleLeftUpDiagonally;
     }
     
+    /*
+     * Name: moveLeftDownDiagonally
+     * Description: Determines the increments needed to move a piece moveLeftDownDiaginally and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveLeftDownDiagonally(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleLeftDownDiagonally = new ArrayList();
         
@@ -692,6 +773,12 @@ public class VanillaChessRules extends Rules{
         return possibleLeftDownDiagonally;
     }
     
+    /*
+     * Name: moveRightUpDiagonally
+     * Description: Determines the increments needed to move a piece moveRightUpDiaginally and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveRightUpDiagonally(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleRightUpDiagonally = new ArrayList();
         
@@ -700,6 +787,12 @@ public class VanillaChessRules extends Rules{
         return possibleRightUpDiagonally;
     }
     
+    /*
+     * Name: moveRightDownDiagonally
+     * Description: Determines the increments needed to move a piece moveRightDownDiaginally and then calls the 
+     *              move function with the increments to determine all the possible moves in that direction
+     * Returns: ArrayList<Integer[]>
+     */
     private ArrayList<Integer[]> moveRightDownDiagonally(int curX, int curY, int destX, int destY, Board board){
         ArrayList <Integer[]> possibleRightDownDiagonally = new ArrayList();
         
@@ -708,6 +801,12 @@ public class VanillaChessRules extends Rules{
         return possibleRightDownDiagonally;
     }
     
+    /*
+     * Name: pawnPossibleMoves
+     * Description: The function goes through every move case for a pawn
+     * Returns: - ArrayList<Integer>
+     *          - An empty ArrayList<Integer> if there are no possible moves
+     */
     private ArrayList <Integer[]> pawnPossibleMoves(String colour, int curX,int curY, Board board){
         ArrayList <Integer[]> possibleMoves = new ArrayList();
         ArrayList <Integer[]> temp;
@@ -738,6 +837,7 @@ public class VanillaChessRules extends Rules{
             }
         }
     
+        //A pawn cannot claim a piece that is infront of it so remove the coordinates if they are occupied
         if(temp.size() > 0){
             boolReturn = board.isPosistionOcuppied(temp.get(0)[0], temp.get(0)[1]);
                 
@@ -760,7 +860,7 @@ public class VanillaChessRules extends Rules{
             temp = moveLeftDownDiagonally(curX,curY,destX,destY,board);
         }
             
-            
+        //Remove the diagnal coordinates if no enemy occupies the spot   
         if(temp.size() > 0){
             boolReturn = board.isPosistionOcuppied(temp.get(0)[0], temp.get(0)[1]);
                 
@@ -781,7 +881,7 @@ public class VanillaChessRules extends Rules{
             destY = curY - 1;
             temp = moveRightDownDiagonally(curX,curY,destX,destY,board);
         }
-            
+        //Remove the diagnal coordinates if no enemy occupies the spot   
         if(temp.size() > 0){
             boolReturn = board.isPosistionOcuppied(temp.get(0)[0], temp.get(0)[1]);
                 
@@ -792,22 +892,29 @@ public class VanillaChessRules extends Rules{
         }    
         
         //Case5: Pawn reached the end of the board
-            
+        //DO PROMOTION HERE
         return possibleMoves;
     } 
     
+    /*
+     * Name: rookPossibleMoves
+     * Description: The function goes through every move case for a rook
+     * Returns: - ArrayList<Integer>
+     *          - An empty ArrayList<Integer> if there are no possible moves
+     * NOTE: Rook can potentialy move to the max x or min x and max y or min y so the destination 
+     *       is going to be the max coordinates in the direction specified.
+     */
     private ArrayList <Integer[]> rookPossibleMoves(int curX,int curY, Board board){
         ArrayList <Integer[]> possibleMoves = new ArrayList();
         ArrayList <Integer[]> temp;
         ChessPiece piece = null; 
         int destX = 0;
         int destY = 0;
-        Boolean boolReturn;
         
         //Case 1: Move up
         temp = new ArrayList();
         destX = curX;
-        destY = board.getMaxY();
+        destY = board.getMaxY(); 
         
         temp = moveUp(curX,curY,destX,destY,board);
         possibleMoves.addAll(temp);
@@ -836,16 +943,27 @@ public class VanillaChessRules extends Rules{
         temp = moveLeft(curX,curY,destX,destY,board);
         possibleMoves.addAll(temp);
         
+        
+        //Case 5: Castling king side -- if the rook is at given x and y
+        
+        //Case 6: Castling queen side -- if the rook is at given x and y
+        
         return possibleMoves;
     }
     
+    /*
+     * Name: bishopPossibleMoves
+     * Description: The function goes through every move case for a bishop
+     * Returns: - ArrayList<Integer>
+     *          - An empty ArrayList<Integer> if there are no possible moves
+     * NOTE: Bishop can potentialy move to the max x or min x and max y or min y so the destination 
+     *       is going to be the max coordinates in the direction specified.
+     */
     private ArrayList <Integer[]> bishopPossibleMoves(int curX,int curY, Board board){
         ArrayList <Integer[]> possibleMoves = new ArrayList();
-        ArrayList <Integer[]> temp;
-        ChessPiece piece = null; 
+        ArrayList <Integer[]> temp; 
         int destX = 0;
         int destY = 0;
-        Boolean boolReturn;
         
         
         //Case 1: Left up diagonal
@@ -884,13 +1002,17 @@ public class VanillaChessRules extends Rules{
         return possibleMoves;
     }
     
+    /*
+     * Name: kingPossibleMoves
+     * Description: The function goes through every move case for a king
+     * Returns: - ArrayList<Integer>
+     *          - An empty ArrayList<Integer> if there are no possible moves
+     */
     private ArrayList <Integer[]> kingPossibleMoves(int curX,int curY, Board board){
         ArrayList <Integer[]> possibleMoves = new ArrayList();
         ArrayList <Integer[]> temp;
-        ChessPiece piece = null; 
         int destX = 0;
         int destY = 0;
-        Boolean boolReturn;
         
         //Case 1: Move up 1 square
         temp = new ArrayList();
@@ -948,17 +1070,26 @@ public class VanillaChessRules extends Rules{
         temp = moveRightDownDiagonally(curX,curY,destX,destY,board);
         possibleMoves.addAll(temp);
         
+        //Case 9: Castling king side 
+        
+        //Case 10: Castling queen side
+        
         return possibleMoves;
     }
     
+    /*
+     * Name: queenPossibleMoves
+     * Description: The function goes through every move case for a queen
+     * Returns: - ArrayList<Integer>
+     *          - An empty ArrayList<Integer> if there are no possible moves
+     * Note: Queen behaves like a bishop and rook
+     */
     private ArrayList <Integer[]> queenPossibleMoves(int curX,int curY, Board board){
         ArrayList <Integer[]> possibleMoves = new ArrayList();
         ArrayList <Integer[]> rookMoves = new ArrayList();
         ArrayList <Integer[]> bishopMoves = new ArrayList();
-        ChessPiece piece = null; 
         int destX = 0;
         int destY = 0;
-        Boolean boolReturn;
         
         rookMoves = rookPossibleMoves(curX,curY,board);
         bishopMoves = bishopPossibleMoves(curX,curY,board);
@@ -968,13 +1099,17 @@ public class VanillaChessRules extends Rules{
         return possibleMoves;
     }
     
+    /*
+     * Name: knightPossibleMoves
+     * Description: The function goes through every move case for a knight
+     * Returns: - ArrayList<Integer>
+     *          - An empty ArrayList<Integer> if there are no possible moves
+     */
     private ArrayList <Integer[]> knightPossibleMoves(int curX,int curY, Board board){
         ArrayList <Integer[]> possibleMoves = new ArrayList();
         ArrayList <Integer[]> temp;
-        ChessPiece piece = null; 
         int destX = 0;
         int destY = 0;
-        Boolean boolReturn;
         
         //Case 1: Move up two squares and 1 to the left
         temp = new ArrayList();
@@ -1043,6 +1178,10 @@ public class VanillaChessRules extends Rules{
         return possibleMoves;
     }
     
+    /*
+     * Name: printList
+     * Description: Prints an ArrayList<Integer[]> to the terminal 
+     */
     private void printList(ArrayList <Integer[]> possibleMoves,String piece){
         System.out.println(piece);
         for(int i = 0; i < possibleMoves.size(); i++){
@@ -1050,45 +1189,42 @@ public class VanillaChessRules extends Rules{
         }
     }
     
-    //Change invalid move to something more meaningful. 
+    /*
+     * Name: tryMoveCheck
+     * Description: The function determines whether the new coordinates are a valid move for a given piece
+     * Returns: - true: The piece can move to the new coordinate
+     *          - false: The new coordinates are not in the list of possible moves for the piece
+     */
     private Boolean tryMoveCheck(int curX,int curY,int newX, int newY,Board board){
+        int foundFlag = 0;
         ArrayList <Integer[]> possibleMoves = new ArrayList();
         ChessPiece piece = board.getPieceAtPosition(curX, curY);
         
         if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
             possibleMoves = pawnPossibleMoves(piece.getChessPieceColour().toString(),curX,curY,board);
-            //printList(possibleMoves,"Pawn");
         }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.ROOK){
             possibleMoves = rookPossibleMoves(curX,curY,board);
-            //printList(possibleMoves,"Rook");
         }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.BISHOP){
             possibleMoves = bishopPossibleMoves(curX,curY,board);
-            //printList(possibleMoves,"Bishop");
         }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.KING){
             possibleMoves = kingPossibleMoves(curX,curY,board);
-            //printList(possibleMoves,"King");
         }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.QUEEN){
             possibleMoves = queenPossibleMoves(curX,curY,board);
-            //printList(possibleMoves,"Queen");
         }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.KNIGHT){
             possibleMoves = knightPossibleMoves(curX,curY,board);
-            //printList(possibleMoves,"Knight");
         }else{
             System.out.println("ERROR: The coordinates passed to tryMoveCheck did not contain a vanilla chess piece");
             System.exit(1);
         }
+        
         if(possibleMoves.size() == 0){
-            addToMessages(Message.Type.ERROR,"Invalid move");
             return false;
-        }else{//Need to check if newX and newY are within the list
-            int foundFlag = 0;
-            //System.out.println("Found Moves");
-            
+        }else{//Check if the new coordinates are within the list of possible moves for that piece
+            //Loop through the possible moves to see if the new x and new y are in that list
             for(int i = 0; i < possibleMoves.size();i++){
                 if(possibleMoves.get(i)[0] == newX && possibleMoves.get(i)[1] == newY){
                     foundFlag = 1;
                 }
-                //System.out.println("(" + possibleMoves.get(i)[0] + "," + possibleMoves.get(i)[1] + ")" );
             }
             if(foundFlag == 1){
                 return true;
