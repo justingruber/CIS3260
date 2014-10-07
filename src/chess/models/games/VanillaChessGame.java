@@ -44,7 +44,7 @@ public class VanillaChessGame extends Game {
         } else if (playerBlack == null) {
             playerBlack = user;
             playerBlack.setColour (ChessPiece.Colours.BLACK);
-            this.currentMover = user;
+            //this.currentMover = user;
         } else {
             //spectators
         }
