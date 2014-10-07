@@ -92,7 +92,7 @@ public class VanillaChessController extends GameController {
                     } else {
                         //error
                         showBoard = false;
-                        terminalView.addMessage (new Message (Message.Type.ERROR, "Invalid command."));
+                        terminalView.addMessage (new Message (Message.Type.ERROR, "That's not a valid command."));
                     }
                 }
             }

@@ -184,6 +184,7 @@ public class VanillaChessRules extends Rules{
         ChessPiece blackKing = new ChessPiece(ChessPiece.ChessPieces.KING,ChessPiece.Colours.BLACK,5,8); 
         blackPieces.add(blackKing);
         ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,4,8);
+        blackPieces.add (blackQueen);
         ChessPiece blackRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,1,8);
         blackPieces.add(blackRook);
         ChessPiece blackRook1 = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,8,8);
