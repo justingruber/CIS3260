@@ -29,6 +29,9 @@ public class VanillaChessGame extends Game {
     public boolean tryMove (int curX, int curY, int newX, int newY) {
         if (this.rules.tryMove (this.currentMover.getColour (), curX, curY, newX, newY)) {
             this.currentMover = (this.currentMover == playerWhite) ? playerBlack : playerWhite;
+            
+            
+            
             return true;
         } else {
             return false;

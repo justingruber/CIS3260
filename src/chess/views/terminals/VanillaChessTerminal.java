@@ -64,7 +64,7 @@ public class VanillaChessTerminal extends ChessTerminal {
         }
         
         System.out.println ();
-        System.out.println (" " + repeatChar (VanillaChessTerminal.HORIZONTAL, 25));
+        System.out.println (" " + String.valueOf (VanillaChessTerminal.TOP_LEFT) + repeatChar (VanillaChessTerminal.HORIZONTAL, 23) + String.valueOf (VanillaChessTerminal.TOP_RIGHT));
         
         Board board = this.getBoard ();
         
@@ -103,7 +103,7 @@ public class VanillaChessTerminal extends ChessTerminal {
             System.out.println ();
         }
         
-        System.out.println (" " + repeatChar (VanillaChessTerminal.HORIZONTAL, 25));
+        System.out.println (" " + String.valueOf (VanillaChessTerminal.BOTTOM_LEFT) + repeatChar (VanillaChessTerminal.HORIZONTAL, 23) + String.valueOf (VanillaChessTerminal.BOTTOM_RIGHT));
         System.out.print (" " + String.valueOf (VanillaChessTerminal.VERTICAL));
         
         for (int i = 0; i < abc.length (); i++) {
@@ -121,8 +121,16 @@ public class VanillaChessTerminal extends ChessTerminal {
     private static final char KNIGHT = 'N';
     private static final char PAWN = 'P';
     
+    /*private static final char HORIZONTAL = '─';
+    private static final char VERTICAL = '│';
+    private static final char TOP_LEFT = '┌';
+    private static final char TOP_RIGHT = '┐';
+    private static final char BOTTOM_LEFT = '└';
+    private static final char BOTTOM_RIGHT = '┘';*/
     private static final char HORIZONTAL = '-';
     private static final char VERTICAL = '|';
-    
-    
+    private static final char TOP_LEFT = '-';
+    private static final char TOP_RIGHT = '-';
+    private static final char BOTTOM_LEFT = '-';
+    private static final char BOTTOM_RIGHT = '-';
 }
