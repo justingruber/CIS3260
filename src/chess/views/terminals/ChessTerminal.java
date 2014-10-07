@@ -61,6 +61,4 @@ public abstract class ChessTerminal extends GameView {
             System.out.println ("==============================================");
         }
     }
-    
-    public abstract void update (User currentMover);
 }
