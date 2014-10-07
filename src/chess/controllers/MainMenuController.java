@@ -8,7 +8,7 @@ package chess.controllers;
 
 import chess.Application;
 import chess.DisplayMode;
-import chess.models.UserManager;
+//import chess.models.UserManager;
 import chess.views.terminals.MainMenuTerminal;
 import chess.models.messages.Message;
 import java.util.Observable;

@@ -30,7 +30,7 @@ public class VanillaChessController extends GameController {
         game.addUser (new User ("Sasuke"));
         
         if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
-            terminalView = new VanillaChessTerminal ();
+            VanillaChessTerminal terminalView = new VanillaChessTerminal ();
             terminalView.setBoard (game.getBoard ());
             boolean updateView = true;
             terminalView.addMessage (new Message (Message.Type.INFO, "Enter help for a list of commands."));
@@ -50,6 +50,9 @@ public class VanillaChessController extends GameController {
                 
                 if (input.equals ("board")) {
                     
+                } else if (input.equals ("legend")) {
+                    updateView = false;
+                    terminalView.showLegend ();
                 } else if (input.equals ("help")) {
                     updateView = false;
                     terminalView.showHelp ();

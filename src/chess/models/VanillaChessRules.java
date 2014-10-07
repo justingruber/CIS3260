@@ -127,7 +127,8 @@ public class VanillaChessRules extends Rules{
             
             return true;
         }else{//The new coordinates given are not a valid move for the piece
-            addToMessages(Message.Type.ERROR,"The piece cannot move to the coordinates: (" + newX + "," + newY +")" );
+            String abc = " ABCDEFGH";
+            addToMessages(Message.Type.ERROR,"You can't move that piece to " + abc.charAt (newX) + newY + ".");
             return false;
         }
     }
@@ -194,7 +195,7 @@ public class VanillaChessRules extends Rules{
         
         for(int i = 1; i <= 8; i++){
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.BLACK,i,7);
-            blackPieces.add(pawn);
+            //blackPieces.add(pawn);
         }
         return blackPieces;
     }
@@ -514,30 +515,32 @@ public class VanillaChessRules extends Rules{
      */
     private Boolean validateInput(ChessPiece.Colours colour, int curX, int curY, int newX, int newY){
         Boolean boolReturns;
+        String abc = " ABCDEFGH";
         
         //Check to see if current coordinates and new coordinates are equal
         if(curX == newX && curY == newY){
-            addToMessages(Message.Type.ERROR,"New coordinates are the same as current coordinates");
+            addToMessages(Message.Type.ERROR,"You entered the same coordinates twice.");
             return false;
         }
       
         //Make sure that there is a piece at current x and y coordinates
         ChessPiece checkCurLocationPiece = this.board.getPieceAtPosition(curX, curY);
         if(checkCurLocationPiece == null){
-            addToMessages(Message.Type.ERROR,"There is no piece at current x and y coordinates");
+            
+            addToMessages(Message.Type.ERROR,"There's no piece at " + abc.charAt (curX) + curY + ".");
             return false;
         }
         
         //Make sure that the colour entered is correct
         if (checkCurLocationPiece.getChessPieceColour () != colour) {
-            addToMessages (Message.Type.ERROR,"Wrong colour");
+            addToMessages (Message.Type.ERROR,"That piece doesn't belong to you.");
             return false;
         }
         
         //Check if new coordinates are within the board's ranges
         boolReturns = this.board.isPositionValid(newX,newY);
         if(boolReturns != true){ 
-            addToMessages(Message.Type.ERROR,"New coordinates are out of bounds");
+            addToMessages(Message.Type.ERROR,abc.charAt (newX) + newY + " is out of bounds.");
             return false;
         }
         
@@ -548,7 +551,7 @@ public class VanillaChessRules extends Rules{
             ChessPiece newLocationPiece = this.board.getPieceAtPosition(newX, newY);
           
             if(curLocationPiece != null && newLocationPiece != null && curLocationPiece.getChessPieceColour() == newLocationPiece.getChessPieceColour()){
-                addToMessages(Message.Type.ERROR,"Friendly piece exists at those coordinates");
+                addToMessages(Message.Type.ERROR,"One of your pieces is already at " + abc.charAt (newX) + newY + ".");
                 return false;
             }   
         }

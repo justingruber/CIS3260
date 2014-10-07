@@ -15,6 +15,7 @@ public class VanillaChessTerminal extends ChessTerminal {
     }
     
     public VanillaChessTerminal () {
+        this.helpLines.add ("legend  - Shows what the characters on the board represent");
         this.helpLines.add ("a1 a2   - Moves the piece from a1 to a2. Change to the piece you actually want.");
     }
     
@@ -25,6 +26,19 @@ public class VanillaChessTerminal extends ChessTerminal {
         System.out.println ();
         printBoard ();
         System.out.println ();
+    }
+    
+    public void showLegend () {
+        System.out.println ("===============LEGEND===============");
+        System.out.println ("The first letter of each pair represents the color. W is white. B is black.");
+        System.out.println ("The second letter of each pair represents the type of piece.");
+        System.out.println ("K - King");
+        System.out.println ("Q - Queen");
+        System.out.println ("B - Bishop");
+        System.out.println ("N - Knight");
+        System.out.println ("R - Rook");
+        System.out.println ("P - Pawn");
+        System.out.println ("====================================");
     }
     
     private void init() {
