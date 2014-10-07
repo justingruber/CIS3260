@@ -21,19 +21,19 @@ public class VanillaChessRules extends Rules{
     }
     
     @Override
-    //Description of the function in the rules class
+    //Description of the function is in the rules class
     public String getDescription(){
         return "VanillaChessRules class is a implementation of the standard chess game. It contains public functions that allow for a standard chess game to be played.";
     }
     
     @Override
-    //Description of the function in the rules class
+    //Description of the function is in the rules class
     public ArrayList<Message> getMessages(){
         return this.messages;
     }
     
     @Override
-    //Description of the function in the rules class
+    //Description of the function is in the rules class
     public Boolean isGameOver(){
         if(isCheckMate() == true || isStaleMate() == true){
             addToMessages(Message.Type.INFO , "GAME OVER");
@@ -44,7 +44,7 @@ public class VanillaChessRules extends Rules{
     
     //Create a copy of pieces?
     @Override
-    //Description of the function in the rules class
+    //Description of the function is in the rules class
     public Boolean createBoard(Board.BoardTypes boardType){
         Boolean correctInput = false;
         
@@ -65,7 +65,7 @@ public class VanillaChessRules extends Rules{
     }
     
     @Override
-    //Description of the function in the rules class
+    //Description of the function is in the rules class
     public ArrayList<Board.BoardTypes> getBoardTypes(){
         ArrayList copyBoardTypes = new ArrayList(this.boardTypes);
         return copyBoardTypes;
@@ -464,27 +464,21 @@ public class VanillaChessRules extends Rules{
                 if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
                     tempArray = new ArrayList(pawnPossibleMoves(piece.getChessPieceColour().toString(),curX,curY,board));
                     possibleMoves.add(tempArray);
-                    //printList(tempArray,"Pawn");
                 }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.ROOK){
                     tempArray = new ArrayList(rookPossibleMoves(curX,curY,board));
                     possibleMoves.add(tempArray);
-                    //printList(tempArray,"Rook");
                 }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.BISHOP){
                     tempArray = new ArrayList(bishopPossibleMoves(curX,curY,board));
                     possibleMoves.add(tempArray);
-                    //printList(tempArray,"Bishop");
                 }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.KING){
                     tempArray = new ArrayList(kingPossibleMoves(curX,curY,board));
                     possibleMoves.add(tempArray);
-                    //printList(tempArray,"King");
                 }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.QUEEN){
                     tempArray = new ArrayList(queenPossibleMoves(curX,curY,board));
                     possibleMoves.add(tempArray);
-                    //printList(tempArray,"Queen");
                 }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.KNIGHT){
                     tempArray = new ArrayList(knightPossibleMoves(curX,curY,board));
                     possibleMoves.add(tempArray);
-                    //printList(tempArray,"Knight");
                 }else{
                     System.out.println("ERROR: The coordinates passed to tryMoveCheck did not contain a vanilla chess piece");
                     System.exit(1);
