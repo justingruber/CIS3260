@@ -32,18 +32,16 @@ public class VanillaChessController extends GameController {
         if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
             VanillaChessTerminal terminalView = new VanillaChessTerminal ();
             terminalView.setBoard (game.getBoard ());
-            boolean updateView = true;
+            boolean showBoard = true;
             terminalView.addMessage (new Message (Message.Type.INFO, "Enter help for a list of commands."));
             
             while (true) {
-                if (updateView) {
-                    terminalView.update (game.getCurrentMover ());
+                if (showBoard) {
+                    terminalView.displayBoard ();
                 }
                 
-                updateView = true;
-                terminalView.showMessages ();
-                terminalView.printLine ("Player " + game.getCurrentMover ().getColour () + "/" + game.getCurrentMover ().getUsername () + "'s turn.");
-                terminalView.printLine ("What do you want to do?");
+                showBoard = true;
+                terminalView.update (game.getCurrentMover (), game.getState ());
                 Scanner scan = new Scanner (System.in);
                 String input = scan.nextLine ();
                 input = input.toLowerCase ().trim ();
@@ -51,10 +49,10 @@ public class VanillaChessController extends GameController {
                 if (input.equals ("board")) {
                     
                 } else if (input.equals ("legend")) {
-                    updateView = false;
-                    terminalView.showLegend ();
+                    showBoard = false;
+                    terminalView.displayLegend ();
                 } else if (input.equals ("help")) {
-                    updateView = false;
+                    showBoard = false;
                     terminalView.showHelp ();
                 } else if (input.equals ("quit")) {
                     this.setChanged ();
@@ -85,7 +83,7 @@ public class VanillaChessController extends GameController {
                         
                         for (Message m:messages) {
                             if (m.getType () == Message.Type.ERROR) {
-                                updateView = false;
+                                showBoard = false;
                                 break;
                             }
                         }
@@ -93,8 +91,8 @@ public class VanillaChessController extends GameController {
                         terminalView.addMessages (messages);
                     } else {
                         //error
-                        updateView = false;
-                        terminalView.addMessage (new Message (Message.Type.ERROR, "Invalid command."));
+                        showBoard = false;
+                        terminalView.addMessage (new Message (Message.Type.ERROR, "That's not a valid command."));
                     }
                 }
             }

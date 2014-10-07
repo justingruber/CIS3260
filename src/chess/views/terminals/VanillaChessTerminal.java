@@ -1,8 +1,8 @@
 package chess.views.terminals;
 
 import chess.models.*;
-import chess.models.messages.Message;
 import chess.models.ChessPiece;
+import chess.models.games.VanillaChessGame;
 
 public class VanillaChessTerminal extends ChessTerminal {
     
@@ -12,14 +12,26 @@ public class VanillaChessTerminal extends ChessTerminal {
         this.helpLines.add ("a1 a2   - Moves the piece from a1 to a2. Change to the piece you actually want.");
     }
     
-    @Override
-    public void update (User currentMover) {
+    public void update (User currentMover, VanillaChessGame.State state) {
+        this.showMessages ();
+        
+        if (state == VanillaChessGame.State.NORMAL) {
+            
+        } else if (state == VanillaChessGame.State.GAME_OVER) {
+            
+        }
+        
+        System.out.println ("Player " + currentMover.getColour () + "/" + currentMover.getUsername () + "'s turn.");
+        System.out.println ("What do you want to do?");
+    }
+    
+    public void displayBoard () {
         System.out.println ();
         printBoard ();
         System.out.println ();
     }
     
-    public void showLegend () {
+    public void displayLegend () {
         System.out.println ("===============LEGEND===============");
         System.out.println ("The first letter of each pair represents the color. W is white. B is black.");
         System.out.println ("The second letter of each pair represents the type of piece.");

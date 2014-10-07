@@ -72,8 +72,6 @@ public class VanillaChessRules extends Rules{
     }
     
     @Override
-    //When to check if new == current
-    //Need to implement a currX and curY check?
     //Description of the function in the rules class
     public Boolean tryMove(ChessPiece.Colours colour,int curX, int curY, int newX, int newY){
         Boolean boolReturns = null;
@@ -82,6 +80,7 @@ public class VanillaChessRules extends Rules{
         ChessPiece piece = null;
         Boolean checkMate = null;
         Boolean staleMate = null;
+        Boolean takeReturn = null;
         
         this.messages = new ArrayList();
         
@@ -110,20 +109,25 @@ public class VanillaChessRules extends Rules{
         }
         
         if(boolReturns == true){//If the new coordinates given are within the pieces possible moves
-            take(curX,curY,newX,newY,this.board);
-            checkMate = checkForCheckMate(enemyColour,this.board);
-            staleMate = checkForStaleMate(enemyColour,this.board);
-            //checkForStaleMate(friendlyColour,this.board);
+            takeReturn = take(curX,curY,newX,newY,this.board);
             
+            if(takeReturn == false){
+                return false;
+            }
+            
+            checkMate = checkForCheckMate(enemyColour,this.board);
+            //staleMate = checkForStaleMate(enemyColour,this.board);
+            //checkForStaleMate(friendlyColour,this.board);
+    
             if(checkMate == true){
                 this.messages = new ArrayList();
                 addToMessages(Message.Type.INFO,"GAME OVER: Checkmate");
             }
             
-            if(staleMate == true){
+            /*if(staleMate == true){
                 this.messages = new ArrayList();
                 addToMessages(Message.Type.INFO,"GAME OVER: Stalemate");
-            }
+            }*/
             
             return true;
         }else{//The new coordinates given are not a valid move for the piece
@@ -143,9 +147,9 @@ public class VanillaChessRules extends Rules{
     private ArrayList <ChessPiece> initializeWhitePieces(){
         ArrayList <ChessPiece> whitePieces = new ArrayList();
         
-        ChessPiece whiteKing = new ChessPiece(ChessPiece.ChessPieces.KING,ChessPiece.Colours.WHITE,4,1); 
+        ChessPiece whiteKing = new ChessPiece(ChessPiece.ChessPieces.KING,ChessPiece.Colours.WHITE,5,1); 
         whitePieces.add(whiteKing);
-        /*ChessPiece whiteQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.WHITE,5,1);
+        ChessPiece whiteQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.WHITE,4,1);
         whitePieces.add(whiteQueen);
         ChessPiece whiteRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.WHITE,1,1);
         whitePieces.add(whiteRook);
@@ -158,11 +162,11 @@ public class VanillaChessRules extends Rules{
         ChessPiece whiteBishop = new ChessPiece(ChessPiece.ChessPieces.BISHOP,ChessPiece.Colours.WHITE,3,1);
         whitePieces.add(whiteBishop);
         ChessPiece whiteBishop1 = new ChessPiece(ChessPiece.ChessPieces.BISHOP,ChessPiece.Colours.WHITE,6,1);
-        whitePieces.add(whiteBishop1);*/
+        whitePieces.add(whiteBishop1);
         
         for(int i = 1; i <= 8; i++){
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.WHITE,i,2);
-            //whitePieces.add(pawn);
+            whitePieces.add(pawn);
         }
         return whitePieces;
     }
@@ -178,14 +182,9 @@ public class VanillaChessRules extends Rules{
         
         ChessPiece blackKing = new ChessPiece(ChessPiece.ChessPieces.KING,ChessPiece.Colours.BLACK,5,8); 
         blackPieces.add(blackKing);
-        //ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,4,8);
-        ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,1,3);
+        ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,4,8);
         blackPieces.add(blackQueen);
-        blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,3,8);
-        blackPieces.add(blackQueen);
-        blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,5,7);
-        blackPieces.add(blackQueen);
-        /*ChessPiece blackRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,1,8);
+        ChessPiece blackRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,1,8);
         blackPieces.add(blackRook);
         ChessPiece blackRook1 = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,8,8);
         blackPieces.add(blackRook1);
@@ -196,11 +195,11 @@ public class VanillaChessRules extends Rules{
         ChessPiece blackBishop = new ChessPiece(ChessPiece.ChessPieces.BISHOP,ChessPiece.Colours.BLACK,3,8);
         blackPieces.add(blackBishop);
         ChessPiece blackBishop1 = new ChessPiece(ChessPiece.ChessPieces.BISHOP,ChessPiece.Colours.BLACK,6,8);
-        blackPieces.add(blackBishop1);*/
+        blackPieces.add(blackBishop1);
         
         for(int i = 1; i <= 8; i++){
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.BLACK,i,7);
-            //blackPieces.add(pawn);
+            blackPieces.add(pawn);
         }
         return blackPieces;
     }
@@ -399,9 +398,11 @@ public class VanillaChessRules extends Rules{
                 }
            }
             
-            if(tempArray.size() != 0 && tempArray != null && piece.getState() == 0){
+            if(tempArray.size() != 0 && tempArray != null && piece.getState() == 0 && piece.getChessPieceColour() == colour){
                 for(int i = 0; i < tempArray.size(); i++){//Play out every move for that piece on the temp board
                     boolReturn = take(piece.getX(),piece.getY(),tempArray.get(i)[0],tempArray.get(i)[1],tempBoard);
+                    //System.out.print("("+ piece.getX() + "," + piece.getY()+ ")");
+                    //System.out.println("to ("+ tempArray.get(i)[0] + "," + tempArray.get(i)[1]+ ")");
                     if(boolReturn == true){ //Only need to find one valid move
                         this.messages = new ArrayList(tempMessages);
                         return true;
@@ -508,10 +509,6 @@ public class VanillaChessRules extends Rules{
         return null;
     }
     
-    
-    //Move the friendly check to the take function? -- Do we really need it?
-    //Move the cur==new coordniates to a new function? -- Do we really need it? 
-    //Make messages meaningful
     /*
      * Name: validateInput
      * Description: Validates that the input entered to make a move is correct
@@ -548,7 +545,7 @@ public class VanillaChessRules extends Rules{
             return false;
         }
         
-        //Check if there is a friendly piece on the new coordinates
+        //Check if there is a friendly piece is on the new coordinates
         boolReturns = this.board.isPosistionOcuppied(newX, newY);
         if(boolReturns != false){
             ChessPiece curLocationPiece = this.board.getPieceAtPosition(curX, curY);
@@ -604,9 +601,7 @@ public class VanillaChessRules extends Rules{
         }else{
             enemyColour = ChessPiece.Colours.WHITE;
         }
-        
         check = isCheck(friendlyColour,board);//Check to see if the moving player is in check
-        
         copyOfPieces = copyPiecesList (board.getPieces());
         tempBoard.setPieces(copyOfPieces);
         boolReturn = null;
@@ -627,6 +622,7 @@ public class VanillaChessRules extends Rules{
 
         //Is the moving player in check after the move?
         check = isCheck(friendlyColour,tempBoard);
+        System.out.println("Check if you are in check after the move " + check);
         if(check == true){
             addToMessages(Message.Type.ERROR,"The move will place you in check");
             return false;
@@ -643,9 +639,6 @@ public class VanillaChessRules extends Rules{
         }
     }
     
-    //Test what happens when curX and Y = destX and Y
-    //Error check dest?
-    //Check what happens when pawn reaches 1-maxrange and maxrange
     /*
      * Name: move
      * Description: The move function returns an ArrayList containing all the possible coordinates given an
