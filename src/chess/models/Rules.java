@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import chess.models.messages.*;
 
 public abstract class Rules {
-    public enum RuleTypes {VANILLA_CHESS_RULES}
+    private ArrayList <User> players = new ArrayList <> ();
+    private ArrayList <User> spectators = new ArrayList <> ();
+    private int maxPlayers = 1;
     private RuleTypes ruleType;
     protected Board board = null;
-   
+    
     public Rules(RuleTypes ruleType){
         this.ruleType = ruleType;
     }
@@ -74,4 +76,6 @@ public abstract class Rules {
     public Board getBoardInstance () {
         return board;
     }
+    
+    public enum RuleTypes { VANILLA_CHESS_RULES };
 }
