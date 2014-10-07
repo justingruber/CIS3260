@@ -6,7 +6,6 @@
 
 package chess.views.terminals;
 
-import chess.models.User;
 import chess.models.messages.Message;
 import chess.views.GameView;
 import java.util.ArrayList;
@@ -21,14 +20,6 @@ public abstract class ChessTerminal extends GameView {
     public ChessTerminal () {
         helpLines.add ("board   - Redraws the board in its current state.");
         helpLines.add ("quit    - Exits to the main menu.");
-    }
-    
-    public void print (String text) {
-        System.out.print (text);
-    }
-    
-    public void printLine (String text) {
-        System.out.println (text);
     }
     
     @Override
