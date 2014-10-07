@@ -67,7 +67,7 @@ public class VanillaChessController extends GameController {
                     if (matcher.find ()) {
                         input = matcher.group ();
                         String [] temp = input.split (" ");
-                        String abc = "abcdefh";
+                        String abc = "abcdefgh";
                         int curX = abc.indexOf (temp [0].charAt (0)) + 1;
                         int curY = Integer.parseInt ("" + temp [0].charAt (1));
                         int newX = abc.indexOf (temp [1].charAt (0)) + 1;

@@ -145,7 +145,7 @@ public class VanillaChessRules extends Rules{
         
         ChessPiece whiteKing = new ChessPiece(ChessPiece.ChessPieces.KING,ChessPiece.Colours.WHITE,4,1); 
         whitePieces.add(whiteKing);
-        ChessPiece whiteQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.WHITE,5,1);
+        /*ChessPiece whiteQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.WHITE,5,1);
         whitePieces.add(whiteQueen);
         ChessPiece whiteRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.WHITE,1,1);
         whitePieces.add(whiteRook);
@@ -158,11 +158,11 @@ public class VanillaChessRules extends Rules{
         ChessPiece whiteBishop = new ChessPiece(ChessPiece.ChessPieces.BISHOP,ChessPiece.Colours.WHITE,3,1);
         whitePieces.add(whiteBishop);
         ChessPiece whiteBishop1 = new ChessPiece(ChessPiece.ChessPieces.BISHOP,ChessPiece.Colours.WHITE,6,1);
-        whitePieces.add(whiteBishop1);
+        whitePieces.add(whiteBishop1);*/
         
         for(int i = 1; i <= 8; i++){
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.WHITE,i,2);
-            whitePieces.add(pawn);
+            //whitePieces.add(pawn);
         }
         return whitePieces;
     }
@@ -178,9 +178,14 @@ public class VanillaChessRules extends Rules{
         
         ChessPiece blackKing = new ChessPiece(ChessPiece.ChessPieces.KING,ChessPiece.Colours.BLACK,5,8); 
         blackPieces.add(blackKing);
-        ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,4,8);
+        //ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,4,8);
+        ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,1,3);
         blackPieces.add(blackQueen);
-        ChessPiece blackRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,1,8);
+        blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,3,8);
+        blackPieces.add(blackQueen);
+        blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,5,7);
+        blackPieces.add(blackQueen);
+        /*ChessPiece blackRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,1,8);
         blackPieces.add(blackRook);
         ChessPiece blackRook1 = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,8,8);
         blackPieces.add(blackRook1);
@@ -191,7 +196,7 @@ public class VanillaChessRules extends Rules{
         ChessPiece blackBishop = new ChessPiece(ChessPiece.ChessPieces.BISHOP,ChessPiece.Colours.BLACK,3,8);
         blackPieces.add(blackBishop);
         ChessPiece blackBishop1 = new ChessPiece(ChessPiece.ChessPieces.BISHOP,ChessPiece.Colours.BLACK,6,8);
-        blackPieces.add(blackBishop1);
+        blackPieces.add(blackBishop1);*/
         
         for(int i = 1; i <= 8; i++){
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.BLACK,i,7);
@@ -526,7 +531,6 @@ public class VanillaChessRules extends Rules{
         //Make sure that there is a piece at current x and y coordinates
         ChessPiece checkCurLocationPiece = this.board.getPieceAtPosition(curX, curY);
         if(checkCurLocationPiece == null){
-            
             addToMessages(Message.Type.ERROR,"There's no piece at " + abc.charAt (curX) + curY + ".");
             return false;
         }

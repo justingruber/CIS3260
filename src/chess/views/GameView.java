@@ -12,8 +12,6 @@ public abstract class GameView extends Observable {
     
     public abstract void printBoard();
     
-    public abstract void placePieces(Board board);
-    
     public abstract void showHelp ();
     
     public void setBoard (Board board) {
