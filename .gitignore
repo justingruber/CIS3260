@@ -4,3 +4,4 @@
 /manifest.mf
 /build.xml
 src/chess/Main.java
+*.class
