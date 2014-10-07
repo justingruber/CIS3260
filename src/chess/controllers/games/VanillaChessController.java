@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
+ *a
  * @author Benjin
  */
 public class VanillaChessController extends GameController {
