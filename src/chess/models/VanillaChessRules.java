@@ -631,7 +631,7 @@ public class VanillaChessRules extends Rules{
             if(check == true){
                addToMessages(Message.Type.INFO,enemyColour.toString() + " king is in Check");
             }
-            addToMessages(Message.Type.SUCCESS,"Move was successful");
+            //addToMessages(Message.Type.SUCCESS,"Move was successful");
             return true;
         }
     }

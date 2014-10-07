@@ -19,10 +19,12 @@ public class VanillaChessTerminal extends ChessTerminal {
     }
     
     @Override
-    public void update () {
+    public void update (User currentMover) {
         setupBoard ();
         placePieces (this.getBoard ());
+        System.out.println ();
         printBoard ();
+        System.out.println ();
     }
     
     private void init() {
@@ -129,7 +131,6 @@ public class VanillaChessTerminal extends ChessTerminal {
     
     @Override
     public void printBoard() {
-        int cellWidth = 2;
         String abc = "ABCDEFGH";
         System.out.print (" |");
         
@@ -176,30 +177,6 @@ public class VanillaChessTerminal extends ChessTerminal {
             System.out.print (j);
             System.out.println ();
         }
-        
-        /*for (int i = 0; i < tiles2.length; i++) {
-            
-            if (i > 0 && i < 9) {
-                System.out.print(i);
-            }
-            else{
-                System.out.print(" ");
-            }
-            
-            for (int j = 0; j < tiles2.length; j++) {
-                
-                System.out.print(tiles2[i][j]);
-            }
-            
-            if (i > 0 && i < 9) {
-                System.out.print(i);
-            }
-            else{
-                System.out.print(" ");
-            }
-            
-            System.out.println();
-        }*/
         
         System.out.println (" " + repeatChar (VanillaChessTerminal.HORIZONTAL, 25));
         System.out.print (" |");

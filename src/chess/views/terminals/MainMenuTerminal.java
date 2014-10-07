@@ -34,6 +34,8 @@ public class MainMenuTerminal extends MainMenuView {
     
     @Override
     public void showMessage (Message message) {
+        System.out.println ("==============================================");
         System.out.println (message.getType () + ": " + message.getText ());
+        System.out.println ("==============================================");
     }
 }

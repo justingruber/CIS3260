@@ -16,10 +16,12 @@ import chess.models.VanillaChessRules;
  * @author Benjin
  */
 public class VanillaChessGame extends Game {
+    private State state;
     private User playerWhite;
     private User playerBlack;
     
     public VanillaChessGame () {
+        state = State.ACTIVE;
         this.rules = new VanillaChessRules ();
         this.rules.createBoard (Board.BoardTypes.VANILLA_CHESS_BOARD);
     }
@@ -46,4 +48,10 @@ public class VanillaChessGame extends Game {
             //spectators
         }
     }
+    
+    public State getState () {
+        return state;
+    }
+    
+    public enum State { ACTIVE, GAME_OVER };
 }
