@@ -116,18 +116,68 @@ public class VanillaChessTerminal extends ChessTerminal {
         tiles2[newY][newX] = tiles2[currY][currX];
         tiles2[currY][currX] = VanillaChessTerminal.BLANK;
     }
-
+    
+    private String repeatChar (char c, int n) {
+        String s = "";
+        
+        for (int i = 0; i < n; i++) {
+            s += c;
+        }
+        
+        return s;
+    }
+    
     @Override
     public void printBoard() {
-        String abc = "  ABCDEFGH";
+        int cellWidth = 2;
+        String abc = "ABCDEFGH";
+        System.out.print (" |");
         
         for (int i = 0; i < abc.length (); i++) {
-            System.out.print (abc.charAt (i));
+            System.out.print (abc.charAt (i) + " " + VanillaChessTerminal.VERTICAL);
         }
         
         System.out.println ();
+        System.out.println (" " + repeatChar (VanillaChessTerminal.HORIZONTAL, 25));
         
-        for (int i = 0; i < tiles2.length; i++) {
+        Board board = this.getBoard ();
+        
+        for (int j = 1; j <= 8; j++) {
+            System.out.print (j + "|");
+            
+            for (int i = 1; i <= 8; i++) {
+                ChessPiece piece = board.getPieceAtPosition (i, j);
+                String color = " ";
+                String pieceChar = " ";
+                
+                if (piece != null) {
+                    color = (piece.getChessPieceColour () == ChessPiece.Colours.BLACK) ? "B" : "W";
+                    pieceChar = " ";
+                    ChessPiece.ChessPieces name = piece.getChessPieceName ();
+                
+                    if (name == ChessPiece.ChessPieces.KING) {
+                        pieceChar = "K";
+                    } else if (name == ChessPiece.ChessPieces.QUEEN) {
+                        pieceChar = "Q";
+                    } else if (name == ChessPiece.ChessPieces.ROOK) {
+                        pieceChar = "R";
+                    } else if (name == ChessPiece.ChessPieces.BISHOP) {
+                        pieceChar = "B";
+                    } else if (name == ChessPiece.ChessPieces.KNIGHT) {
+                        pieceChar = "N";
+                    } else if (name == ChessPiece.ChessPieces.PAWN) {
+                        pieceChar = "P";
+                    }
+                }
+                
+                System.out.print (color + pieceChar + "|");
+            }
+            
+            System.out.print (j);
+            System.out.println ();
+        }
+        
+        /*for (int i = 0; i < tiles2.length; i++) {
             
             if (i > 0 && i < 9) {
                 System.out.print(i);
@@ -149,10 +199,13 @@ public class VanillaChessTerminal extends ChessTerminal {
             }
             
             System.out.println();
-        }
+        }*/
+        
+        System.out.println (" " + repeatChar (VanillaChessTerminal.HORIZONTAL, 25));
+        System.out.print (" |");
         
         for (int i = 0; i < abc.length (); i++) {
-            System.out.print (abc.charAt (i));
+            System.out.print (abc.charAt (i) + " " + VanillaChessTerminal.VERTICAL);
         }
         
         System.out.println ();
