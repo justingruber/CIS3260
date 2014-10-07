@@ -102,7 +102,7 @@ public class Chess {
         }
         
         
-        while(streamInput.hasNextLine()){
+        /*while(streamInput.hasNextLine()){
             
             System.out.println("/////////////////////////////////////////");
             fileInput = streamInput.nextLine();
@@ -125,7 +125,7 @@ public class Chess {
             for (int i = 0; i < messages.size();i++){
                 System.out.println(messages.get(i).getType() + ": " + messages.get(i).getText()+ "");
             }
-        }
+        }*/
         
         streamInput.close();
         

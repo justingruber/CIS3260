@@ -115,6 +115,11 @@ public class VanillaChessRules extends Rules{
             staleMate = checkForStaleMate(enemyColour,this.board);
             //checkForStaleMate(friendlyColour,this.board);
             
+            System.out.println("Enemy colour = " + enemyColour);
+            
+            System.out.println("Checkmate: " + checkMate);
+            
+            System.out.println("asdadasd" + this.isCheckMate);
             if(checkMate == true){
                 this.messages = new ArrayList();
                 addToMessages(Message.Type.INFO,"GAME OVER: Checkmate");
@@ -142,9 +147,9 @@ public class VanillaChessRules extends Rules{
     private ArrayList <ChessPiece> initializeWhitePieces(){
         ArrayList <ChessPiece> whitePieces = new ArrayList();
         
-        ChessPiece whiteKing = new ChessPiece(ChessPiece.ChessPieces.KING,ChessPiece.Colours.WHITE,4,1); 
+        ChessPiece whiteKing = new ChessPiece(ChessPiece.ChessPieces.KING,ChessPiece.Colours.WHITE,5,1); 
         whitePieces.add(whiteKing);
-        ChessPiece whiteQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.WHITE,5,1);
+        ChessPiece whiteQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.WHITE,4,1);
         whitePieces.add(whiteQueen);
         ChessPiece whiteRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.WHITE,1,1);
         whitePieces.add(whiteRook);
@@ -393,9 +398,11 @@ public class VanillaChessRules extends Rules{
                 }
            }
             
-            if(tempArray.size() != 0 && tempArray != null && piece.getState() == 0){
+            if(tempArray.size() != 0 && tempArray != null && piece.getState() == 0 && piece.getChessPieceColour() == colour){
                 for(int i = 0; i < tempArray.size(); i++){//Play out every move for that piece on the temp board
                     boolReturn = take(piece.getX(),piece.getY(),tempArray.get(i)[0],tempArray.get(i)[1],tempBoard);
+                    System.out.print("("+ piece.getX() + "," + piece.getY()+ ")");
+                    System.out.println("to ("+ tempArray.get(i)[0] + "," + tempArray.get(i)[1]+ ")");
                     if(boolReturn == true){ //Only need to find one valid move
                         this.messages = new ArrayList(tempMessages);
                         return true;
@@ -541,14 +548,14 @@ public class VanillaChessRules extends Rules{
             return false;
         }
         
-        //Check if there is a friendly piece on the new coordinates
+        //Check if there is a friendly piece is on the new coordinates
         boolReturns = this.board.isPosistionOcuppied(newX, newY);
         if(boolReturns != false){
             ChessPiece curLocationPiece = this.board.getPieceAtPosition(curX, curY);
             ChessPiece newLocationPiece = this.board.getPieceAtPosition(newX, newY);
           
             if(curLocationPiece != null && newLocationPiece != null && curLocationPiece.getChessPieceColour() == newLocationPiece.getChessPieceColour()){
-                addToMessages(Message.Type.ERROR,"Friendly piece exists at those coordinates");
+                addToMessages(Message.Type.ERROR,"Friendly piece exists at the new coordinates");
                 return false;
             }   
         }
@@ -597,9 +604,9 @@ public class VanillaChessRules extends Rules{
         }else{
             enemyColour = ChessPiece.Colours.WHITE;
         }
-        
+        System.out.println("Friendly = " + friendlyColour);
         check = isCheck(friendlyColour,board);//Check to see if the moving player is in check
-        
+        System.out.println("Are you in check = " + check);
         copyOfPieces = copyPiecesList (board.getPieces());
         tempBoard.setPieces(copyOfPieces);
         boolReturn = null;
@@ -620,6 +627,7 @@ public class VanillaChessRules extends Rules{
 
         //Is the moving player in check after the move?
         check = isCheck(friendlyColour,tempBoard);
+        System.out.println("Are you still in check after the move  = " + check);
         if(check == true){
             addToMessages(Message.Type.ERROR,"The move will place you in check");
             return false;
@@ -628,6 +636,7 @@ public class VanillaChessRules extends Rules{
 
             //Check to see if the move put the enemy in check
             check = isCheck(enemyColour,board);
+            System.out.println("Is the enemy in check = " + check);
             if(check == true){
                addToMessages(Message.Type.INFO,enemyColour.toString() + " king is in Check");
             }
