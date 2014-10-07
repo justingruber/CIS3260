@@ -7,11 +7,9 @@
 package chess.models.games;
 
 import chess.models.Board;
-import chess.models.ChessPiece;
 import chess.models.Rules;
 import chess.models.User;
 
-import chess.models.VanillaChessRules;
 import chess.models.messages.Message;
 
 import java.util.ArrayList;

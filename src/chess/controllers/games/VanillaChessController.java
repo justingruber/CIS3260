@@ -12,6 +12,7 @@ import chess.models.User;
 import chess.models.games.VanillaChessGame;
 import chess.models.messages.Message;
 import chess.views.terminals.VanillaChessTerminal;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,29 +26,33 @@ public class VanillaChessController extends GameController {
     @Override
     public void start () {
         VanillaChessGame game = new VanillaChessGame ();
-        game.addUser (new User ("White"));
-        game.addUser (new User ("Black"));
+        game.addUser (new User ("Naruto"));
+        game.addUser (new User ("Sasuke"));
         
         if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
-            terminalView = new VanillaChessTerminal ();
+            VanillaChessTerminal terminalView = new VanillaChessTerminal ();
             terminalView.setBoard (game.getBoard ());
             boolean updateView = true;
             terminalView.addMessage (new Message (Message.Type.INFO, "Enter help for a list of commands."));
             
             while (true) {
                 if (updateView) {
-                    terminalView.update ();
+                    terminalView.update (game.getCurrentMover ());
                 }
                 
                 updateView = true;
                 terminalView.showMessages ();
+                terminalView.printLine ("Player " + game.getCurrentMover ().getColour () + "/" + game.getCurrentMover ().getUsername () + "'s turn.");
                 terminalView.printLine ("What do you want to do?");
                 Scanner scan = new Scanner (System.in);
                 String input = scan.nextLine ();
                 input = input.toLowerCase ().trim ();
                 
-                if (input.equals ("display")) {
+                if (input.equals ("board")) {
                     
+                } else if (input.equals ("legend")) {
+                    updateView = false;
+                    terminalView.showLegend ();
                 } else if (input.equals ("help")) {
                     updateView = false;
                     terminalView.showHelp ();
@@ -62,7 +67,7 @@ public class VanillaChessController extends GameController {
                     if (matcher.find ()) {
                         input = matcher.group ();
                         String [] temp = input.split (" ");
-                        String abc = "abcdefh";
+                        String abc = "abcdefgh";
                         int curX = abc.indexOf (temp [0].charAt (0)) + 1;
                         int curY = Integer.parseInt ("" + temp [0].charAt (1));
                         int newX = abc.indexOf (temp [1].charAt (0)) + 1;
@@ -76,7 +81,16 @@ public class VanillaChessController extends GameController {
 
                         }
                         
-                        terminalView.addMessages (game.getMessages ());
+                        ArrayList <Message> messages = game.getMessages ();
+                        
+                        for (Message m:messages) {
+                            if (m.getType () == Message.Type.ERROR) {
+                                updateView = false;
+                                break;
+                            }
+                        }
+                        
+                        terminalView.addMessages (messages);
                     } else {
                         //error
                         updateView = false;

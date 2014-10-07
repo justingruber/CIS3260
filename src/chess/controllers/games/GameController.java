@@ -14,9 +14,6 @@ import chess.views.terminals.ChessTerminal;
  * @author Benjin
  */
 public abstract class GameController extends Observable {
-    //Game game;
-    ChessTerminal terminalView;
-    
     public abstract void start ();
     
     public static final int QUIT = 0;

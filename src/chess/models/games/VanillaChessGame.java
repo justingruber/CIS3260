@@ -16,10 +16,12 @@ import chess.models.VanillaChessRules;
  * @author Benjin
  */
 public class VanillaChessGame extends Game {
+    private State state;
     private User playerWhite;
     private User playerBlack;
     
     public VanillaChessGame () {
+        state = State.NORMAL;
         this.rules = new VanillaChessRules ();
         this.rules.createBoard (Board.BoardTypes.VANILLA_CHESS_BOARD);
     }
@@ -27,6 +29,7 @@ public class VanillaChessGame extends Game {
     public boolean tryMove (int curX, int curY, int newX, int newY) {
         if (this.rules.tryMove (this.currentMover.getColour (), curX, curY, newX, newY)) {
             this.currentMover = (this.currentMover == playerWhite) ? playerBlack : playerWhite;
+            
             return true;
         } else {
             return false;
@@ -42,8 +45,15 @@ public class VanillaChessGame extends Game {
         } else if (playerBlack == null) {
             playerBlack = user;
             playerBlack.setColour (ChessPiece.Colours.BLACK);
+            //this.currentMover = user;
         } else {
             //spectators
         }
     }
+    
+    public State getState () {
+        return state;
+    }
+    
+    public enum State { NORMAL, CHECK, GAME_OVER };
 }

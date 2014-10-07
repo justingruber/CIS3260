@@ -10,6 +10,8 @@ package chess.models;
  *
  * @author Benjin
  */
+
+/*
 public class UserManager {
     private static User currentUser;
     
@@ -21,3 +23,4 @@ public class UserManager {
         return currentUser;
     }
 }
+*/

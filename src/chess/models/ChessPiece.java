@@ -3,17 +3,39 @@ import java.lang.Exception;
 
 public class ChessPiece {
     public enum Colours{
-        BLACK,
-        WHITE
+        BLACK ("Black"),
+        WHITE ("White");
+        
+        private final String text;
+        
+        private Colours (String text) {
+            this.text = text;
+        }
+        
+        @Override
+        public String toString () {
+            return this.text;
+        }
     }
     
     public enum ChessPieces {
-        KING,
-        QUEEN,
-        ROOK,
-        BISHOP,
-        KNIGHT,
-        PAWN
+        KING ("King"),
+        QUEEN ("Queen"),
+        ROOK ("Rook"),
+        BISHOP ("Bishop"),
+        KNIGHT ("Knight"),
+        PAWN ("Pawn");
+        
+        private final String text;
+        
+        private ChessPieces (String text) {
+            this.text = text;
+        }
+        
+        @Override
+        public String toString () {
+            return this.text;
+        }
     }
     
     private ChessPieces pieceName; 
