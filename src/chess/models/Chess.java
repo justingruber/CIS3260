@@ -95,7 +95,7 @@ public class Chess {
         String string = "";
         
         try{
-            streamInput = new Scanner(new FileInputStream("slatemateTest2.txt"));
+            streamInput = new Scanner(new FileInputStream("check.txt"));
         }catch(FileNotFoundException e){
             System.out.println("ERORR: FILE NOT FOUND!\n");
             System.exit(0);
