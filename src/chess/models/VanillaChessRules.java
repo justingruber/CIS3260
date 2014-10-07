@@ -72,8 +72,6 @@ public class VanillaChessRules extends Rules{
     }
     
     @Override
-    //When to check if new == current
-    //Need to implement a currX and curY check?
     //Description of the function in the rules class
     public Boolean tryMove(ChessPiece.Colours colour,int curX, int curY, int newX, int newY){
         Boolean boolReturns = null;
@@ -82,6 +80,7 @@ public class VanillaChessRules extends Rules{
         ChessPiece piece = null;
         Boolean checkMate = null;
         Boolean staleMate = null;
+        Boolean takeReturn = null;
         
         this.messages = new ArrayList();
         
@@ -110,7 +109,12 @@ public class VanillaChessRules extends Rules{
         }
         
         if(boolReturns == true){//If the new coordinates given are within the pieces possible moves
-            take(curX,curY,newX,newY,this.board);
+            takeReturn = take(curX,curY,newX,newY,this.board);
+            
+            if(takeReturn == false){
+                return false;
+            }
+            
             checkMate = checkForCheckMate(enemyColour,this.board);
             staleMate = checkForStaleMate(enemyColour,this.board);
             //checkForStaleMate(friendlyColour,this.board);
@@ -509,10 +513,6 @@ public class VanillaChessRules extends Rules{
         return null;
     }
     
-    
-    //Move the friendly check to the take function? -- Do we really need it?
-    //Move the cur==new coordniates to a new function? -- Do we really need it? 
-    //Make messages meaningful
     /*
      * Name: validateInput
      * Description: Validates that the input entered to make a move is correct
@@ -626,7 +626,7 @@ public class VanillaChessRules extends Rules{
 
         //Is the moving player in check after the move?
         check = isCheck(friendlyColour,tempBoard);
-        
+        System.out.println("Check if you are in check after the move " + check);
         if(check == true){
             addToMessages(Message.Type.ERROR,"The move will place you in check");
             return false;
@@ -643,9 +643,6 @@ public class VanillaChessRules extends Rules{
         }
     }
     
-    //Test what happens when curX and Y = destX and Y
-    //Error check dest?
-    //Check what happens when pawn reaches 1-maxrange and maxrange
     /*
      * Name: move
      * Description: The move function returns an ArrayList containing all the possible coordinates given an
