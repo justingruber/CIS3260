@@ -116,7 +116,7 @@ public class VanillaChessRules extends Rules{
             }
             
             checkMate = checkForCheckMate(enemyColour,this.board);
-            staleMate = checkForStaleMate(enemyColour,this.board);
+            //staleMate = checkForStaleMate(enemyColour,this.board);
             //checkForStaleMate(friendlyColour,this.board);
     
             if(checkMate == true){
@@ -124,10 +124,10 @@ public class VanillaChessRules extends Rules{
                 addToMessages(Message.Type.INFO,"GAME OVER: Checkmate");
             }
             
-            if(staleMate == true){
+            /*if(staleMate == true){
                 this.messages = new ArrayList();
                 addToMessages(Message.Type.INFO,"GAME OVER: Stalemate");
-            }
+            }*/
             
             return true;
         }else{//The new coordinates given are not a valid move for the piece
