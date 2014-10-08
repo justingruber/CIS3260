@@ -27,3 +27,13 @@ or
 	
 Description:
 When the game starts type "help" to get a list of commands.
+
+
+
+
+
+a
+
+
+
+a
