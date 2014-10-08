@@ -8,7 +8,7 @@ Group Members:
 	- 2. Jinhai Wang
 	- 3. Benjin Yap
 	- 4. Justin Gruber
-
+	
 CIS: CIS 3260
 Assignment: 2
 Date: Tuesday October 9, 2014
@@ -27,13 +27,3 @@ or
 	
 Description:
 When the game starts type "help" to get a list of commands.
-
-
-
-
-
-a
-
-
-
-a
