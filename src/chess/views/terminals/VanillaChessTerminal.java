@@ -8,8 +8,8 @@ public class VanillaChessTerminal extends ChessTerminal {
     
     
     public VanillaChessTerminal () {
-        this.helpLines.add ("legend  - Shows what the characters on the board represent");
-        this.helpLines.add ("a1 a2   - Moves the piece from a1 to a2. Change to the piece you actually want.");
+        this.addHelpLine ("legend  - Shows what the characters on the board represent");
+        this.addHelpLine ("a1 a2   - Moves the piece from a1 to a2. Change to the piece you actually want.");
     }
     
     public void update (User currentMover, VanillaChessGame.State state) {

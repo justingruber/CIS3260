@@ -15,11 +15,15 @@ import java.util.ArrayList;
  * @author Benjin
  */
 public abstract class ChessTerminal extends GameView {
-    ArrayList <String> helpLines = new ArrayList <> ();
+    private ArrayList <String> helpLines = new ArrayList <> ();
     
     public ChessTerminal () {
         helpLines.add ("board   - Redraws the board in its current state.");
         helpLines.add ("quit    - Exits to the main menu.");
+    }
+    
+    public void addHelpLine (String line) {
+        helpLines.add (line);
     }
     
     @Override
