@@ -16,12 +16,11 @@ public class VanillaChessTerminal extends ChessTerminal {
         this.showMessages ();
         
         if (state == VanillaChessGame.State.NORMAL) {
-            
+            System.out.println ("Player " + currentMover.getColour () + "/" + currentMover.getUsername () + "'s turn.");
         } else if (state == VanillaChessGame.State.GAME_OVER) {
             
         }
         
-        System.out.println ("Player " + currentMover.getColour () + "/" + currentMover.getUsername () + "'s turn.");
         System.out.println ("What do you want to do?");
     }
     

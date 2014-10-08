@@ -36,7 +36,7 @@ public class VanillaChessRules extends Rules{
     //Description of the function is in the rules class
     public Boolean isGameOver(){
         if(isCheckMate() == true || isStaleMate() == true){
-            addToMessages(Message.Type.INFO , "GAME OVER");
+            //addToMessages(Message.Type.INFO , "GAME OVER");
             return true;
         } 
         return false;
@@ -168,6 +168,7 @@ public class VanillaChessRules extends Rules{
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.WHITE,i,2);
             whitePieces.add(pawn);
         }
+        //whitePieces.add (new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.WHITE,4,2));
         return whitePieces;
     }
     
@@ -184,6 +185,10 @@ public class VanillaChessRules extends Rules{
         blackPieces.add(blackKing);
         ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,4,8);
         blackPieces.add(blackQueen);
+        /*blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,1,5);
+        blackPieces.add(blackQueen);
+        blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,6,8);
+        blackPieces.add(blackQueen);*/
         ChessPiece blackRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,1,8);
         blackPieces.add(blackRook);
         ChessPiece blackRook1 = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,8,8);
@@ -622,7 +627,7 @@ public class VanillaChessRules extends Rules{
 
         //Is the moving player in check after the move?
         check = isCheck(friendlyColour,tempBoard);
-        System.out.println("Check if you are in check after the move " + check);
+        
         if(check == true){
             addToMessages(Message.Type.ERROR,"The move will place you in check");
             return false;

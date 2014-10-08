@@ -30,7 +30,9 @@ public class VanillaChessGame extends Game {
         if (this.rules.tryMove (this.currentMover.getColour (), curX, curY, newX, newY)) {
             this.currentMover = (this.currentMover == playerWhite) ? playerBlack : playerWhite;
             
-            
+            if (((VanillaChessRules) this.rules).isGameOver ()) {
+                state = State.GAME_OVER;
+            }
             
             return true;
         } else {

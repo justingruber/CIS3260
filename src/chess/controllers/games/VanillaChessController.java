@@ -63,34 +63,38 @@ public class VanillaChessController extends GameController {
                     Matcher matcher = pattern.matcher (input);
 
                     if (matcher.find ()) {
-                        input = matcher.group ();
-                        String [] temp = input.split (" ");
-                        String abc = "abcdefgh";
-                        int curX = abc.indexOf (temp [0].charAt (0)) + 1;
-                        int curY = Integer.parseInt ("" + temp [0].charAt (1));
-                        int newX = abc.indexOf (temp [1].charAt (0)) + 1;
-                        int newY = Integer.parseInt ("" + temp [1].charAt (1));
-                        
-                        boolean success = game.tryMove (curX, curY, newX, newY);
+                        if (game.getState () == VanillaChessGame.State.NORMAL) {
+                            input = matcher.group ();
+                            String [] temp = input.split (" ");
+                            String abc = "abcdefgh";
+                            int curX = abc.indexOf (temp [0].charAt (0)) + 1;
+                            int curY = Integer.parseInt ("" + temp [0].charAt (1));
+                            int newX = abc.indexOf (temp [1].charAt (0)) + 1;
+                            int newY = Integer.parseInt ("" + temp [1].charAt (1));
 
-                        if (success) {
-                            
-                        } else {
+                            boolean success = game.tryMove (curX, curY, newX, newY);
 
-                        }
-                        
-                        ArrayList <Message> messages = game.getMessages ();
-                        
-                        for (Message m:messages) {
-                            if (m.getType () == Message.Type.ERROR) {
-                                showBoard = false;
-                                break;
+                            if (success) {
+
+                            } else {
+
                             }
+
+                            ArrayList <Message> messages = game.getMessages ();
+
+                            for (Message m:messages) {
+                                if (m.getType () == Message.Type.ERROR) {
+                                    showBoard = false;
+                                    break;
+                                }
+                            }
+
+                            terminalView.addMessages (messages);
+                        } else {
+                            showBoard = false;
+                            terminalView.addMessage (new Message (Message.Type.ERROR, "The game is already over."));
                         }
-                        
-                        terminalView.addMessages (messages);
                     } else {
-                        //error
                         showBoard = false;
                         terminalView.addMessage (new Message (Message.Type.ERROR, "That's not a valid command."));
                     }
