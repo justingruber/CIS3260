@@ -13,7 +13,7 @@ public class VanillaChessTerminal extends ChessTerminal {
     }
     
     public void update (User currentMover, VanillaChessGame.State state) {
-        this.showMessages ();
+        this.displayMessages ();
         
         if (state == VanillaChessGame.State.NORMAL) {
             System.out.println ("Player " + currentMover.getColour () + "/" + currentMover.getUsername () + "'s turn.");
@@ -53,8 +53,7 @@ public class VanillaChessTerminal extends ChessTerminal {
         return s;
     }
     
-    @Override
-    public void printBoard() {
+    private void printBoard() {
         String abc = "ABCDEFGH";
         System.out.print (" " + String.valueOf (VanillaChessTerminal.VERTICAL));
         

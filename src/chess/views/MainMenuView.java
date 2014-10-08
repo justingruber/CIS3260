@@ -6,5 +6,5 @@ import java.util.Observable;
 public abstract class MainMenuView extends Observable {
     
     public abstract void update ();
-    public abstract void showMessage (Message message);
+    public abstract void displayMessage (Message message);
 }

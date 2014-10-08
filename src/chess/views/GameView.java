@@ -10,9 +10,7 @@ public abstract class GameView extends Observable {
     private ArrayList <Message> messages = new ArrayList <Message> ();
     private Board board;
     
-    public abstract void printBoard();
-    
-    public abstract void showHelp ();
+    public abstract void displayHelp ();
     
     public void setBoard (Board board) {
         this.board = board;
@@ -42,5 +40,5 @@ public abstract class GameView extends Observable {
         messages.clear ();
     }
     
-    public abstract void showMessages ();
+    public abstract void displayMessages ();
 }

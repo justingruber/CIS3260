@@ -15,14 +15,6 @@ import java.util.Scanner;
  */
 public class MainMenuTerminal extends MainMenuView {
     
-    public void print (String text) {
-        System.out.print (text);
-    }
-    
-    public void printLine (String text) {
-        System.out.println (text);
-    }
-    
     @Override
     public void update () {
         System.out.println ("===================================");
@@ -33,7 +25,7 @@ public class MainMenuTerminal extends MainMenuView {
     }
     
     @Override
-    public void showMessage (Message message) {
+    public void displayMessage (Message message) {
         System.out.println ("==============================================");
         System.out.println (message.getType () + ": " + message.getText ());
         System.out.println ("==============================================");

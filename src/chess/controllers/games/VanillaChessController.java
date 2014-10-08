@@ -53,7 +53,7 @@ public class VanillaChessController extends GameController {
                     terminalView.displayLegend ();
                 } else if (input.equals ("help")) {
                     showBoard = false;
-                    terminalView.showHelp ();
+                    terminalView.displayHelp ();
                 } else if (input.equals ("quit")) {
                     this.setChanged ();
                     this.notifyObservers (GameController.QUIT);

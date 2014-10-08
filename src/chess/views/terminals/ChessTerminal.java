@@ -27,7 +27,7 @@ public abstract class ChessTerminal extends GameView {
     }
     
     @Override
-    public void showHelp () {
+    public void displayHelp () {
         System.out.println ("======================HELP====================");
         
         for (String line:helpLines) {
@@ -38,7 +38,7 @@ public abstract class ChessTerminal extends GameView {
     }
     
     @Override
-    public void showMessages () {
+    public void displayMessages () {
         Message message = null;
         boolean printed = false;
         

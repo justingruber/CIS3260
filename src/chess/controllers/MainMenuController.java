@@ -43,7 +43,7 @@ public class MainMenuController extends Observable implements Observer {
                     this.notifyObservers (MainMenuController.QUIT);
                     break;
                 } else {  //invalid input
-                    terminalView.showMessage (new Message (Message.Type.ERROR, "Invalid input"));
+                    terminalView.displayMessage (new Message (Message.Type.ERROR, "Invalid input"));
                 }
             }
         }
