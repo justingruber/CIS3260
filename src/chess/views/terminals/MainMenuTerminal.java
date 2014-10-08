@@ -20,8 +20,8 @@ public class MainMenuTerminal extends MainMenuView {
         System.out.println ("===================================");
         System.out.println ("    Super Awesome Chess Program    ");
         System.out.println ("===================================");
-        System.out.println ("(1) Play");
-        System.out.println ("(2) Quit");
+        System.out.println ("Play");
+        System.out.println ("Quit");
     }
     
     @Override
