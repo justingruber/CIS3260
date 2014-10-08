@@ -119,12 +119,6 @@ public class VanillaChessTerminal extends ChessTerminal {
     private static final char KNIGHT = 'N';
     private static final char PAWN = 'P';
     
-    /*private static final char HORIZONTAL = '─';
-    private static final char VERTICAL = '│';
-    private static final char TOP_LEFT = '┌';
-    private static final char TOP_RIGHT = '┐';
-    private static final char BOTTOM_LEFT = '└';
-    private static final char BOTTOM_RIGHT = '┘';*/
     private static final char HORIZONTAL = '-';
     private static final char VERTICAL = '|';
     private static final char TOP_LEFT = '-';
