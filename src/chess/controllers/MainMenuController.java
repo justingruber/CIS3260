@@ -30,8 +30,8 @@ public class MainMenuController extends Observable implements Observer {
             
             while (true) {
                 Scanner scan = new Scanner (System.in);
-                //String input = scan.nextLine ();
-                String input = MainMenuController.PLAY;
+                String input = scan.nextLine ();
+                //String input = MainMenuController.PLAY;
                 input = input.toLowerCase ().trim ();
                 
                 if (input.equals (MainMenuController.PLAY)) {

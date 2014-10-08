@@ -22,15 +22,15 @@ public class VanillaChessGame extends Game {
     
     public VanillaChessGame () {
         state = State.NORMAL;
-        this.rules = new VanillaChessRules ();
-        this.rules.createBoard (Board.BoardTypes.VANILLA_CHESS_BOARD);
+        this.setRules (new VanillaChessRules ());
+        this.getRules ().createBoard (Board.BoardTypes.VANILLA_CHESS_BOARD);
     }
     
     public boolean tryMove (int curX, int curY, int newX, int newY) {
-        if (this.rules.tryMove (this.currentMover.getColour (), curX, curY, newX, newY)) {
-            this.currentMover = (this.currentMover == playerWhite) ? playerBlack : playerWhite;
+        if (this.getRules ().tryMove (this.getCurrentMover ().getColour (), curX, curY, newX, newY)) {
+            this.setCurrentMover ((this.getCurrentMover () == playerWhite) ? playerBlack : playerWhite);
             
-            if (((VanillaChessRules) this.rules).isGameOver ()) {
+            if (((VanillaChessRules) this.getRules ()).isGameOver ()) {
                 state = State.GAME_OVER;
             }
             
@@ -45,11 +45,11 @@ public class VanillaChessGame extends Game {
         if (playerWhite == null) {
             playerWhite = user;
             playerWhite.setColour (ChessPiece.Colours.WHITE);
-            this.currentMover = user;
+            this.setCurrentMover (playerWhite);
         } else if (playerBlack == null) {
             playerBlack = user;
             playerBlack.setColour (ChessPiece.Colours.BLACK);
-            //this.currentMover = user;
+            //this.setCurrentMover (playerBlack);
         } else {
             //spectators
         }
