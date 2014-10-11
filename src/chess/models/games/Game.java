@@ -18,7 +18,6 @@ import java.util.ArrayList;
  * @author Benjin
  */
 public abstract class Game {
-    private User currentMover;
     private Rules rules;
     
     public abstract void addUser (User user);
@@ -31,12 +30,8 @@ public abstract class Game {
         return rules.getMessages ();
     }
     
-    public void setCurrentMover (User user) {
-        currentMover = user;
-    }
-    
     public User getCurrentMover () {
-        return currentMover;
+        return rules.getCurrentMover ();
     }
     
     public void setRules (Rules rules) {

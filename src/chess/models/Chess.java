@@ -149,11 +149,11 @@ public class Chess {
             //System.out.println("\nMoving piece from: (" + curX + "," + curY + ")" + " to: (" + newX + "," + newY + ")" );
     
             if(string.equalsIgnoreCase("Black")){
-                boolReturn = rules.tryMove(ChessPiece.Colours.BLACK,curX, curY, newX, newY);   
+                //boolReturn = rules.tryMove(ChessPiece.Colours.BLACK,curX, curY, newX, newY);   
             }else{
-                boolReturn = rules.tryMove(ChessPiece.Colours.WHITE,curX, curY, newX, newY);   
+                //boolReturn = rules.tryMove(ChessPiece.Colours.WHITE,curX, curY, newX, newY);   
             }
-            
+            boolReturn = true;
             if(boolReturn == true){
                 drawBoard(board);
             }

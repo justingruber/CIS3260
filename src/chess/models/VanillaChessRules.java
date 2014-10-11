@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import chess.models.messages.*;
         
 public class VanillaChessRules extends Rules{
+    private User playerWhite;
+    private User playerBlack;
     private ArrayList <ChessPiece> pieces = new ArrayList();
     private ArrayList <Board.BoardTypes> boardTypes = new ArrayList();
     private ArrayList <Message> messages = new ArrayList();
@@ -18,6 +20,18 @@ public class VanillaChessRules extends Rules{
         this.boardTypes.add(Board.BoardTypes.VANILLA_CHESS_BOARD);
         createPiecesList();
         //this.addToMessages(Message.Type.INFO, "No messages");
+    }
+    
+    @Override
+    void playerAdded (User user) {
+        if (playerWhite == null) {
+            playerWhite = user;
+            playerWhite.setColour (ChessPiece.Colours.WHITE);
+            this.setCurrentMover (user);
+        } else {
+            playerBlack = user;
+            playerBlack.setColour (ChessPiece.Colours.BLACK);
+        }
     }
     
     @Override
@@ -73,7 +87,7 @@ public class VanillaChessRules extends Rules{
     
     @Override
     //Description of the function in the rules class
-    public Boolean tryMove(ChessPiece.Colours colour,int curX, int curY, int newX, int newY){
+    public Boolean tryMove(int curX, int curY, int newX, int newY){
         Boolean boolReturns = null;
         ChessPiece.Colours friendlyColour;
         ChessPiece.Colours enemyColour;
@@ -91,7 +105,7 @@ public class VanillaChessRules extends Rules{
         }
         
         //Check to see if the input is valid
-        boolReturns = validateInput(colour,curX,curY,newX,newY);
+        boolReturns = validateInput(this.getCurrentMover ().getColour (),curX,curY,newX,newY);
         if(boolReturns == false){
             return false;
         }

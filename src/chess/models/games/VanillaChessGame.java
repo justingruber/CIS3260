@@ -17,8 +17,6 @@ import chess.models.VanillaChessRules;
  */
 public class VanillaChessGame extends Game {
     private State state;
-    private User playerWhite;
-    private User playerBlack;
     
     public VanillaChessGame () {
         state = State.NORMAL;
@@ -27,8 +25,7 @@ public class VanillaChessGame extends Game {
     }
     
     public boolean tryMove (int curX, int curY, int newX, int newY) {
-        if (this.getRules ().tryMove (this.getCurrentMover ().getColour (), curX, curY, newX, newY)) {
-            this.setCurrentMover ((this.getCurrentMover () == playerWhite) ? playerBlack : playerWhite);
+        if (this.getRules ().tryMove (curX, curY, newX, newY)) {
             
             if (((VanillaChessRules) this.getRules ()).isGameOver ()) {
                 state = State.GAME_OVER;
@@ -42,17 +39,7 @@ public class VanillaChessGame extends Game {
     
     @Override
     public void addUser (User user) {
-        if (playerWhite == null) {
-            playerWhite = user;
-            playerWhite.setColour (ChessPiece.Colours.WHITE);
-            this.setCurrentMover (playerWhite);
-        } else if (playerBlack == null) {
-            playerBlack = user;
-            playerBlack.setColour (ChessPiece.Colours.BLACK);
-            //this.setCurrentMover (playerBlack);
-        } else {
-            //spectators
-        }
+        this.getRules ().addUser (user);
     }
     
     public State getState () {

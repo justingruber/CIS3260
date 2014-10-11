@@ -4,14 +4,44 @@ import java.util.ArrayList;
 import chess.models.messages.*;
 
 public abstract class Rules {
+    private User currentMover;
     private ArrayList <User> players = new ArrayList <> ();
     private ArrayList <User> spectators = new ArrayList <> ();
-    private int maxPlayers = 1;
+    private int maxPlayers = 2;
     private RuleTypes ruleType;
     protected Board board = null;
     
     public Rules(RuleTypes ruleType){
         this.ruleType = ruleType;
+    }
+    
+    public void addUser (User user) {
+        if (players.size () < maxPlayers) {
+            players.add (user);
+            playerAdded (user);
+        } else {
+            spectators.add (user);
+        }
+    }
+    
+    void playerAdded (User user) {
+        
+    }
+    
+    public void setMaxPlayers (int num) {
+        maxPlayers = num;
+    }
+    
+    public int getMaxPlayers () {
+        return maxPlayers;
+    }
+    
+    public void setCurrentMover (User user) {
+        currentMover = user;
+    }
+    
+    public User getCurrentMover () {
+        return currentMover;
     }
     
     /* 
@@ -35,7 +65,7 @@ public abstract class Rules {
      * Returns: - true if the move was successful
      *          - false if if the move was unsuccessful
      */
-    abstract public Boolean tryMove(ChessPiece.Colours color, int curX, int curY, int newX, int newY);
+    abstract public Boolean tryMove(int curX, int curY, int newX, int newY);
     
     /* 
      * Name: getMessages
