@@ -3,11 +3,21 @@ package chess.models;
 import java.util.ArrayList;
 
 public abstract class Board {
-    public enum BoardTypes {VANILLA_CHESS_BOARD}
-  
-    abstract public BoardTypes getBoardType();
-    abstract public ArrayList <ChessPiece> getPieces();
-    abstract public void setPieces(ArrayList <ChessPiece> chessPieceList);
+    private ArrayList <ChessPiece> chessPieces;
+    protected BoardType type;
+    
+    public final BoardType getType() {
+        return type;
+    }
+    
+    public final ArrayList <ChessPiece> getPieces(){
+        return new ArrayList (chessPieces);
+    }
+    
+    public final void setPieces(ArrayList <ChessPiece> chessPieceList){
+        chessPieces = chessPieceList;            
+    }
+    
     abstract public ChessPiece getPieceAtPosition(int x, int y);
     abstract public boolean isPosistionOcuppied(int x, int y);
     abstract public boolean isPositionValid(int x, int y);

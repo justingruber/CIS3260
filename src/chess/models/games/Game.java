@@ -7,38 +7,47 @@
 package chess.models.games;
 
 import chess.models.Board;
-import chess.models.Rules;
+import chess.models.BoardType;
+import chess.models.ChessPiece;
+import chess.models.GameType;
 import chess.models.User;
-
 import chess.models.messages.Message;
-
 import java.util.ArrayList;
 /**
  *
  * @author Benjin
  */
 public abstract class Game {
-    private Rules rules;
+    protected GameType type;
+    private ArrayList <User> players = new ArrayList <> ();
+    private ArrayList <User> spectators = new ArrayList <> ();
+    protected int maxPlayers = 2;
+    protected Board board;
+    protected ArrayList <ChessPiece> pieces = new ArrayList();
+    protected ArrayList <Message> messages = new ArrayList();
     
-    public abstract void addUser (User user);
+    public void addUser (User user) {
+        if (players.size () < maxPlayers) {
+            players.add (user);
+        } else {
+            spectators.add (user);
+        }
+    }
+    
+    public int getMaxPlayers () {
+        return maxPlayers;
+    }
     
     public Board getBoard () {
-        return rules.getBoardInstance ();
+        return board;
     }
     
     public ArrayList <Message> getMessages () {
-        return rules.getMessages ();
+        return messages;
     }
     
-    public User getCurrentMover () {
-        return rules.getCurrentMover ();
-    }
     
-    public void setRules (Rules rules) {
-        this.rules = rules;
-    }
+    protected abstract void playerAdded (User user);
     
-    public Rules getRules () {
-        return rules;
-    }
+    protected abstract void createBoard ();
 }
