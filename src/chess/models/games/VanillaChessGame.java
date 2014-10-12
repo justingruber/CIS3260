@@ -7,7 +7,6 @@
 package chess.models.games;
 
 import chess.models.Board;
-import chess.models.ChessPiece;
 import chess.models.User;
 import chess.models.VanillaChessRules;
 
@@ -26,7 +25,7 @@ public class VanillaChessGame extends Game {
     
     public boolean tryMove (int curX, int curY, int newX, int newY) {
         if (this.getRules ().tryMove (curX, curY, newX, newY)) {
-            
+            //////////change this into the game class
             if (((VanillaChessRules) this.getRules ()).isGameOver ()) {
                 state = State.GAME_OVER;
             }
