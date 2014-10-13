@@ -10,4 +10,23 @@ package chess.models;
  *
  * @author Benjin
  */
-public enum GameType { VANILLA }
+public enum GameType {
+    VANILLA ("Vanilla", "Regular ol' chess");
+    
+    private final String name;
+    private final String description;
+
+    private GameType (String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+    
+    @Override
+    public String toString () {
+        return name;
+    }
+    
+    public String getDescription () {
+        return description;
+    }
+}

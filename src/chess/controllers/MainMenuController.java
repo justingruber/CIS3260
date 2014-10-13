@@ -23,9 +23,8 @@ import java.util.regex.Pattern;
  */
 public class MainMenuController extends Observable implements Observer {
     public void start () {
-        //UserManager.setCurrentUser ("Naruto");
         this.setChanged ();
-                            this.notifyObservers (GameType.values ()[0]);
+        this.notifyObservers (GameType.values ()[0]);
         
         if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
             MainMenuTerminal terminalView = new MainMenuTerminal ();

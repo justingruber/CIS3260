@@ -27,7 +27,7 @@ public class MainMenuTerminal extends MainMenuView {
             System.out.println ("Which variant do you want to play?");
             
             for (GameType type:GameType.values ()) {
-                System.out.println ("[" + i + "] " + type);
+                System.out.println ("[" + i + "] " + type + " - " + type.getDescription ());
                 i++;
             }
             
