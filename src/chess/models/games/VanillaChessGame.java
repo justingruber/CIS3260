@@ -58,12 +58,12 @@ public final class VanillaChessGame extends Game {
         if (playerWhite == null) {
             playerWhite = user;
             user.setColour (ChessPiece.Colours.WHITE);
+            currentMover = user;
         } else {
             playerBlack = user;
             user.setColour (ChessPiece.Colours.BLACK);
+            //currentMover = user;
         }
-        
-        currentMover = user;
     }
     
     public enum State { NORMAL, GAME_OVER };
@@ -159,6 +159,7 @@ public final class VanillaChessGame extends Game {
                 addToMessages(Message.Type.INFO,"GAME OVER: Stalemate");
             }*/
             
+            currentMover = currentMover == playerWhite ? playerBlack : playerWhite;
             return true;
         }else{//The new coordinates given are not a valid move for the piece
             String abc = " ABCDEFGH";

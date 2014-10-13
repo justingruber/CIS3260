@@ -6,10 +6,11 @@
 
 package chess.controllers;
 
-import chess.controllers.games.VanillaChessController;
 import chess.controllers.games.GameController;
-import java.util.Observer;
+import chess.controllers.games.VanillaChessController;
+import chess.models.GameType;
 import java.util.Observable;
+import java.util.Observer;
 /**
  *
  * @author Benjin
@@ -22,16 +23,16 @@ public class MasterController implements Observer {
         mainMenuControl.start ();
     }
     
-    /*public void goGame (Rules.RuleTypes type) {
+    public void goGame (GameType type) {
         GameController gameControl = null;
         
-        if (type == Rules.RuleTypes.VANILLA_CHESS_RULES) {
+        if (type == GameType.VANILLA) {
             gameControl = new VanillaChessController ();
         }
         
         gameControl.addObserver (this);
         gameControl.start ();
-    }*/
+    }
     
     public void goQuit () {
         System.out.println ("BYE");
@@ -40,8 +41,8 @@ public class MasterController implements Observer {
     @Override
     public void update (Observable obj, Object arg) {
         if (obj instanceof MainMenuController) {
-            if (arg.equals (MainMenuController.PLAY)) {
-//               goGame (Rules.RuleTypes.VANILLA_CHESS_RULES);
+            if (arg instanceof GameType) {
+                goGame ((GameType) arg);
             } else if (arg.equals (MainMenuController.QUIT)) {
                 goQuit ();
             }

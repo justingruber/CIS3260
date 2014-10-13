@@ -29,6 +29,7 @@ public abstract class Game {
     public void addUser (User user) {
         if (players.size () < maxPlayers) {
             players.add (user);
+            playerAdded (user);
         } else {
             spectators.add (user);
         }
