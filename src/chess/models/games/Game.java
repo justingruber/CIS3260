@@ -7,8 +7,8 @@
 package chess.models.games;
 
 import chess.models.Board;
-import chess.models.BoardType;
 import chess.models.ChessPiece;
+import chess.models.GameSetting;
 import chess.models.GameType;
 import chess.models.User;
 import chess.models.messages.Message;
@@ -19,12 +19,47 @@ import java.util.ArrayList;
  */
 public abstract class Game {
     protected GameType type;
-    private ArrayList <User> players = new ArrayList <> ();
-    private ArrayList <User> spectators = new ArrayList <> ();
     protected int maxPlayers = 2;
     protected Board board;
     protected ArrayList <ChessPiece> pieces = new ArrayList();
     protected ArrayList <Message> messages = new ArrayList();
+    
+    final ArrayList <GameSetting> supportedSettings = new ArrayList <> ();
+    
+    private boolean isHost = true;
+    private int state;
+    private final ArrayList <GameSetting> selectedSettings = new ArrayList <> ();
+    private final ArrayList <User> players = new ArrayList <> ();
+    private final ArrayList <User> spectators = new ArrayList <> ();
+    
+    public Game () {
+        state = Game.STATE_LOBBY;
+    }
+    
+    public ArrayList <GameSetting> getSupportedSettings () {
+        return new ArrayList <> (supportedSettings);
+    }
+    
+    public void setSelectedSettings (ArrayList <GameSetting> settings) {
+        selectedSettings.clear ();
+        selectedSettings.addAll (settings);
+    }
+    
+    public ArrayList <GameSetting> getSelectedSettings () {
+        return new ArrayList <> (selectedSettings);
+    }
+    
+    public boolean isHost () {
+        return isHost;
+    }
+    
+    public void setState (int state) {
+        this.state = state;
+    }
+    
+    public int getState () {
+        return state;
+    }
     
     public void addUser (User user) {
         if (players.size () < maxPlayers) {
@@ -51,4 +86,6 @@ public abstract class Game {
     protected abstract void playerAdded (User user);
     
     protected abstract void createBoard ();
+    
+    public static final int STATE_LOBBY = 0;
 }

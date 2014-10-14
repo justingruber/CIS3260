@@ -8,26 +8,27 @@ package chess.models.games;
 
 import chess.models.Board;
 import chess.models.ChessPiece;
+import chess.models.GameSetting;
 import chess.models.GameType;
 import chess.models.User;
 import chess.models.VanillaChessBoard;
 import chess.models.messages.Message;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
  * @author Benjin
  */
 public final class VanillaChessGame extends Game {
-    private State state;
     private User currentMover;
     private User playerWhite;
     private User playerBlack;
     
     public VanillaChessGame () {
+        this.supportedSettings.addAll (Arrays.asList (GameSetting.PROMOTION, GameSetting.CASTLING, GameSetting.EN_PASSANT, GameSetting.DRAW_BY_AGREEMENT, GameSetting.STALEMATE, GameSetting.FIFTY_MOVE_RULE));
         this.type = GameType.VANILLA;
         this.maxPlayers = 2;
-        state = State.NORMAL;
         createPiecesList ();
         createBoard ();
     }
@@ -45,9 +46,6 @@ public final class VanillaChessGame extends Game {
         }
     }
     */
-    public State getState () {
-        return state;
-    }
     
     public User getCurrentMover () {
         return currentMover;
@@ -65,8 +63,6 @@ public final class VanillaChessGame extends Game {
             //currentMover = user;
         }
     }
-    
-    public enum State { NORMAL, GAME_OVER };
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,6 +148,7 @@ public final class VanillaChessGame extends Game {
             if(checkMate == true){
                 this.messages = new ArrayList();
                 addToMessages(Message.Type.INFO,"GAME OVER: Checkmate");
+                this.setState (VanillaChessGame.STATE_GAME_OVER);
             }
             
             /*if(staleMate == true){
@@ -180,7 +177,7 @@ public final class VanillaChessGame extends Game {
         
         ChessPiece whiteKing = new ChessPiece(ChessPiece.ChessPieces.KING,ChessPiece.Colours.WHITE,5,1); 
         whitePieces.add(whiteKing);
-        ChessPiece whiteQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.WHITE,4,1);
+        /*ChessPiece whiteQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.WHITE,4,1);
         whitePieces.add(whiteQueen);
         ChessPiece whiteRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.WHITE,1,1);
         whitePieces.add(whiteRook);
@@ -198,7 +195,7 @@ public final class VanillaChessGame extends Game {
         for(int i = 1; i <= 8; i++){
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.WHITE,i,2);
             whitePieces.add(pawn);
-        }
+        }*/
         //whitePieces.add (new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.WHITE,4,2));
         return whitePieces;
     }
@@ -216,11 +213,11 @@ public final class VanillaChessGame extends Game {
         blackPieces.add(blackKing);
         ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,4,8);
         blackPieces.add(blackQueen);
-        /*blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,1,5);
+        blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,1,4);
         blackPieces.add(blackQueen);
         blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,6,8);
-        blackPieces.add(blackQueen);*/
-        ChessPiece blackRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,1,8);
+        blackPieces.add(blackQueen);
+        /*ChessPiece blackRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,1,8);
         blackPieces.add(blackRook);
         ChessPiece blackRook1 = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,8,8);
         blackPieces.add(blackRook1);
@@ -236,7 +233,7 @@ public final class VanillaChessGame extends Game {
         for(int i = 1; i <= 8; i++){
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.BLACK,i,7);
             blackPieces.add(pawn);
-        }
+        }*/
         return blackPieces;
     }
     
@@ -1263,4 +1260,7 @@ public final class VanillaChessGame extends Game {
             }
         }
     }
+    
+    public static final int STATE_NORMAL = 1;
+    public static final int STATE_GAME_OVER = 2;
 }

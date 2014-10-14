@@ -7,13 +7,12 @@
 package chess.controllers.games;
 
 import java.util.Observable;
-import chess.models.games.Game;
-import chess.views.terminals.ChessTerminal;
+import java.util.Observer;
 /**
  *
  * @author Benjin
  */
-public abstract class GameController extends Observable {
+public abstract class GameController extends Observable implements Observer {
     public abstract void start ();
     
     public static final int QUIT = 0;

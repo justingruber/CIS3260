@@ -2,22 +2,36 @@ package chess.views.terminals;
 
 import chess.models.*;
 import chess.models.ChessPiece;
+import chess.models.games.Game;
 import chess.models.games.VanillaChessGame;
 
 public class VanillaChessTerminal extends ChessTerminal {
     
     
     public VanillaChessTerminal () {
-        this.addHelpLine ("legend  - Shows what the characters on the board represent");
-        this.addHelpLine ("a1 a2   - Moves the piece from a1 to a2. Change to the piece you actually want.");
+        this.addHelpLine ("legend", "legend  - Shows what the characters on the board represent.");
+        this.addHelpLine ("settings", "settings - Shows the current settings of the game.");
     }
     
-    public void update (User currentMover, VanillaChessGame.State state) {
+    public void stateChanged (int state) {
+        if (state == Game.STATE_LOBBY) {
+            this.addHelpLine ("start", "start - Starts the game.");
+            this.addHelpLine ("setsettings", "setsettings - Set the settings for the game.");
+        } else if (state == VanillaChessGame.STATE_NORMAL) {
+            this.removeHelpLine ("start");
+            this.removeHelpLine ("setsettings");
+            this.addHelpLine ("move", "a1 a2   - Moves the piece from a1 to a2. Change to the piece you actually want.");
+        } else if (state == VanillaChessGame.STATE_GAME_OVER) {
+            this.removeHelpLine ("move");
+        }
+    }
+    
+    public void update (User currentMover, int state) {
         this.displayMessages ();
         
-        if (state == VanillaChessGame.State.NORMAL) {
+        if (state == VanillaChessGame.STATE_NORMAL) {
             System.out.println ("Player " + currentMover.getColour () + "/" + currentMover.getUsername () + "'s turn.");
-        } else if (state == VanillaChessGame.State.GAME_OVER) {
+        } else if (state == VanillaChessGame.STATE_GAME_OVER) {
             
         }
         
