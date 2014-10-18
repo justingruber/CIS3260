@@ -75,6 +75,9 @@ public final class VanillaChessGame extends Game {
     private Boolean isStatemate = false;
     private ChessPiece lastPieceToMove = null;
     private Boolean isEnPassant = false;
+    private Boolean castleKingSide = false;
+    private Boolean castleQueenSide = false;
+    
     @Override
     //Description of the function is in the rules class
     public ArrayList<Message> getMessages(){
@@ -136,6 +139,7 @@ public final class VanillaChessGame extends Game {
         }
         
         if(boolReturns == true){//If the new coordinates given are within the pieces possible moves
+            //System.out.println("From trymove");
             takeReturn = take(curX,curY,newX,newY,this.board);
             
             if(takeReturn == false){
@@ -154,9 +158,9 @@ public final class VanillaChessGame extends Game {
             
             
             
-            //piece = this.board.getPieceAtPosition(newX, newY);
-            //System.out.println("previous (" + piece.getPreviousX() + ","+ piece.getPreviousY() +")");
-            //System.out.println("current (" + piece.getX() + ","+ piece.getY() +")");
+//            piece = this.board.getPieceAtPosition(newX, newY);
+//            System.out.println("previous (" + piece.getPreviousX() + ","+ piece.getPreviousY() +")");
+//            System.out.println("current (" + piece.getX() + ","+ piece.getY() +")");
             //System.out.println("Last peice to move is " + this.lastPieceToMove.getChessPieceColour() + this.lastPieceToMove.getChessPieceName());
             /*if(staleMate == true){
                 this.messages = new ArrayList();
@@ -440,6 +444,7 @@ public final class VanillaChessGame extends Game {
             
             if(tempArray.size() != 0 && tempArray != null && piece.getState() == 0 && piece.getChessPieceColour() == colour){
                 for(int i = 0; i < tempArray.size(); i++){//Play out every move for that piece on the temp board
+                    //System.out.println("from can a piece move");
                     boolReturn = take(piece.getX(),piece.getY(),tempArray.get(i)[0],tempArray.get(i)[1],tempBoard);
                     //System.out.print("("+ piece.getX() + "," + piece.getY()+ ")");
                     //System.out.println("to ("+ tempArray.get(i)[0] + "," + tempArray.get(i)[1]+ ")");
@@ -477,7 +482,7 @@ public final class VanillaChessGame extends Game {
         
         possibleMoves = getAllPossibleMoves(enemyColour,board);
         
-        //Go through the enememy's possible moves
+        //Go through the enemy's possible moves
         for(int i = 0; i < possibleMoves.size();i++){
             for(int j = 0; j < possibleMoves.get(i).size();j++){
                 tempArray = new ArrayList(possibleMoves.get(i));
@@ -648,7 +653,10 @@ public final class VanillaChessGame extends Game {
         copyOfPieces = copyPiecesList (board.getPieces());
         tempBoard.setPieces(copyOfPieces);
         boolReturn = null;
-
+        //Cant castle if you are in check
+        //Can't castle if the move will place you in check
+        
+        
         //Take the enemy piece if the new coordinates are occupied
         boolReturn = tempBoard.isPosistionOcuppied(newX, newY);
         tempPiece = tempBoard.getPieceAtPosition(curX, curY);
@@ -680,10 +688,42 @@ public final class VanillaChessGame extends Game {
             takePiece.setY(0);
         }
         
-        
-
         //Move the piece
         pieceFromCopy = tempBoard.getPieceAtPosition(curX, curY);
+        ChessPiece rook = null;
+        if(checkForInitialCheck == false && pieceFromCopy.getChessPieceName() == ChessPiece.ChessPieces.KING && this.castleKingSide == true || this.castleQueenSide == true){
+            //System.out.println("kingside = " + this.castleKingSide);
+            //System.out.println("queenside =" + this.castleQueenSide);
+            if(newX == curX+2 && newY == curY){
+                rook = tempBoard.getPieceAtPosition(8, curY);
+//                System.out.println("From take inside");
+//                System.out.println("Rook = " + rook.getX() + ","+ rook.getY());
+                rook.setPreviousX(8);
+                rook.setPreviousY(curY);
+                rook.setX(6);
+                rook.setY(curY);
+//                System.out.println("From take inside");
+//                System.out.println("Rook = " + rook.getX() + ","+ rook.getY());
+                this.castleKingSide = false;
+                //System.out.println("Castle king side");
+            }else if(newX == curX-2 && newY == curY){
+                rook = tempBoard.getPieceAtPosition(1, curY);
+                rook.setPreviousX(1);
+                rook.setPreviousY(curY);
+                rook.setX(4);
+                rook.setY(curY);
+                this.castleQueenSide = false;
+                //System.out.println("Castle queen side");
+            }      
+        }else if(checkForInitialCheck == true && pieceFromCopy.getChessPieceName() == ChessPiece.ChessPieces.KING && (newX == curX+2 || newX ==curX-2 )){
+            addToMessages(Message.Type.ERROR,"Can't castle when in check");
+            this.isEnPassant = false;
+            this.castleKingSide = false;
+            this.castleQueenSide = false;
+            return false;
+        }
+        //System.out.println("From take");
+        //System.out.println("Rook outside = " + rook.getX() + ","+ rook.getY());
         pieceFromCopy.setPreviousX(curX);
         pieceFromCopy.setPreviousY(curY);
         pieceFromCopy.setX(newX);
@@ -698,6 +738,9 @@ public final class VanillaChessGame extends Game {
             }else{
                 addToMessages(Message.Type.ERROR,"The move will place you in check");
             }
+            this.isEnPassant = false;
+            this.castleKingSide = false;
+            this.castleQueenSide = false;
             return false;
         }else{
             board.setPieces(copyOfPieces);
@@ -709,6 +752,9 @@ public final class VanillaChessGame extends Game {
                addToMessages(Message.Type.INFO,enemyColour.toString() + " king is in Check");
             }
             //addToMessages(Message.Type.SUCCESS,"Move was successful");
+            this.isEnPassant = false;
+            this.castleKingSide = false;
+            this.castleQueenSide = false;
             return true;
         }
     }
@@ -1072,11 +1118,6 @@ public final class VanillaChessGame extends Game {
         temp = moveLeft(curX,curY,destX,destY,board);
         possibleMoves.addAll(temp);
         
-        
-        //Case 5: Castling king side -- if the rook is at given x and y
-        
-        //Case 6: Castling queen side -- if the rook is at given x and y
-        
         return possibleMoves;
     }
     
@@ -1140,8 +1181,21 @@ public final class VanillaChessGame extends Game {
     private ArrayList <Integer[]> kingPossibleMoves(int curX,int curY, Board board){
         ArrayList <Integer[]> possibleMoves = new ArrayList();
         ArrayList <Integer[]> temp;
+        ChessPiece king;
         int destX = 0;
         int destY = 0;
+        Boolean isOccupied;
+        Boolean isCheck;
+        Boolean boolReturn;
+        Board tempBoard = new VanillaChessBoard();
+        ArrayList <ChessPiece> copyOfPieces;
+        ArrayList<Message> tempMessages = new ArrayList(this.messages);
+        Boolean kingSide  = false;
+        Boolean queenSide = false;
+        
+        this.messages = new ArrayList();
+        
+        king = board.getPieceAtPosition(curX,curY);
         
         //Case 1: Move up 1 square
         temp = new ArrayList();
@@ -1200,8 +1254,83 @@ public final class VanillaChessGame extends Game {
         possibleMoves.addAll(temp);
         
         //Case 9: Castling king side 
+        ChessPiece rook = board.getPieceAtPosition(8,king.getY());
+        if(rook != null && rook.getPreviousX() == 0 && rook.getPreviousY() == 0 && rook.getState() == 0){
+            if(king.getPreviousX() == 0 && king.getPreviousY() == 0){
+                temp = moveRight(curX,curY,curX+2,curY,board);
+                if(temp.size() == 2 && temp.get(1)[0] == curX+2 && temp.get(1)[1] == curY){
+                    //System.out.println(king.getChessPieceColour());
+                    for(Integer[] coordinates : temp){
+                        isOccupied = board.isPosistionOcuppied(coordinates[0], coordinates[1]);
+                        if(isOccupied == false){
+                            tempBoard = new VanillaChessBoard();
+                            copyOfPieces = copyPiecesList (board.getPieces());
+                            tempBoard.setPieces(copyOfPieces);
+//                            System.out.println("curx/cury ("+ curX+ ","+curY +")");
+//                            System.out.println("coordinates ("+ coordinates[0]+ ","+coordinates[1] +")");
+                              //System.out.println("From king possible moves");
+                              boolReturn = take(curX, curY, coordinates[0],coordinates[1],tempBoard);
+//                            System.out.println("take return = " + boolReturn);
+                            this.messages = new ArrayList(tempMessages);
+                            if(boolReturn == false){
+                               kingSide = false;
+                               break;
+                            }else{
+                               kingSide = true;
+                            }  
+                        }else{
+                            kingSide = false;
+                            break;
+                        }
+                    }
+                    
+                    if(kingSide == true){
+                        possibleMoves.add(temp.get(1));
+                        this.castleKingSide = kingSide;
+                    }
+                    
+                }
+            }
+        }
         
         //Case 10: Castling queen side
+        rook = board.getPieceAtPosition(1,king.getY());
+        if(rook != null && rook.getPreviousX() == 0 && rook.getPreviousY() == 0 && rook.getState() == 0){
+            if(king.getPreviousX() == 0 && king.getPreviousY() == 0){
+                temp = moveLeft(curX,curY,curX-2,curY,board);
+                if(temp.size() == 2 && temp.get(1)[0] == curX-2 && temp.get(1)[1] == curY){
+                    //System.out.println(king.getChessPieceColour());
+                    for(Integer[] coordinates : temp){
+                        isOccupied = board.isPosistionOcuppied(coordinates[0], coordinates[1]);
+                        if(isOccupied == false){
+                            tempBoard = new VanillaChessBoard();
+                            copyOfPieces = copyPiecesList (board.getPieces());
+                            tempBoard.setPieces(copyOfPieces);
+//                            System.out.println("curx/cury ("+ curX+ ","+curY +")");
+//                            System.out.println("coordinates ("+ coordinates[0]+ ","+coordinates[1] +")");
+                              boolReturn = take(curX, curY, coordinates[0],coordinates[1],tempBoard);
+//                            System.out.println("take return = " + boolReturn);
+                            this.messages = new ArrayList(tempMessages);
+                            if(boolReturn == false){
+                               queenSide = false;
+                               break;
+                            }else{
+                               queenSide = true;
+                            }  
+                        }else{
+                            queenSide = false;
+                            break;
+                        }
+                    }
+                    
+                    if(queenSide == true){
+                        possibleMoves.add(temp.get(1));
+                        this.castleQueenSide = queenSide;
+                    }
+                    
+                }
+            }
+        }
         
         return possibleMoves;
     }

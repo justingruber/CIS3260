@@ -64,6 +64,8 @@ public class ChessPiece {
         this.X = piece.getX();
         this.Y = piece.getY();
         this.state = piece.getState();
+        this.previousX = piece.getPreviousX();
+        this.previousY = piece.getPreviousY();
     }
     
     public ChessPieces getChessPieceName(){
