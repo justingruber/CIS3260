@@ -112,6 +112,8 @@ public final class VanillaChessGame extends Game {
         Boolean staleMate = null;
         Boolean takeReturn = null;
         
+        //System.out.println(getSelectedSettings());
+        
         this.messages = new ArrayList();
         
         //Make sure it's not game over
@@ -446,8 +448,8 @@ public final class VanillaChessGame extends Game {
                 for(int i = 0; i < tempArray.size(); i++){//Play out every move for that piece on the temp board
                     //System.out.println("from can a piece move");
                     boolReturn = take(piece.getX(),piece.getY(),tempArray.get(i)[0],tempArray.get(i)[1],tempBoard);
-                    //System.out.print("("+ piece.getX() + "," + piece.getY()+ ")");
-                    //System.out.println("to ("+ tempArray.get(i)[0] + "," + tempArray.get(i)[1]+ ")");
+                    System.out.print("("+ piece.getX() + "," + piece.getY()+ ")");
+                    System.out.println("to ("+ tempArray.get(i)[0] + "," + tempArray.get(i)[1]+ ")");
                     if(boolReturn == true){ //Only need to find one valid move
                         this.messages = new ArrayList(tempMessages);
                         return true;
@@ -455,6 +457,7 @@ public final class VanillaChessGame extends Game {
                 }
             }
        }
+        this.messages = new ArrayList(tempMessages);
         return false;
     }
     
@@ -653,9 +656,6 @@ public final class VanillaChessGame extends Game {
         copyOfPieces = copyPiecesList (board.getPieces());
         tempBoard.setPieces(copyOfPieces);
         boolReturn = null;
-        //Cant castle if you are in check
-        //Can't castle if the move will place you in check
-        
         
         //Take the enemy piece if the new coordinates are occupied
         boolReturn = tempBoard.isPosistionOcuppied(newX, newY);
@@ -733,6 +733,7 @@ public final class VanillaChessGame extends Game {
         check = isCheck(friendlyColour,tempBoard);
         
         if(check == true){
+            System.out.println("Check for initial check" + checkForInitialCheck);
             if(checkForInitialCheck  == true){
                 addToMessages(Message.Type.ERROR,"The move will leave you in check");
             }else{
@@ -749,6 +750,7 @@ public final class VanillaChessGame extends Game {
             //Check to see if the move put the enemy in check
             check = isCheck(enemyColour,board);
             if(check == true){
+               //System.out.println("King is in check" + enemyColour.toString());
                addToMessages(Message.Type.INFO,enemyColour.toString() + " king is in Check");
             }
             //addToMessages(Message.Type.SUCCESS,"Move was successful");
@@ -952,14 +954,24 @@ public final class VanillaChessGame extends Game {
         }
     
         //A pawn cannot claim a piece that is infront of it so remove the coordinates if they are occupied
+        if(temp.size() == 2){
+            boolReturn = board.isPosistionOcuppied(temp.get(1)[0], temp.get(1)[1]);
+                
+            if(boolReturn == true){
+                temp.remove(1);
+            }
+            possibleMoves.addAll(temp); 
+        }
+        
         if(temp.size() > 0){
             boolReturn = board.isPosistionOcuppied(temp.get(0)[0], temp.get(0)[1]);
                 
             if(boolReturn == true){
                 temp.remove(0);
             }
-            possibleMoves.addAll(temp);
+            possibleMoves.addAll(temp); 
         }
+        
         
             
         //Case3: Move left up or down diagonally 1 square only if enemy is there
@@ -1004,6 +1016,9 @@ public final class VanillaChessGame extends Game {
             }
             possibleMoves.addAll(temp);
         }    
+        
+        
+        
         
         //Case5: En passant 
         //Check if there is a pawn that moved 2 squares next to it
@@ -1271,7 +1286,6 @@ public final class VanillaChessGame extends Game {
                               //System.out.println("From king possible moves");
                               boolReturn = take(curX, curY, coordinates[0],coordinates[1],tempBoard);
 //                            System.out.println("take return = " + boolReturn);
-                            this.messages = new ArrayList(tempMessages);
                             if(boolReturn == false){
                                kingSide = false;
                                break;
@@ -1310,7 +1324,6 @@ public final class VanillaChessGame extends Game {
 //                            System.out.println("coordinates ("+ coordinates[0]+ ","+coordinates[1] +")");
                               boolReturn = take(curX, curY, coordinates[0],coordinates[1],tempBoard);
 //                            System.out.println("take return = " + boolReturn);
-                            this.messages = new ArrayList(tempMessages);
                             if(boolReturn == false){
                                queenSide = false;
                                break;
@@ -1331,7 +1344,7 @@ public final class VanillaChessGame extends Game {
                 }
             }
         }
-        
+        this.messages = new ArrayList(tempMessages);
         return possibleMoves;
     }
     
