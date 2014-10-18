@@ -104,7 +104,7 @@ public class VanillaChessController extends GameController {
                                     if (nums.size () > 0) {
                                         terminalView.addMessage (new Message (Message.Type.ERROR, "You can't have [0] with other settings."));
                                     } else {
-                                        game.setSelectedSettings (new ArrayList <> ());
+                                        game.setSelectedSettings (new ArrayList <GameSetting> ());
                                         break;
                                     }
                                 } else {

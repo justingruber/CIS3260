@@ -73,7 +73,8 @@ public final class VanillaChessGame extends Game {
     private Boolean isCheckmate = false;
     private Boolean isCheck = false;
     private Boolean isStatemate = false;
-    
+    private ChessPiece lastPieceToMove = null;
+    private Boolean isEnPassant = false;
     @Override
     //Description of the function is in the rules class
     public ArrayList<Message> getMessages(){
@@ -150,7 +151,10 @@ public final class VanillaChessGame extends Game {
                 addToMessages(Message.Type.INFO,"GAME OVER: Checkmate");
                 this.setState (VanillaChessGame.STATE_GAME_OVER);
             }
-            
+            piece = this.board.getPieceAtPosition(newX, newY);
+            System.out.println("previous (" + piece.getPreviousX() + ","+ piece.getPreviousY() +")");
+            System.out.println("current (" + piece.getX() + ","+ piece.getY() +")");
+            System.out.println("Last peice to move is " + this.lastPieceToMove.getChessPieceColour() + this.lastPieceToMove.getChessPieceName());
             /*if(staleMate == true){
                 this.messages = new ArrayList();
                 addToMessages(Message.Type.INFO,"GAME OVER: Stalemate");
@@ -177,7 +181,7 @@ public final class VanillaChessGame extends Game {
         
         ChessPiece whiteKing = new ChessPiece(ChessPiece.ChessPieces.KING,ChessPiece.Colours.WHITE,5,1); 
         whitePieces.add(whiteKing);
-        /*ChessPiece whiteQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.WHITE,4,1);
+        ChessPiece whiteQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.WHITE,4,1);
         whitePieces.add(whiteQueen);
         ChessPiece whiteRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.WHITE,1,1);
         whitePieces.add(whiteRook);
@@ -195,7 +199,7 @@ public final class VanillaChessGame extends Game {
         for(int i = 1; i <= 8; i++){
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.WHITE,i,2);
             whitePieces.add(pawn);
-        }*/
+        }
         //whitePieces.add (new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.WHITE,4,2));
         return whitePieces;
     }
@@ -213,11 +217,11 @@ public final class VanillaChessGame extends Game {
         blackPieces.add(blackKing);
         ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,4,8);
         blackPieces.add(blackQueen);
-        blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,1,4);
-        blackPieces.add(blackQueen);
-        blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,6,8);
-        blackPieces.add(blackQueen);
-        /*ChessPiece blackRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,1,8);
+        //blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,1,4);
+        //blackPieces.add(blackQueen);
+        //blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,6,8);
+        //blackPieces.add(blackQueen);
+        ChessPiece blackRook = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,1,8);
         blackPieces.add(blackRook);
         ChessPiece blackRook1 = new ChessPiece(ChessPiece.ChessPieces.ROOK,ChessPiece.Colours.BLACK,8,8);
         blackPieces.add(blackRook1);
@@ -233,7 +237,7 @@ public final class VanillaChessGame extends Game {
         for(int i = 1; i <= 8; i++){
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.BLACK,i,7);
             blackPieces.add(pawn);
-        }*/
+        }
         return blackPieces;
     }
     
@@ -619,11 +623,14 @@ public final class VanillaChessGame extends Game {
     private Boolean take(int curX, int curY, int newX, int newY,Board board){
         Boolean boolReturn;
         Boolean check;
+        Boolean checkForInitialCheck;
+        Boolean checkForEnPassant;
         ArrayList <ChessPiece> copyOfPieces;
         ChessPiece pieceFromCopy;
         ChessPiece.Colours friendlyColour;
         ChessPiece.Colours enemyColour;
         Board tempBoard = new VanillaChessBoard();
+        ChessPiece tempPiece = null;
         
         ChessPiece piece = board.getPieceAtPosition(curX, curY);
         
@@ -634,22 +641,48 @@ public final class VanillaChessGame extends Game {
         }else{
             enemyColour = ChessPiece.Colours.WHITE;
         }
-        check = isCheck(friendlyColour,board);//Check to see if the moving player is in check
+        checkForInitialCheck = isCheck(friendlyColour,board);//Check to see if the moving player is in check
         copyOfPieces = copyPiecesList (board.getPieces());
         tempBoard.setPieces(copyOfPieces);
         boolReturn = null;
 
         //Take the enemy piece if the new coordinates are occupied
         boolReturn = tempBoard.isPosistionOcuppied(newX, newY);
-        if(boolReturn == true){
+        tempPiece = tempBoard.getPieceAtPosition(curX, curY);
+        
+        if(boolReturn == false && tempPiece.getChessPieceName() == ChessPiece.ChessPieces.PAWN && this.isEnPassant == true){
+            if(tempPiece.getChessPieceColour() == ChessPiece.Colours.WHITE){
+                checkForEnPassant = tempBoard.isPosistionOcuppied(newX, newY-1);
+                if(checkForEnPassant == true){
+                    ChessPiece takePiece = tempBoard.getPieceAtPosition(newX, newY-1);
+                    takePiece.setState(1);
+                    takePiece.setX(0);
+                    takePiece.setY(0);
+                }
+                this.isEnPassant = false;
+            }else if(tempPiece.getChessPieceColour() == ChessPiece.Colours.BLACK){
+                checkForEnPassant = tempBoard.isPosistionOcuppied(newX, newY+1);
+                if(checkForEnPassant == true){
+                    ChessPiece takePiece = tempBoard.getPieceAtPosition(newX, newY+1);
+                    takePiece.setState(1);
+                    takePiece.setX(0);
+                    takePiece.setY(0);
+                }
+                this.isEnPassant = false;
+            }
+        }else if(boolReturn == true){
             ChessPiece takePiece = tempBoard.getPieceAtPosition(newX, newY);
             takePiece.setState(1);
             takePiece.setX(0);
             takePiece.setY(0);
         }
+        
+        
 
         //Move the piece
         pieceFromCopy = tempBoard.getPieceAtPosition(curX, curY);
+        pieceFromCopy.setPreviousX(curX);
+        pieceFromCopy.setPreviousY(curY);
         pieceFromCopy.setX(newX);
         pieceFromCopy.setY(newY);
 
@@ -657,11 +690,16 @@ public final class VanillaChessGame extends Game {
         check = isCheck(friendlyColour,tempBoard);
         
         if(check == true){
-            addToMessages(Message.Type.ERROR,"The move will place you in check");
+            if(checkForInitialCheck  == true){
+                addToMessages(Message.Type.ERROR,"The move will leave you in check");
+            }else{
+                addToMessages(Message.Type.ERROR,"The move will place you in check");
+            }
             return false;
         }else{
             board.setPieces(copyOfPieces);
-
+            this.lastPieceToMove = board.getPieceAtPosition(newX,newY);
+            
             //Check to see if the move put the enemy in check
             check = isCheck(enemyColour,board);
             if(check == true){
@@ -918,8 +956,69 @@ public final class VanillaChessGame extends Game {
             possibleMoves.addAll(temp);
         }    
         
-        //Case5: Pawn reached the end of the board
-        //DO PROMOTION HERE
+        //Case5: En passant 
+        //Check if there is a pawn that moved 2 squares next to it
+        if(colour.equalsIgnoreCase("white") && curY == 5 && this.lastPieceToMove.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
+            boolReturn = board.isPosistionOcuppied(curX+1, curY);
+            //Check the right of the pawn
+            if(boolReturn == true){
+                piece = board.getPieceAtPosition(curX+1,curY);
+                
+                if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN && curX+1 == this.lastPieceToMove.getX() && curY == this.lastPieceToMove.getY()){
+                    if(this.lastPieceToMove.getPreviousX() == curX+1 && this.lastPieceToMove.getPreviousY() == curY+2){
+                        temp = moveRightUpDiagonally(curX,curY,curX+1,curY+1,board);
+                        possibleMoves.addAll(temp);
+                        this.isEnPassant = true;
+                    }
+                }
+            }
+            
+            boolReturn = board.isPosistionOcuppied(curX-1, curY);
+            //Check the left of the pawn
+            if(boolReturn == true){
+                piece = board.getPieceAtPosition(curX-1,curY);
+                if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN && curX-1 == this.lastPieceToMove.getX() && curY == this.lastPieceToMove.getY()){
+                    if(this.lastPieceToMove.getPreviousX() == curX-1 && this.lastPieceToMove.getPreviousY() == curY+2){
+                        temp = moveLeftUpDiagonally(curX,curY,curX-1,curY+1,board);
+                        possibleMoves.addAll(temp);
+                        this.isEnPassant = true;
+                    }
+                }
+            }
+        }else if(colour.equalsIgnoreCase("black") && curY == 4 && this.lastPieceToMove.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
+            boolReturn = board.isPosistionOcuppied(curX+1, curY);
+            //Check the right of the pawn
+            if(boolReturn == true){
+                piece = board.getPieceAtPosition(curX+1,curY);
+                
+                if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN && curX+1 == this.lastPieceToMove.getX() && curY == this.lastPieceToMove.getY()){
+                    if(this.lastPieceToMove.getPreviousX() == curX+1 && this.lastPieceToMove.getPreviousY() == curY-2){
+                        temp = moveRightDownDiagonally(curX,curY,curX+1,curY-1,board);
+                        possibleMoves.addAll(temp);
+                        this.isEnPassant = true;
+                    }
+                }
+            }
+            
+            boolReturn = board.isPosistionOcuppied(curX-1, curY);
+            //Check the left of the pawn
+            if(boolReturn == true){
+                piece = board.getPieceAtPosition(curX-1,curY);
+                if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN && curX-1 == this.lastPieceToMove.getX() && curY == this.lastPieceToMove.getY()){
+                    if(this.lastPieceToMove.getPreviousX() == curX-1 && this.lastPieceToMove.getPreviousY() == curY-2){
+                        temp = moveLeftDownDiagonally(curX,curY,curX-1,curY-1,board);
+                        possibleMoves.addAll(temp);
+                        this.isEnPassant = true;
+                    }
+                }
+            }
+        }
+        
+        //Move the pawn left and right and see what the move function returns
+        //If it returns something then check to see if it is a pawn
+        // If pawn then check for previous x,y
+        // If everything matches up then move up diagonally
+        // The actual checking of whose turn and only on next move should be done by take?
         return possibleMoves;
     } 
     

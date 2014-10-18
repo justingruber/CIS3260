@@ -42,6 +42,8 @@ public class ChessPiece {
     private Colours pieceColour;
     private int X = 0;
     private int Y = 0;
+    private int previousX = 0;
+    private int previousY = 0;
     private int state = 0;
     
     public ChessPiece (ChessPieces pieceName, Colours pieceColour){
@@ -102,6 +104,22 @@ public class ChessPiece {
     
     public void setState(int state){
         this.state = state;
+    }
+    
+    public int getPreviousX(){ 
+        return this.previousX;
+    }
+    
+    public int getPreviousY(){ 
+        return this.previousY;
+    }
+    
+    public void setPreviousX(int x){
+        this.previousX = x;
+    }
+    
+    public void setPreviousY(int y){
+        this.previousY = y;
     }
     
 }
