@@ -151,6 +151,9 @@ public final class VanillaChessGame extends Game {
                 addToMessages(Message.Type.INFO,"GAME OVER: Checkmate");
                 this.setState (VanillaChessGame.STATE_GAME_OVER);
             }
+            
+            
+            
             //piece = this.board.getPieceAtPosition(newX, newY);
             //System.out.println("previous (" + piece.getPreviousX() + ","+ piece.getPreviousY() +")");
             //System.out.println("current (" + piece.getX() + ","+ piece.getY() +")");
