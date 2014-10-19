@@ -77,11 +77,21 @@ public final class VanillaChessGame extends Game {
     private Boolean isEnPassant = false;
     private Boolean castleKingSide = false;
     private Boolean castleQueenSide = false;
+    private int whiteMoveCountForFifyMoveRule = 0;
+    private int blackMoveCountForFifyMoveRule = 0;
     
     @Override
     //Description of the function is in the rules class
     public ArrayList<Message> getMessages(){
         return this.messages;
+    }
+    
+    public Boolean isFiftyMoveDraw(){
+        if(this.whiteMoveCountForFifyMoveRule >= 50 && this.blackMoveCountForFifyMoveRule >= 50){
+            return true;
+        }else{
+            return false;
+        }
     }
     
     //Description of the function is in the rules class
@@ -111,7 +121,7 @@ public final class VanillaChessGame extends Game {
         Boolean checkMate = null;
         Boolean staleMate = null;
         Boolean takeReturn = null;
-        
+        Boolean isOccupied = null;
         //System.out.println(getSelectedSettings());
         
         this.messages = new ArrayList();
@@ -140,8 +150,9 @@ public final class VanillaChessGame extends Game {
             enemyColour = ChessPiece.Colours.WHITE;
         }
         
+        isOccupied = board.isPosistionOcuppied(newX, newY);
+        
         if(boolReturns == true){//If the new coordinates given are within the pieces possible moves
-            //System.out.println("From trymove");
             takeReturn = take(curX,curY,newX,newY,this.board);
             
             if(takeReturn == false){
@@ -158,16 +169,16 @@ public final class VanillaChessGame extends Game {
                 this.setState (VanillaChessGame.STATE_GAME_OVER);
             }
             
-            
-            
-//            piece = this.board.getPieceAtPosition(newX, newY);
-//            System.out.println("previous (" + piece.getPreviousX() + ","+ piece.getPreviousY() +")");
-//            System.out.println("current (" + piece.getX() + ","+ piece.getY() +")");
-            //System.out.println("Last peice to move is " + this.lastPieceToMove.getChessPieceColour() + this.lastPieceToMove.getChessPieceName());
             /*if(staleMate == true){
                 this.messages = new ArrayList();
                 addToMessages(Message.Type.INFO,"GAME OVER: Stalemate");
             }*/
+            
+            if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN || isOccupied == true){
+                resetMoveCounts();
+            }else{
+                incrementMoveCount(friendlyColour);
+            }
             
             currentMover = currentMover == playerWhite ? playerBlack : playerWhite;
             return true;
@@ -175,6 +186,19 @@ public final class VanillaChessGame extends Game {
             String abc = " ABCDEFGH";
             addToMessages(Message.Type.ERROR,"You can't move that piece to " + abc.charAt (newX) + newY + ".");
             return false;
+        }
+    }
+    
+    private void resetMoveCounts(){
+        this.blackMoveCountForFifyMoveRule = 0;
+        this.whiteMoveCountForFifyMoveRule = 0;
+    }
+    
+    private void incrementMoveCount(ChessPiece.Colours colour){
+        if(colour == ChessPiece.Colours.WHITE){
+            this.whiteMoveCountForFifyMoveRule = this.whiteMoveCountForFifyMoveRule + 10;
+        }else{
+            this.blackMoveCountForFifyMoveRule = this.blackMoveCountForFifyMoveRule + 10;
         }
     }
     
@@ -685,7 +709,7 @@ public final class VanillaChessGame extends Game {
             ChessPiece takePiece = tempBoard.getPieceAtPosition(newX, newY);
             takePiece.setState(1);
             takePiece.setX(0);
-            takePiece.setY(0);
+            takePiece.setY(0);       
         }
         
         //Move the piece
@@ -733,7 +757,6 @@ public final class VanillaChessGame extends Game {
         check = isCheck(friendlyColour,tempBoard);
         
         if(check == true){
-            System.out.println("Check for initial check" + checkForInitialCheck);
             if(checkForInitialCheck  == true){
                 addToMessages(Message.Type.ERROR,"The move will leave you in check");
             }else{
