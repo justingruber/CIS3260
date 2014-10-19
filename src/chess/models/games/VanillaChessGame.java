@@ -181,9 +181,7 @@ public final class VanillaChessGame extends Game {
         
         if(boolReturns == true){//If the new coordinates given are within the pieces possible moves
             takeReturn = take(curX,curY,newX,newY,this.board);
-            
             if(takeReturn == false){
-                pieces = board.getPieces();
                 return false;
             }
             
@@ -197,9 +195,6 @@ public final class VanillaChessGame extends Game {
                 }   
             }
             
-            System.out.println("White " + this.whiteMoveCountForFifyMoveRule);
-            System.out.println("Black " + this.blackMoveCountForFifyMoveRule);
-            
             //Promote code goes in here
             /******************************************************/
              if(getSelectedSettings().contains(GameSetting.PROMOTION) && (newY == 1 || newY == 8) && board.getPieceAtPosition(newX,newY).getChessPieceName() == ChessPiece.ChessPieces.PAWN){
@@ -210,12 +205,10 @@ public final class VanillaChessGame extends Game {
                  successfulMove();
              }
              
-            pieces = board.getPieces();
             return true;
         }else{//The new coordinates given are not a valid move for the piece
             String abc = " ABCDEFGH";
             addToMessages(Message.Type.ERROR,"You can't move that piece to " + abc.charAt (newX) + newY + ".");
-            pieces = board.getPieces();
             return false;
         }
     }
@@ -235,12 +228,12 @@ public final class VanillaChessGame extends Game {
             this.setState (VanillaChessGame.STATE_GAME_OVER);
         }
             
-        if(checkForStaleMate(enemyColour,this.board)){
+        if(getSelectedSettings().contains(GameSetting.STALEMATE) && checkForStaleMate(enemyColour,this.board)){
             this.messages = new ArrayList();
             addToMessages(Message.Type.INFO,"GAME OVER: Stalemate");
             this.setState (VanillaChessGame.STATE_GAME_OVER);
         }
-        
+        pieces = board.getPieces();
         currentMover = currentMover == playerWhite ? playerBlack : playerWhite;
     }
     
@@ -494,7 +487,8 @@ public final class VanillaChessGame extends Game {
         Board tempBoard = new VanillaChessBoard();
         Boolean boolReturn;
         ArrayList<Message> tempMessages = new ArrayList(this.messages);
-        
+        ChessPiece tempPiece = this.lastPieceToMove;
+        lastPieceToMove = new ChessPiece (tempPiece);
         this.messages = new ArrayList();
         
         //Create a temporary board and set piece positions from the original board
@@ -531,11 +525,13 @@ public final class VanillaChessGame extends Game {
                     //System.out.println("to ("+ tempArray.get(i)[0] + "," + tempArray.get(i)[1]+ ")");
                     if(boolReturn == true){ //Only need to find one valid move
                         this.messages = new ArrayList(tempMessages);
+                        this.lastPieceToMove = tempPiece;
                         return true;
                     }
                 }
             }
        }
+        this.lastPieceToMove = tempPiece;
         this.messages = new ArrayList(tempMessages);
         return false;
     }
@@ -562,7 +558,7 @@ public final class VanillaChessGame extends Game {
 
         king = getKing(friendlyColour,board); 
         
-        possibleMoves = getAllPossibleMoves(enemyColour,board);
+        possibleMoves = getAllPossibleMovesWithoutKing(enemyColour,board);
         
         //Go through the enemy's possible moves
         for(int i = 0; i < possibleMoves.size();i++){
@@ -584,7 +580,7 @@ public final class VanillaChessGame extends Game {
      * Returns: - ArrayList<ArrayList> 
      *          - The ArrayList<ArrayList> will be empty if there are no possible moves
      */
-    private ArrayList <ArrayList> getAllPossibleMoves(ChessPiece.Colours colour,Board board){
+    private ArrayList <ArrayList> getAllPossibleMovesWithoutKing(ChessPiece.Colours colour,Board board){
         ArrayList <ArrayList> possibleMoves = new ArrayList(); 
         ArrayList <Integer[]> tempArray = null;
         int curX = 0;
@@ -605,8 +601,8 @@ public final class VanillaChessGame extends Game {
                     tempArray = new ArrayList(bishopPossibleMoves(curX,curY,board));
                     possibleMoves.add(tempArray);
                 }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.KING){
-                    tempArray = new ArrayList(kingPossibleMoves(curX,curY,board));
-                    possibleMoves.add(tempArray);
+                    //tempArray = new ArrayList(kingPossibleMoves(curX,curY,board));
+                    //possibleMoves.add(tempArray);
                 }else if(piece.getChessPieceName() == ChessPiece.ChessPieces.QUEEN){
                     tempArray = new ArrayList(queenPossibleMoves(curX,curY,board));
                     possibleMoves.add(tempArray);
@@ -1092,7 +1088,7 @@ public final class VanillaChessGame extends Game {
         
         //Case5: En passant 
         //Check if there is a pawn that moved 2 squares next to it
-        if(colour.equalsIgnoreCase("white") && curY == 5 && this.lastPieceToMove.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
+        if(getSelectedSettings().contains(GameSetting.EN_PASSANT) && colour.equalsIgnoreCase("white") && curY == 5 && this.lastPieceToMove.getChessPieceName() == ChessPiece.ChessPieces.PAWN){ 
             boolReturn = board.isPosistionOcuppied(curX+1, curY);
             //Check the right of the pawn
             if(boolReturn == true){
@@ -1119,7 +1115,7 @@ public final class VanillaChessGame extends Game {
                     }
                 }
             }
-        }else if(colour.equalsIgnoreCase("black") && curY == 4 && this.lastPieceToMove.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
+        }else if(getSelectedSettings().contains(GameSetting.EN_PASSANT) && colour.equalsIgnoreCase("black") && curY == 4 && this.lastPieceToMove.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
             boolReturn = board.isPosistionOcuppied(curX+1, curY);
             //Check the right of the pawn
             if(boolReturn == true){
@@ -1340,7 +1336,7 @@ public final class VanillaChessGame extends Game {
         
         //Case 9: Castling king side 
         ChessPiece rook = board.getPieceAtPosition(8,king.getY());
-        if(rook != null && rook.getPreviousX() == 0 && rook.getPreviousY() == 0 && rook.getState() == 0){
+        if(getSelectedSettings().contains(GameSetting.CASTLING) && rook != null && rook.getChessPieceName() == ChessPiece.ChessPieces.ROOK && rook.getPreviousX() == 0 && rook.getPreviousY() == 0 && rook.getState() == 0){
             if(king.getPreviousX() == 0 && king.getPreviousY() == 0){
                 temp = moveRight(curX,curY,curX+2,curY,board);
                 if(temp.size() == 2 && temp.get(1)[0] == curX+2 && temp.get(1)[1] == curY){
@@ -1351,11 +1347,11 @@ public final class VanillaChessGame extends Game {
                             tempBoard = new VanillaChessBoard();
                             copyOfPieces = copyPiecesList (board.getPieces());
                             tempBoard.setPieces(copyOfPieces);
-//                            System.out.println("curx/cury ("+ curX+ ","+curY +")");
-//                            System.out.println("coordinates ("+ coordinates[0]+ ","+coordinates[1] +")");
-                              //System.out.println("From king possible moves");
-                              boolReturn = take(curX, curY, coordinates[0],coordinates[1],tempBoard);
-//                            System.out.println("take return = " + boolReturn);
+                            System.out.println("From king possible moves");
+                            System.out.println("curx/cury ("+ curX+ ","+curY +")");
+                            System.out.println("coordinates ("+ coordinates[0]+ ","+coordinates[1] +")");
+                            boolReturn = take(curX, curY, coordinates[0],coordinates[1],tempBoard);
+//                          System.out.println("take return = " + boolReturn);
                             if(boolReturn == false){
                                kingSide = false;
                                break;
@@ -1379,7 +1375,7 @@ public final class VanillaChessGame extends Game {
         
         //Case 10: Castling queen side
         rook = board.getPieceAtPosition(1,king.getY());
-        if(rook != null && rook.getPreviousX() == 0 && rook.getPreviousY() == 0 && rook.getState() == 0){
+        if(getSelectedSettings().contains(GameSetting.CASTLING) && rook != null && rook.getChessPieceName() == ChessPiece.ChessPieces.ROOK && rook.getPreviousX() == 0 && rook.getPreviousY() == 0 && rook.getState() == 0){
             if(king.getPreviousX() == 0 && king.getPreviousY() == 0){
                 temp = moveLeft(curX,curY,curX-2,curY,board);
                 if(temp.size() == 2 && temp.get(1)[0] == curX-2 && temp.get(1)[1] == curY){
@@ -1390,8 +1386,9 @@ public final class VanillaChessGame extends Game {
                             tempBoard = new VanillaChessBoard();
                             copyOfPieces = copyPiecesList (board.getPieces());
                             tempBoard.setPieces(copyOfPieces);
-//                            System.out.println("curx/cury ("+ curX+ ","+curY +")");
-//                            System.out.println("coordinates ("+ coordinates[0]+ ","+coordinates[1] +")");
+                            System.out.println("From queen possible moves");
+                            System.out.println("curx/cury ("+ curX+ ","+curY +")");
+                            System.out.println("coordinates ("+ coordinates[0]+ ","+coordinates[1] +")");
                               boolReturn = take(curX, curY, coordinates[0],coordinates[1],tempBoard);
 //                            System.out.println("take return = " + boolReturn);
                             if(boolReturn == false){
