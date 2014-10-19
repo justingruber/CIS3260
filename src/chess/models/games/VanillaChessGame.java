@@ -97,44 +97,15 @@ public final class VanillaChessGame extends Game {
     
     //Description of the function is in the rules class
     public Boolean isGameOver(){
-        Boolean checkMate = false;
-        Boolean staleMate = false;
-        ChessPiece.Colours friendlyColour;
-        ChessPiece.Colours enemyColour;
-        ChessPiece.Colours test;
-        ChessPiece.Colours testEnemy; 
-        
-        friendlyColour = currentMover.getColour();
-        enemyColour = currentMover.getColour() == ChessPiece.Colours.WHITE ? ChessPiece.Colours.BLACK: ChessPiece.Colours.WHITE;
-        
-        checkMate = checkForCheckMate(enemyColour,this.board);
-            staleMate = checkForStaleMate(enemyColour,this.board);
-            //checkForStaleMate(friendlyColour,this.board);
-    
-            if(checkMate == true){
-                this.messages = new ArrayList();
-                addToMessages(Message.Type.INFO,"GAME OVER: Checkmate");
-                this.setState (VanillaChessGame.STATE_GAME_OVER);
-            }
-            
-            if(staleMate == true){
-                this.messages = new ArrayList();
-                addToMessages(Message.Type.INFO,"GAME OVER: Stalemate");
-                this.setState (VanillaChessGame.STATE_GAME_OVER);
-            }
-        
-        if(checkMate == true || staleMate == true){
+        if(isCheckMate() == true || isStaleMate() == true){
             //addToMessages(Message.Type.INFO , "GAME OVER");
             return true;
         } 
-            
-        currentMover = currentMover == playerWhite ? playerBlack : playerWhite;
         return false;
     }
     
     public void promotePiece(ChessPiece.ChessPieces promoteTo){
         ChessPiece tempPiece = null;
-        System.out.println("Promoting to " + promoteTo);
         
         if(this.promotePiece == null){
             System.out.println("promotePiece is null. Bug in the code");
@@ -147,7 +118,6 @@ public final class VanillaChessGame extends Game {
         
         for(ChessPiece piece: this.board.getPieces()){
             if(this.promotePiece.getX() == piece.getX() && this.promotePiece.getY() == piece.getY()){
-                //System.out.print("("+ piece.getX() + "," + piece.getY()+ ")");
                 pieces = this.board.getPieces();
                 pieces.remove(piece);
                 pieces.add(tempPiece);
@@ -156,6 +126,8 @@ public final class VanillaChessGame extends Game {
             }
         }
         this.promotePiece = null;
+ 
+        successfulMove();
     }
     
     //Description of the function is in the rules class
@@ -174,7 +146,7 @@ public final class VanillaChessGame extends Game {
         Boolean checkMate = null;
         Boolean staleMate = null;
         Boolean takeReturn = null;
-        Boolean isOccupied = null;
+        Boolean wasOccupied = null;
         //System.out.println(getSelectedSettings());
         
         this.messages = new ArrayList();
@@ -204,7 +176,8 @@ public final class VanillaChessGame extends Game {
             enemyColour = ChessPiece.Colours.WHITE;
         }
         
-        isOccupied = board.isPosistionOcuppied(newX, newY);
+        wasOccupied = board.isPosistionOcuppied(newX, newY);
+        
         
         if(boolReturns == true){//If the new coordinates given are within the pieces possible moves
             takeReturn = take(curX,curY,newX,newY,this.board);
@@ -214,24 +187,29 @@ public final class VanillaChessGame extends Game {
                 return false;
             }
             
-            //Promote code goes in here
-            /******************************************************/
-             if((newY == 1 || newY == 8) && piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
-                 this.promotePiece = board.getPieceAtPosition(newX,newY);
-                 //Add the notify observers code here and call the promote piece function when you want to promote
-                 //promotePiece(ChessPiece.ChessPieces.QUEEN);
-             }
-             /******************************************************/
-             
-            
             //Fifty move rule incrementing logic
             //Reset the count if a piece has been taken or a pawn has moved
-            if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN || isOccupied == true){
-                resetMoveCounts();
-            }else{
-                incrementMoveCount(friendlyColour);
+            if(getSelectedSettings().contains(GameSetting.FIFTY_MOVE_RULE)){
+                if(board.getPieceAtPosition(newX,newY).getChessPieceName() ==  ChessPiece.ChessPieces.PAWN || wasOccupied == true){
+                    resetMoveCounts();
+                }else{
+                    incrementMoveCount(friendlyColour);
+                }   
             }
             
+            System.out.println("White " + this.whiteMoveCountForFifyMoveRule);
+            System.out.println("Black " + this.blackMoveCountForFifyMoveRule);
+            
+            //Promote code goes in here
+            /******************************************************/
+             if(getSelectedSettings().contains(GameSetting.PROMOTION) && (newY == 1 || newY == 8) && board.getPieceAtPosition(newX,newY).getChessPieceName() == ChessPiece.ChessPieces.PAWN){
+                 this.promotePiece = board.getPieceAtPosition(newX,newY);
+                 //Add the notify observers code here and call the promote piece function when you want to promote
+                 promotePiece(ChessPiece.ChessPieces.QUEEN);   
+             }else{
+                 successfulMove();
+             }
+             
             pieces = board.getPieces();
             return true;
         }else{//The new coordinates given are not a valid move for the piece
@@ -242,6 +220,30 @@ public final class VanillaChessGame extends Game {
         }
     }
     
+    private void successfulMove(){
+        ChessPiece.Colours enemyColour;
+        
+        enemyColour = currentMover.getColour() == ChessPiece.Colours.WHITE ? ChessPiece.Colours.BLACK: ChessPiece.Colours.WHITE;
+        
+        if(isCheck(enemyColour,this.board)){
+            addToMessages(Message.Type.INFO,enemyColour.toString() + " king is in Check");
+        }
+    
+        if(checkForCheckMate(enemyColour,this.board)){
+            this.messages = new ArrayList();
+            addToMessages(Message.Type.INFO,"GAME OVER: Checkmate");
+            this.setState (VanillaChessGame.STATE_GAME_OVER);
+        }
+            
+        if(checkForStaleMate(enemyColour,this.board)){
+            this.messages = new ArrayList();
+            addToMessages(Message.Type.INFO,"GAME OVER: Stalemate");
+            this.setState (VanillaChessGame.STATE_GAME_OVER);
+        }
+        
+        currentMover = currentMover == playerWhite ? playerBlack : playerWhite;
+    }
+    
     private void resetMoveCounts(){
         this.blackMoveCountForFifyMoveRule = 0;
         this.whiteMoveCountForFifyMoveRule = 0;
@@ -249,9 +251,9 @@ public final class VanillaChessGame extends Game {
     
     private void incrementMoveCount(ChessPiece.Colours colour){
         if(colour == ChessPiece.Colours.WHITE){
-            this.whiteMoveCountForFifyMoveRule = this.whiteMoveCountForFifyMoveRule + 10;
+            this.whiteMoveCountForFifyMoveRule = this.whiteMoveCountForFifyMoveRule + 1;
         }else{
-            this.blackMoveCountForFifyMoveRule = this.blackMoveCountForFifyMoveRule + 10;
+            this.blackMoveCountForFifyMoveRule = this.blackMoveCountForFifyMoveRule + 1;
         }
     }
     
@@ -301,7 +303,7 @@ public final class VanillaChessGame extends Game {
         
         ChessPiece blackKing = new ChessPiece(ChessPiece.ChessPieces.KING,ChessPiece.Colours.BLACK,5,8); 
         blackPieces.add(blackKing);
-       ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,4,8);
+        ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,4,8);
         blackPieces.add(blackQueen);
         //blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,1,4);
         //blackPieces.add(blackQueen);
@@ -822,14 +824,6 @@ public final class VanillaChessGame extends Game {
         }else{
             board.setPieces(copyOfPieces);
             this.lastPieceToMove = board.getPieceAtPosition(newX,newY);
-            
-            //Check to see if the move put the enemy in check
-            check = isCheck(enemyColour,board);
-            if(check == true){
-               //System.out.println("King is in check" + enemyColour.toString());
-               addToMessages(Message.Type.INFO,enemyColour.toString() + " king is in Check");
-            }
-            //addToMessages(Message.Type.SUCCESS,"Move was successful");
             this.isEnPassant = false;
             this.castleKingSide = false;
             this.castleQueenSide = false;
