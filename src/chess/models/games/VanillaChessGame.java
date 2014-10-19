@@ -79,6 +79,7 @@ public final class VanillaChessGame extends Game {
     private Boolean castleQueenSide = false;
     private int whiteMoveCountForFifyMoveRule = 0;
     private int blackMoveCountForFifyMoveRule = 0;
+    private ChessPiece promotePiece = null;
     
     @Override
     //Description of the function is in the rules class
@@ -103,7 +104,31 @@ public final class VanillaChessGame extends Game {
         return false;
     }
     
-    //Create a copy of pieces?
+    public void promotePiece(ChessPiece.ChessPieces promoteTo){
+        ChessPiece tempPiece = null;
+        System.out.println("Promoting to " + promoteTo);
+        
+        if(this.promotePiece == null){
+            System.out.println("promotePiece is null. Bug in the code");
+            return;
+        }
+        
+        tempPiece = new ChessPiece(promoteTo, this.promotePiece.getChessPieceColour(), this.promotePiece.getX(),this.promotePiece.getY());
+        tempPiece.setPreviousX(this.promotePiece.getPreviousX());
+        tempPiece.setPreviousY(this.promotePiece.getPreviousY());
+        
+        for(ChessPiece piece: this.board.getPieces()){
+            if(this.promotePiece.getX() == piece.getX() && this.promotePiece.getY() == piece.getY()){
+                //System.out.print("("+ piece.getX() + "," + piece.getY()+ ")");
+                pieces = this.board.getPieces();
+                pieces.remove(piece);
+                pieces.add(tempPiece);
+                this.board.setPieces(pieces);
+                break;
+            }
+        }
+        this.promotePiece = null;
+    }
     
     //Description of the function is in the rules class
     @Override
@@ -156,11 +181,22 @@ public final class VanillaChessGame extends Game {
             takeReturn = take(curX,curY,newX,newY,this.board);
             
             if(takeReturn == false){
+                pieces = board.getPieces();
                 return false;
             }
             
+            //Promote code goes in here
+            /******************************************************/
+             if((newY == 1 || newY == 8) && piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN){
+                 this.promotePiece = board.getPieceAtPosition(newX,newY);
+                 //Add the notify observers code here and call the promote piece function when you want to promote
+                 //promotePiece(ChessPiece.ChessPieces.QUEEN);
+                 
+             }
+             /******************************************************/
+            
             checkMate = checkForCheckMate(enemyColour,this.board);
-            //staleMate = checkForStaleMate(enemyColour,this.board);
+            staleMate = checkForStaleMate(enemyColour,this.board);
             //checkForStaleMate(friendlyColour,this.board);
     
             if(checkMate == true){
@@ -169,11 +205,14 @@ public final class VanillaChessGame extends Game {
                 this.setState (VanillaChessGame.STATE_GAME_OVER);
             }
             
-            /*if(staleMate == true){
+            if(staleMate == true){
                 this.messages = new ArrayList();
                 addToMessages(Message.Type.INFO,"GAME OVER: Stalemate");
-            }*/
+                this.setState (VanillaChessGame.STATE_GAME_OVER);
+            }
             
+            //Fifty move rule incrementing logic
+            //Reset the count if a piece has been taken or a pawn has moved
             if(piece.getChessPieceName() == ChessPiece.ChessPieces.PAWN || isOccupied == true){
                 resetMoveCounts();
             }else{
@@ -181,10 +220,12 @@ public final class VanillaChessGame extends Game {
             }
             
             currentMover = currentMover == playerWhite ? playerBlack : playerWhite;
+            pieces = board.getPieces();
             return true;
         }else{//The new coordinates given are not a valid move for the piece
             String abc = " ABCDEFGH";
             addToMessages(Message.Type.ERROR,"You can't move that piece to " + abc.charAt (newX) + newY + ".");
+            pieces = board.getPieces();
             return false;
         }
     }
@@ -233,7 +274,7 @@ public final class VanillaChessGame extends Game {
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.WHITE,i,2);
             whitePieces.add(pawn);
         }
-        //whitePieces.add (new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.WHITE,4,2));
+        whitePieces.add (new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.WHITE,1,7));
         return whitePieces;
     }
     
@@ -248,7 +289,7 @@ public final class VanillaChessGame extends Game {
         
         ChessPiece blackKing = new ChessPiece(ChessPiece.ChessPieces.KING,ChessPiece.Colours.BLACK,5,8); 
         blackPieces.add(blackKing);
-        ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,4,8);
+       /* ChessPiece blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,4,8);
         blackPieces.add(blackQueen);
         //blackQueen = new ChessPiece(ChessPiece.ChessPieces.QUEEN,ChessPiece.Colours.BLACK,1,4);
         //blackPieces.add(blackQueen);
@@ -270,7 +311,7 @@ public final class VanillaChessGame extends Game {
         for(int i = 1; i <= 8; i++){
             ChessPiece pawn = new ChessPiece(ChessPiece.ChessPieces.PAWN, ChessPiece.Colours.BLACK,i,7);
             blackPieces.add(pawn);
-        }
+        }*/
         return blackPieces;
     }
     
@@ -472,8 +513,8 @@ public final class VanillaChessGame extends Game {
                 for(int i = 0; i < tempArray.size(); i++){//Play out every move for that piece on the temp board
                     //System.out.println("from can a piece move");
                     boolReturn = take(piece.getX(),piece.getY(),tempArray.get(i)[0],tempArray.get(i)[1],tempBoard);
-                    System.out.print("("+ piece.getX() + "," + piece.getY()+ ")");
-                    System.out.println("to ("+ tempArray.get(i)[0] + "," + tempArray.get(i)[1]+ ")");
+                    //System.out.print("("+ piece.getX() + "," + piece.getY()+ ")");
+                    //System.out.println("to ("+ tempArray.get(i)[0] + "," + tempArray.get(i)[1]+ ")");
                     if(boolReturn == true){ //Only need to find one valid move
                         this.messages = new ArrayList(tempMessages);
                         return true;
