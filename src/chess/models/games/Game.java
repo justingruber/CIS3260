@@ -13,11 +13,12 @@ import chess.models.GameType;
 import chess.models.User;
 import chess.models.messages.Message;
 import java.util.ArrayList;
+import java.util.Observable;
 /**
  *
  * @author Benjin
  */
-public abstract class Game {
+public abstract class Game extends Observable {
     protected GameType type;
     protected int maxPlayers = 2;
     protected Board board;

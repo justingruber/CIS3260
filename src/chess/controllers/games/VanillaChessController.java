@@ -8,6 +8,7 @@ package chess.controllers.games;
 
 import chess.Application;
 import chess.DisplayMode;
+import chess.models.ChessPiece;
 import chess.models.GameSetting;
 import chess.models.User;
 import chess.models.games.Game;
@@ -15,7 +16,6 @@ import chess.models.games.VanillaChessGame;
 import chess.models.messages.Message;
 import chess.views.terminals.VanillaChessTerminal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Observable;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -26,19 +26,26 @@ import java.util.regex.Pattern;
  * @author Benjin
  */
 public class VanillaChessController extends GameController {
+    private VanillaChessGame game = new VanillaChessGame ();
     private VanillaChessTerminal terminalView;
     
     @Override
     public void start () {
-        VanillaChessGame game = new VanillaChessGame ();
+        game.addObserver (this);
         game.addUser (new User ("Naruto"));
         game.addUser (new User ("Sasuke"));
+        
+        ArrayList <GameSetting> awd = new ArrayList <> ();
+        awd.add (GameSetting.PROMOTION);
+        awd.add (GameSetting.FIFTY_MOVE_RULE);
+        awd.add (GameSetting.DRAW_BY_AGREEMENT);
+        game.setSelectedSettings (awd);
         
         if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
             terminalView = new VanillaChessTerminal ();
             terminalView.addObserver (this);
             terminalView.setBoard (game.getBoard ());
-            terminalView.stateChanged (Game.STATE_LOBBY);
+            terminalView.stateChanged (Game.STATE_LOBBY, game.getSelectedSettings ());
             
             boolean showBoard = true;
             terminalView.addMessage (new Message (Message.Type.INFO, "Enter help for a list of commands."));
@@ -70,7 +77,7 @@ public class VanillaChessController extends GameController {
                 } else if (input.equals ("start") && game.getState () == Game.STATE_LOBBY) {
                     if (game.isHost ()) {
                         game.setState (VanillaChessGame.STATE_NORMAL);
-                        terminalView.stateChanged (VanillaChessGame.STATE_NORMAL);
+                        terminalView.stateChanged (VanillaChessGame.STATE_NORMAL, game.getSelectedSettings ());
                         showBoard = true;
                     } else {
                         terminalView.addMessage (new Message (Message.Type.ERROR, "Only the host can do that."));
@@ -135,6 +142,27 @@ public class VanillaChessController extends GameController {
                     } else {
                         terminalView.addMessage (new Message (Message.Type.ERROR, "Only the host can do that."));
                     }
+                } else if (input.equals ("draw") && game.getState () == VanillaChessGame.STATE_NORMAL) {
+                    terminalView.displayDrawRequest (game.getCurrentMover ());
+                    
+                    while (true) {
+                        terminalView.displayMessages ();
+                        input = scan.nextLine ().trim ();
+                        
+                        if (input.equals ("1")) {
+                            terminalView.addMessage (new Message (Message.Type.INFO, "The game has ended in draw."));
+                            terminalView.stateChanged (VanillaChessGame.STATE_GAME_OVER, game.getSelectedSettings ());
+                            showBoard = true;
+                            break;
+                        } else if (input.equals ("2")) {
+                            terminalView.addMessage (new Message (Message.Type.INFO, "The draw by agreement wasn't agreed upon."));
+                            break;
+                        } else {
+                            terminalView.addMessage (new Message (Message.Type.ERROR, "That's not a valid input."));
+                        }
+                    }
+                } else if (input.equals ("fifty") && game.getState () == VanillaChessGame.STATE_NORMAL) {
+                    
                 } else {
                     Pattern pattern = Pattern.compile ("^\\s*[a-h][1-8] [a-h][1-8]\\s*$");
                     Matcher matcher = pattern.matcher (input);
@@ -156,7 +184,7 @@ public class VanillaChessController extends GameController {
                             }
                             
                             if (game.isGameOver ()) {
-                                terminalView.stateChanged (VanillaChessGame.STATE_GAME_OVER);
+                                terminalView.stateChanged (VanillaChessGame.STATE_GAME_OVER, game.getSelectedSettings ());
                             }
 
                             ArrayList <Message> messages = game.getMessages ();
@@ -184,8 +212,37 @@ public class VanillaChessController extends GameController {
     
     @Override
     public void update (Observable obj, Object args) {
+        if (args.equals ("PROMOTE")) {
+            terminalView.displayPromotion ();
+            Scanner scan = new Scanner (System.in);
+            
+            while (true) {
+                terminalView.displayMessages ();
+                String input = scan.nextLine ().trim ();
+                
+                //this is pretty gross too
+                if (input.equals ("1")) {
+                    game.promotePiece (ChessPiece.ChessPieces.BISHOP);
+                    break;
+                } else if (input.equals ("2")) {
+                    game.promotePiece (ChessPiece.ChessPieces.ROOK);
+                    break;
+                } else if (input.equals ("3")) {
+                    game.promotePiece (ChessPiece.ChessPieces.QUEEN);
+                    break;
+                } else if (input.equals ("4")) {
+                    game.promotePiece (ChessPiece.ChessPieces.KNIGHT);
+                    break;
+                } else {
+                    terminalView.addMessage (new Message (Message.Type.ERROR, "That's not a valid choice."));
+                }
+            }
+            
+            return;
+        }
+        
         if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
-            terminalView.stateChanged ((int) args);
+            terminalView.stateChanged ((int) args, game.getSelectedSettings ());
         }
     }
 }

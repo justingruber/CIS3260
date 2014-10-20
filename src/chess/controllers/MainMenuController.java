@@ -23,8 +23,8 @@ import java.util.regex.Pattern;
  */
 public class MainMenuController extends Observable implements Observer {
     public void start () {
-        //this.setChanged ();
-        //this.notifyObservers (GameType.values ()[0]);
+        this.setChanged ();
+        this.notifyObservers (GameType.values ()[0]);
         
         if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
             MainMenuTerminal terminalView = new MainMenuTerminal ();
