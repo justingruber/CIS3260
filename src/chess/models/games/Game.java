@@ -25,9 +25,9 @@ public abstract class Game extends Observable {
     protected ArrayList <ChessPiece> pieces = new ArrayList();
     protected ArrayList <Message> messages = new ArrayList();
     
-    final ArrayList <GameSetting> supportedSettings = new ArrayList <> ();
+    protected final ArrayList <GameSetting> supportedSettings = new ArrayList <> ();
     
-    private boolean isHost = true;
+    private final boolean isHost = true;
     private int state;
     private final ArrayList <GameSetting> selectedSettings = new ArrayList <> ();
     private final ArrayList <User> players = new ArrayList <> ();

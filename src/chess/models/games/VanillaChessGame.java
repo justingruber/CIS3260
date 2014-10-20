@@ -32,20 +32,6 @@ public final class VanillaChessGame extends Game {
         createPiecesList ();
         createBoard ();
     }
-    /*
-    public boolean tryMove (int curX, int curY, int newX, int newY) {
-        if (this.getRules ().tryMove (curX, curY, newX, newY)) {
-            //////////change this into the game class
-            if (((VanillaChessRules) this.getRules ()).isGameOver ()) {
-                state = State.GAME_OVER;
-            }
-            
-            return true;
-        } else {
-            return false;
-        }
-    }
-    */
     
     public User getCurrentMover () {
         return currentMover;
@@ -80,12 +66,6 @@ public final class VanillaChessGame extends Game {
     private int whiteMoveCountForFifyMoveRule = 0;
     private int blackMoveCountForFifyMoveRule = 0;
     private ChessPiece promotePiece = null;
-    
-    @Override
-    //Description of the function is in the rules class
-    public ArrayList<Message> getMessages(){
-        return this.messages;
-    }
     
     public Boolean isFiftyMoveDraw(){
         if(this.whiteMoveCountForFifyMoveRule >= 50 && this.blackMoveCountForFifyMoveRule >= 50){

@@ -17,11 +17,11 @@ import java.util.HashMap;
  * @author Benjin
  */
 public abstract class ChessTerminal extends GameView {
-    private HashMap <String, String> helpLines = new HashMap <> ();
+    private final HashMap <String, String> helpLines = new HashMap <> ();
     
     public ChessTerminal () {
-        helpLines.put ("board", "board   - Redraws the board in its current state.");
-        helpLines.put ("quit", "quit    - Exits to the main menu.");
+        helpLines.put ("board", "board - Redraws the board in its current state.");
+        helpLines.put ("quit", "quit - Exits to the main menu.");
     }
     
     public void addHelpLine (String key, String line) {
