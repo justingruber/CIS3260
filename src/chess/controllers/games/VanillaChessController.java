@@ -35,11 +35,11 @@ public class VanillaChessController extends GameController {
         game.addUser (new User ("Naruto"));
         game.addUser (new User ("Sasuke"));
         
-        ArrayList <GameSetting> awd = new ArrayList <> ();
+        /*ArrayList <GameSetting> awd = new ArrayList <> ();
         awd.add (GameSetting.PROMOTION);
         awd.add (GameSetting.FIFTY_MOVE_RULE);
         awd.add (GameSetting.DRAW_BY_AGREEMENT);
-        game.setSelectedSettings (awd);
+        game.setSelectedSettings (awd);*/
         
         if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
             terminalView = new VanillaChessTerminal ();
@@ -142,7 +142,7 @@ public class VanillaChessController extends GameController {
                     } else {
                         terminalView.addMessage (new Message (Message.Type.ERROR, "Only the host can do that."));
                     }
-                } else if (input.equals ("draw") && game.getState () == VanillaChessGame.STATE_NORMAL) {
+                } else if (input.equals ("draw") && game.getSelectedSettings ().contains (GameSetting.DRAW_BY_AGREEMENT) && game.getState () == VanillaChessGame.STATE_NORMAL) {
                     terminalView.displayDrawRequest (game.getCurrentMover ());
                     
                     while (true) {
@@ -161,8 +161,13 @@ public class VanillaChessController extends GameController {
                             terminalView.addMessage (new Message (Message.Type.ERROR, "That's not a valid input."));
                         }
                     }
-                } else if (input.equals ("fifty") && game.getState () == VanillaChessGame.STATE_NORMAL) {
-                    
+                } else if (input.equals ("fifty") && game.getSelectedSettings ().contains (GameSetting.FIFTY_MOVE_RULE) && game.getState () == VanillaChessGame.STATE_NORMAL) {
+                    if (game.isFiftyMoveDraw ()) {
+                        terminalView.addMessage (new Message (Message.Type.SUCCESS, "The fifty-move rule has been applied. The game ends in a draw."));
+                        terminalView.stateChanged (VanillaChessGame.STATE_GAME_OVER, game.getSelectedSettings ());
+                    } else {
+                        terminalView.addMessage (new Message (Message.Type.INFO, "The fifty-move rule does not apply at this point."));
+                    }
                 } else {
                     Pattern pattern = Pattern.compile ("^\\s*[a-h][1-8] [a-h][1-8]\\s*$");
                     Matcher matcher = pattern.matcher (input);
