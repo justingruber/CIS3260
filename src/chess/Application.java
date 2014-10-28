@@ -22,5 +22,5 @@ public class Application {
         new MasterController ().goMainMenu ();
     }
     
-    public static final DisplayMode DISPLAY_MODE = DisplayMode.TERMINAL;
+    public static DisplayMode DISPLAY_MODE;
 }

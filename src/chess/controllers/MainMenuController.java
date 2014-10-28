@@ -10,6 +10,7 @@ import chess.Application;
 import chess.DisplayMode;
 import chess.models.GameType;
 import chess.models.messages.Message;
+import chess.views.graphical.MainMenuGraphical;
 import chess.views.terminals.MainMenuTerminal;
 import java.util.Observable;
 import java.util.Observer;
@@ -25,6 +26,28 @@ public class MainMenuController extends Observable implements Observer {
     public void start () {
         //this.setChanged ();
         //this.notifyObservers (GameType.values ()[0]);
+        
+        
+        //Change this as you see fit, I just needed it for testing purposes and didn't know where to put it.
+        System.out.println("[1] Graphical");
+        System.out.println("[2] Terminal");
+        boolean isValid = false;
+        
+        Scanner opt = new Scanner(System.in);
+        int in = opt.nextInt();
+        while(!isValid){
+            if(in == 1){
+                Application.DISPLAY_MODE = DisplayMode.GUI;
+                isValid = true;
+            }
+            else if (in == 2) {
+                Application.DISPLAY_MODE = DisplayMode.TERMINAL;
+                isValid = true;
+            }
+            else {
+                System.out.println("Enter 1 or 2.");
+            }
+        }
         
         if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
             MainMenuTerminal terminalView = new MainMenuTerminal ();
@@ -70,6 +93,11 @@ public class MainMenuController extends Observable implements Observer {
                     }
                 }
             }
+        }
+        else if(Application.DISPLAY_MODE == DisplayMode.GUI){
+            MainMenuGraphical graphicalView = new MainMenuGraphical();
+            graphicalView.MainMenuGraphical();
+            
         }
     }
     
