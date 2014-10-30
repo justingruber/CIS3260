@@ -163,7 +163,10 @@ public class MainMenuGraphical extends MainMenuView {
     }
     
     private void createAboutDialogue(){
-        System.out.println("23");
+        JDialog about = new JDialog(mainFrame, "About Our Program");
+        about.setVisible(true);
+        about.setSize(200,200);
+        
     }
     
     private void displayVariants(){
@@ -221,5 +224,6 @@ public class MainMenuGraphical extends MainMenuView {
     private final int WINDOWHEIGHT = 600;
     private final int WINDOWWIDTH = 600;
     private final String TITLEIMAGE = "./Assets/Logo/banner_25-pitch.png";
+    private final String ABOUT = "asdasd";
     
 }
