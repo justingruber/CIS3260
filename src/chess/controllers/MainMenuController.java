@@ -34,6 +34,7 @@ public class MainMenuController extends Observable implements Observer {
         boolean isValid = false;
         
         Scanner opt = new Scanner(System.in);
+        
         int in = opt.nextInt();
         while(!isValid){
             if(in == 1){

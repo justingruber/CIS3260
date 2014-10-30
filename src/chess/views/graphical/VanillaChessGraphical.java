@@ -101,5 +101,14 @@ public class VanillaChessGraphical extends ChessGraphical {
          System.out.println ("P - Pawn");
          System.out.println ("====================================");*/
     }
+    
+    private String getPiecePath(String piece){
+        String path = getClass().getResource(piece).toString();
+
+        if (path.startsWith("file:/")) {
+            path = path.substring(path.indexOf('/') + 1, path.length());
+        }
+        return path;
+    }
 
 }
