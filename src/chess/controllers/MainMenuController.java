@@ -17,6 +17,10 @@ import java.util.Observer;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.*;
 
 /**
  *
@@ -31,7 +35,9 @@ public class MainMenuController extends Observable implements Observer {
         //Change this as you see fit, I just needed it for testing purposes and didn't know where to put it.
         System.out.println("[1] Graphical");
         System.out.println("[2] Terminal");
+        System.out.println("[3] Online");
         boolean isValid = false;
+        boolean isOnline = false;
         
         Scanner opt = new Scanner(System.in);
         
@@ -45,12 +51,36 @@ public class MainMenuController extends Observable implements Observer {
                 Application.DISPLAY_MODE = DisplayMode.TERMINAL;
                 isValid = true;
             }
-            else {
-                System.out.println("Enter 1 or 2.");
+            else if(in == 3){
+                Application.DISPLAY_MODE = DisplayMode.TERMINAL;
+                isOnline = true;
+                isValid = true;
             }
+            else {
+                System.out.println("Enter 1, 2, or 3.");
+            }
+        
+        }
+        if (Application.DISPLAY_MODE == DisplayMode.TERMINAL && isOnline) {
+            MainMenuTerminal terminalView = new MainMenuTerminal();
+            terminalView = new MainMenuTerminal();
+            terminalView.showTitle();
+
+            connect(terminalView);
+            
+//            while (true) {
+//                Scanner scan = new Scanner(System.in);
+//                String input = scan.nextLine ();
+//                 if (input.equals("back")) {
+//                        terminalView.setState(MainMenuTerminal.State.MAIN);
+//                        terminalView.showTitle();
+//                    } else {
+//                        terminalView.displayMessage(new Message(Message.Type.ERROR, "Invalid input"));
+//                    }
+//            }
         }
         
-        if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
+        else if (Application.DISPLAY_MODE == DisplayMode.TERMINAL) {
             MainMenuTerminal terminalView = new MainMenuTerminal ();
             terminalView = new MainMenuTerminal ();
             terminalView.showTitle ();
@@ -105,6 +135,71 @@ public class MainMenuController extends Observable implements Observer {
     @Override
     public void update (Observable object, Object args) {
         
+    }
+    
+    
+    private void connect(MainMenuTerminal terminalView) {
+        String info = "";
+        String host = "";
+
+        try {
+            BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Enter host address:");
+            host = stdIn.readLine();
+            System.out.println("Enter a username: ");
+            info = stdIn.readLine();
+            Socket server;
+            server = new Socket(host, 8080);
+            PrintWriter out = new PrintWriter(server.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
+
+            out.println(info);
+            Thread read = new Thread() {
+                public synchronized void run() {
+                    while (true) {
+                        try {
+                            String tmp = in.readLine();
+                            System.out.println(tmp);
+                            if (tmp.equalsIgnoreCase("Goodbye")) {
+                                break;
+                            }
+                            else if(tmp.equalsIgnoreCase("Game is starting.")){
+                                terminalView.setState(MainMenuTerminal.State.PLAY);
+                                startGame();
+                            }
+                        } catch (Exception e) {
+                        }
+
+                    }
+                    System.exit(0);
+                }
+            };
+            read.start();
+            Thread write = new Thread() {
+                public synchronized void run() {
+                    while (true) {
+                        try {
+                            String info = "";
+                            info = stdIn.readLine();
+                            out.println(info);
+                        } catch (Exception e) {
+                        }
+
+                    }
+                }
+            };
+            write.start();
+            
+            
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    public void startGame(){
+        this.setChanged();
+        this.notifyObservers(GameType.values()[0]);
     }
     
     public static final String PLAY = "play";
